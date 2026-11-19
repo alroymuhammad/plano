@@ -1,0 +1,13 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "semi": false,
+  "singleQuote": true,
+  "ignorePatterns": [
+    "**/dist",
+    "**/routeTree.gen.ts",
+    "packages/db/migrations",
+    "pnpm-lock.yaml",
+    "packages/ui/src",
+    "packages/ui/components.json"
+  ]
+}

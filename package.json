@@ -1,0 +1,17 @@
+{
+  "name": "plano",
+  "private": true,
+  "scripts": {
+    "dev:api": "pnpm --filter api dev",
+    "dev:platform": "pnpm --filter platform dev",
+    "db:generate": "pnpm --filter @plano/db generate",
+    "db:migrate": "pnpm --filter @plano/db migrate",
+    "build": "pnpm -r build",
+    "lint": "oxlint",
+    "format": "oxfmt"
+  },
+  "devDependencies": {
+    "oxfmt": "^0.79.0",
+    "oxlint": "^1.94.0"
+  }
+}
