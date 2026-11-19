@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "new-york",
+  "rsc": false,
+  "tsx": true,
+  "tailwind": {
+    "config": "",
+    "css": "src/styles/globals.css",
+    "baseColor": "neutral",
+    "cssVariables": true
+  },
+  "iconLibrary": "lucide",
+  "aliases": {
+    "components": "@plano/ui/components",
+    "ui": "@plano/ui/components",
+    "utils": "@plano/ui/lib/utils",
+    "hooks": "@plano/ui/hooks",
+    "lib": "@plano/ui/lib"
+  }
+}
