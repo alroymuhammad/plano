@@ -1,4 +1,4 @@
-import { Agent, type AgentPrompt } from '@anvia/core'
+import { Agent, type AgentPrompt, type MemoryScope, type MemoryStore } from '@anvia/core'
 import { BASE_INSTRUCTION } from './instruction'
 import { tools } from './tools/tools'
 import { getModel, type Provider } from './utils/model'
@@ -7,16 +7,19 @@ export type RunAgentOptions = {
   prompt: AgentPrompt
   provider?: Provider
   modelId?: string
+  // Pass both to persist the conversation across runs.
+  memory?: MemoryStore
+  session?: MemoryScope
 }
 
-export function runAgent({ prompt, provider, modelId }: RunAgentOptions) {
+export function runAgent({ prompt, provider, modelId, memory, session }: RunAgentOptions) {
   const agent = new Agent({
     id: 'assistant',
     model: getModel(provider, modelId),
     instructions: BASE_INSTRUCTION,
     tools,
-    memory: undefined,
+    memory: memory && { store: memory, savePolicy: 'turn' },
     maxTurns: 75,
   })
-  return agent.stream({ prompt })
+  return agent.stream({ prompt, session })
 }
