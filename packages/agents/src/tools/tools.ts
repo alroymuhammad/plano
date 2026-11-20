@@ -1,5 +1,6 @@
 import { createTool } from '@anvia/core'
 import { z } from 'zod'
+import { webSearchTool } from './web-search'
 
 export const testingTool = createTool({
   name: 'testing',
@@ -8,4 +9,4 @@ export const testingTool = createTool({
   handler: () => 'tools testing are working',
 })
 
-export const tools = [testingTool]
+export const tools = [testingTool, webSearchTool]
