@@ -63,3 +63,11 @@ export const verification = pgTable(
   },
   (t) => [index('verification_identifier_idx').on(t.identifier)],
 )
+
+// Agent memory tables, owned by @anvia/memory-drizzle (decision 0011).
+export {
+  agentMemoryErrors,
+  agentMemoryMessages,
+  agentMemorySessions,
+  agentMemoryWrites,
+} from '@anvia/memory-drizzle'

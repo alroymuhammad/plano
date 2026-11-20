@@ -1,6 +1,6 @@
 # 0002 — Anvia SDK for agent development
 
-Status: accepted
+Status: superseded by 0011 (db memory package)
 Date: 2026-11-19
 
 ## Context

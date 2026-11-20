@@ -95,13 +95,13 @@ importers:
     dependencies:
       '@anvia/anthropic':
         specifier: ^1.2.2
-        version: 1.2.2(@anvia/core@1.19.2(zod@4.6.7))(zod@4.6.7)
+        version: 1.2.2(@anvia/core@1.20.0(zod@4.6.7))(zod@4.6.7)
       '@anvia/core':
-        specifier: ^1.19.2
-        version: 1.19.2(zod@4.6.7)
+        specifier: ^1.20.0
+        version: 1.20.0(zod@4.6.7)
       '@anvia/openai':
         specifier: ^1.3.8
-        version: 1.3.8(@anvia/core@1.19.2(zod@4.6.7))(google-auth-library@10.9.1)(zod@4.6.7)
+        version: 1.3.8(@anvia/core@1.20.0(zod@4.6.7))(google-auth-library@10.9.1)(zod@4.6.7)
       '@tavily/core':
         specifier: ^1.1.0
         version: 1.1.0(debug@4.4.3)(zod@4.6.7)
@@ -118,6 +118,12 @@ importers:
 
   packages/db:
     dependencies:
+      '@anvia/core':
+        specifier: ^1.20.0
+        version: 1.20.0(zod@4.6.7)
+      '@anvia/memory-drizzle':
+        specifier: ^1.2.1
+        version: 1.2.1(@anvia/core@1.20.0(zod@4.6.7))(drizzle-orm@0.45.4(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1))
       drizzle-orm:
         specifier: ^0.45.4
         version: 0.45.4(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
@@ -133,19 +139,19 @@ importers:
     dependencies:
       '@anvia/logger':
         specifier: ^1.2.1
-        version: 1.2.1(@anvia/core@1.19.2(zod@4.6.7))
+        version: 1.2.1(@anvia/core@1.20.0(zod@4.6.7))
       '@anvia/otel':
         specifier: ^1.3.2
-        version: 1.3.2(@anvia/core@1.19.2(zod@4.6.7))
+        version: 1.3.2(@anvia/core@1.20.0(zod@4.6.7))
 
   packages/ui:
     dependencies:
       '@anvia/react':
         specifier: ^1.1.5
-        version: 1.1.5(@anvia/client@1.8.1(@anvia/core@1.19.2(zod@4.6.7)))(@anvia/core@1.19.2(zod@4.6.7))(react@19.3.1)
+        version: 1.1.5(@anvia/client@1.8.1(@anvia/core@1.20.0(zod@4.6.7)))(@anvia/core@1.20.0(zod@4.6.7))(react@19.3.1)
       '@anvia/react-ui':
         specifier: ^1.3.2
-        version: 1.3.2(@anvia/client@1.8.1(@anvia/core@1.19.2(zod@4.6.7)))(@anvia/react@1.1.5(@anvia/client@1.8.1(@anvia/core@1.19.2(zod@4.6.7)))(@anvia/core@1.19.2(zod@4.6.7))(react@19.3.1))(@floating-ui/dom@1.8.0)(@tiptap/extensions@3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        version: 1.3.2(@anvia/client@1.8.1(@anvia/core@1.20.0(zod@4.6.7)))(@anvia/react@1.1.5(@anvia/client@1.8.1(@anvia/core@1.20.0(zod@4.6.7)))(@anvia/core@1.20.0(zod@4.6.7))(react@19.3.1))(@floating-ui/dom@1.8.0)(@tiptap/extensions@3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@base-ui/react':
         specifier: ^1.9.0
         version: 1.9.0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -260,8 +266,8 @@ packages:
       '@anvia/durable':
         optional: true
 
-  '@anvia/core@1.19.2':
-    resolution: {integrity: sha512-kzIkjjkQSUYXaIOFqEVNQAAVzrTI9U4PTuKQ0/OciFlPeq+n3cyqXPxKMFal73NZVr3CkwLCvx0isc19OHY6yA==}
+  '@anvia/core@1.20.0':
+    resolution: {integrity: sha512-IrSlXJGuLVm4WmC8XLcy9V9rzWbOiAMHwm2S3Evs6l3vC831AYi7FJvLE0IFuGn6q0tgh8iKq6EGfe2RCw6Sjg==}
     peerDependencies:
       '@valibot/to-json-schema': ^1.8.0
       zod: ^4.6.7
@@ -273,6 +279,13 @@ packages:
     resolution: {integrity: sha512-gQprYXl8cj0pOmjuc9aFZtGlavSepAvGdaO/9Gr1LJfBX7to821py0gz2kSEmlGuubmNPWSOeHJxVQ+V6z/wtw==}
     peerDependencies:
       '@anvia/core': ^1.14.1
+
+  '@anvia/memory-drizzle@1.2.1':
+    resolution: {integrity: sha512-RoeFue4A/KerjD4QwC/QcjgJT7wWHKfQcmffEoTrE2A7nnNDI0O6jlldgbnxhKofFmYC6jYRZaHhOb5zE+MdxQ==}
+    hasBin: true
+    peerDependencies:
+      '@anvia/core': ^1.20.0
+      drizzle-orm: '>=0.45.3 <1.0.0'
 
   '@anvia/openai@1.3.8':
     resolution: {integrity: sha512-G6VPoTvivqIs4Liyso6ESxPiGIfA7FQDaIT3OaOJvjjw5DI84MHryLANmxSJjOHvlGfpadzSBcwjJeK/LHaMyg==}
@@ -4163,32 +4176,37 @@ snapshots:
       - supports-color
       - zod
 
-  '@anvia/anthropic@1.2.2(@anvia/core@1.19.2(zod@4.6.7))(zod@4.6.7)':
+  '@anvia/anthropic@1.2.2(@anvia/core@1.20.0(zod@4.6.7))(zod@4.6.7)':
     dependencies:
       '@anthropic-ai/sdk': 1.10.0(zod@4.6.7)
       '@anthropic-ai/vertex-sdk': 1.1.3(zod@4.6.7)
-      '@anvia/core': 1.19.2(zod@4.6.7)
+      '@anvia/core': 1.20.0(zod@4.6.7)
     transitivePeerDependencies:
       - supports-color
       - zod
 
-  '@anvia/client@1.8.1(@anvia/core@1.19.2(zod@4.6.7))':
+  '@anvia/client@1.8.1(@anvia/core@1.20.0(zod@4.6.7))':
     dependencies:
-      '@anvia/core': 1.19.2(zod@4.6.7)
+      '@anvia/core': 1.20.0(zod@4.6.7)
 
-  '@anvia/core@1.19.2(zod@4.6.7)':
+  '@anvia/core@1.20.0(zod@4.6.7)':
     dependencies:
       yaml: 2.9.1
       zod: 4.6.7
 
-  '@anvia/logger@1.2.1(@anvia/core@1.19.2(zod@4.6.7))':
+  '@anvia/logger@1.2.1(@anvia/core@1.20.0(zod@4.6.7))':
     dependencies:
-      '@anvia/core': 1.19.2(zod@4.6.7)
+      '@anvia/core': 1.20.0(zod@4.6.7)
       pino: 10.4.0
 
-  '@anvia/openai@1.3.8(@anvia/core@1.19.2(zod@4.6.7))(google-auth-library@10.9.1)(zod@4.6.7)':
+  '@anvia/memory-drizzle@1.2.1(@anvia/core@1.20.0(zod@4.6.7))(drizzle-orm@0.45.4(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1))':
     dependencies:
-      '@anvia/core': 1.19.2(zod@4.6.7)
+      '@anvia/core': 1.20.0(zod@4.6.7)
+      drizzle-orm: 0.45.4(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+
+  '@anvia/openai@1.3.8(@anvia/core@1.20.0(zod@4.6.7))(google-auth-library@10.9.1)(zod@4.6.7)':
+    dependencies:
+      '@anvia/core': 1.20.0(zod@4.6.7)
       openai: 7.59.0(google-auth-library@10.9.1)(zod@4.6.7)
     transitivePeerDependencies:
       - '@aws-sdk/credential-provider-node'
@@ -4199,16 +4217,16 @@ snapshots:
       - ws
       - zod
 
-  '@anvia/otel@1.3.2(@anvia/core@1.19.2(zod@4.6.7))':
+  '@anvia/otel@1.3.2(@anvia/core@1.20.0(zod@4.6.7))':
     dependencies:
-      '@anvia/core': 1.19.2(zod@4.6.7)
+      '@anvia/core': 1.20.0(zod@4.6.7)
       '@opentelemetry/api': 1.10.0
       '@opentelemetry/api-logs': 0.223.0
 
-  '@anvia/react-ui@1.3.2(@anvia/client@1.8.1(@anvia/core@1.19.2(zod@4.6.7)))(@anvia/react@1.1.5(@anvia/client@1.8.1(@anvia/core@1.19.2(zod@4.6.7)))(@anvia/core@1.19.2(zod@4.6.7))(react@19.3.1))(@floating-ui/dom@1.8.0)(@tiptap/extensions@3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
+  '@anvia/react-ui@1.3.2(@anvia/client@1.8.1(@anvia/core@1.20.0(zod@4.6.7)))(@anvia/react@1.1.5(@anvia/client@1.8.1(@anvia/core@1.20.0(zod@4.6.7)))(@anvia/core@1.20.0(zod@4.6.7))(react@19.3.1))(@floating-ui/dom@1.8.0)(@tiptap/extensions@3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@anvia/client': 1.8.1(@anvia/core@1.19.2(zod@4.6.7))
-      '@anvia/react': 1.1.5(@anvia/client@1.8.1(@anvia/core@1.19.2(zod@4.6.7)))(@anvia/core@1.19.2(zod@4.6.7))(react@19.3.1)
+      '@anvia/client': 1.8.1(@anvia/core@1.20.0(zod@4.6.7))
+      '@anvia/react': 1.1.5(@anvia/client@1.8.1(@anvia/core@1.20.0(zod@4.6.7)))(@anvia/core@1.20.0(zod@4.6.7))(react@19.3.1)
       '@radix-ui/react-slot': 1.5.0(@types/react@19.3.0)(react@19.3.1)
       '@tiptap/core': 3.34.0(@tiptap/pm@3.34.0)
       '@tiptap/extension-document': 3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))
@@ -4232,10 +4250,10 @@ snapshots:
       - '@types/react-dom'
       - supports-color
 
-  '@anvia/react@1.1.5(@anvia/client@1.8.1(@anvia/core@1.19.2(zod@4.6.7)))(@anvia/core@1.19.2(zod@4.6.7))(react@19.3.1)':
+  '@anvia/react@1.1.5(@anvia/client@1.8.1(@anvia/core@1.20.0(zod@4.6.7)))(@anvia/core@1.20.0(zod@4.6.7))(react@19.3.1)':
     dependencies:
-      '@anvia/client': 1.8.1(@anvia/core@1.19.2(zod@4.6.7))
-      '@anvia/core': 1.19.2(zod@4.6.7)
+      '@anvia/client': 1.8.1(@anvia/core@1.20.0(zod@4.6.7))
+      '@anvia/core': 1.20.0(zod@4.6.7)
       react: 19.3.1
 
   '@babel/code-frame@7.29.7':

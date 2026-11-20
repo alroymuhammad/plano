@@ -12,9 +12,9 @@ Each package is `package.json` + `index.ts` (add files only as needed). Named `@
   - `agents` — `@anvia/core`, `@anvia/openai`, `@anvia/anthropic` (decision 0008), `@tavily/core` (decision 0009)
   - `ui` — `@anvia/react`, `@anvia/react-ui`
   - `observability` — `@anvia/otel`, `@anvia/logger`
-  - `db` — none; uses `drizzle-orm` + `postgres` (see decision 0007)
+  - `db` — `@anvia/memory-drizzle` for agent memory (decision 0011); otherwise `drizzle-orm` + `postgres` (decision 0007)
 - Exception: `ui` is a shadcn package. Code lives in `src/` (managed by the shadcn CLI, excluded from oxfmt/oxlint). Import via deep paths: `@plano/ui/components/<name>`, `@plano/ui/hooks/<name>`, `@plano/ui/lib/utils`, `@plano/ui/globals.css`. Add components with `pnpm dlx shadcn@latest add <name>` from `packages/ui`; don't hand-edit them.
-- Exception: `db` keeps code in `src/` (`client.ts`, `schema.ts`); `src/index.ts` is its only public entry. Migrations go in `drizzle/` (decision 0010).
+- Exception: `db` keeps code in `src/` (`client.ts`, `schema.ts`, `anvia-memory.ts`); `src/index.ts` is its only public entry. Migrations go in `drizzle/` (decision 0010).
 - Exception: `agents` keeps code in `src/` (`core.ts`, `instruction.ts`, `tools/`, `evals/`, `utils/`); `src/index.ts` is its only public entry.
 - Each agent tool lives in `agents/src/tools/<name>/`: `index.ts` defines the tool (name, description, input schema) and calls `service.ts`, which holds the logic and external clients. Register it in `tools/tools.ts`.
 - Packages never import from `apps/*`.
@@ -26,4 +26,4 @@ Each package is `package.json` + `index.ts` (add files only as needed). Named `@
 - Every table is defined in `src/schema.ts`. Never change the database by hand.
 - After changing `src/schema.ts`: `pnpm db:generate`, review the SQL, then `pnpm db:migrate`. Commit the migration with the schema change.
 - Never edit a migration that has been applied; generate a new one.
-- Column names are the TS keys (camelCase), matching better-auth's defaults.
+- Column names are the TS keys (camelCase), matching better-auth's defaults. Exception: the `agent_memory_*` tables re-exported from `@anvia/memory-drizzle` keep its snake_case columns (decision 0011).
