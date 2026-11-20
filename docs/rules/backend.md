@@ -23,4 +23,4 @@ apps/api/src/
 - Throw `HTTPException` for expected errors.
 - Every module has all three files. Don't add more until a file gets unwieldy.
 - Export `AppType` from `src/index.ts` for the web app's typed client.
-- Auth is the exception to modules: better-auth in `src/auth.ts`, mounted at `/auth/*` (decision 0006). Its tables live in `packages/db/schema.ts` (decision 0007).
+- Auth is the exception to modules: better-auth in `src/auth.ts`, mounted at `/auth/*` (decision 0006). Its tables live in `packages/db/src/schema.ts` (decisions 0007, 0010).

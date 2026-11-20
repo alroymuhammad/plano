@@ -1,6 +1,6 @@
 # 0007 — Drizzle on Postgres for `packages/db`
 
-Status: accepted
+Status: superseded by 0010 (file layout)
 Date: 2026-11-19
 
 ## Context
