@@ -1,4 +1,5 @@
 import type { AgentObservabilityOptions } from '@anvia/core/observability'
+import type { PipelineObservabilityOptions } from '@anvia/core/pipeline'
 import { LensClient } from '@anvia/lens'
 import type { LensClientOptions } from '@anvia/lens'
 
@@ -8,5 +9,9 @@ export function createLens(options: LensClientOptions = {}) {
     observers: { lens: client.observer() },
     primaryTrace: 'lens',
   }
-  return { client, observability }
+  const pipelineObservability: PipelineObservabilityOptions = {
+    observers: { lens: client.pipelineObserver() },
+    primaryTrace: 'lens',
+  }
+  return { client, observability, pipelineObservability }
 }
