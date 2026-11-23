@@ -1,6 +1,6 @@
 # 0005 — Document Discovery across sources
 
-Status: accepted
+Status: superseded by 0009
 Date: 2026-11-20
 
 ## Problem

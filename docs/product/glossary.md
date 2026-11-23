@@ -20,8 +20,11 @@ Canonical product terms. Use them in UI, code, and docs, and avoid the listed sy
 ## Documents
 
 - **Library**: an Analyst's own document collection, shared across their sessions. _Avoid_: corpus, knowledge base.
-- **Document Discovery**: finding candidate documents outside the Library, ranked by Source Credibility, and importing them only after confirmation. _Avoid_: crawl, scrape.
-- **Source Credibility**: fixed ranking of origin: Official (JDIH portals, BPK, GISTARU) > Government (other .go.id) > Open Web. Open Web is never verified. _Avoid_: trust score.
+- **Find Documents**: finding candidate documents outside the Library, ranked by Source Credibility, and importing them only after confirmation. Formerly "Document Discovery". See [0009](0009-find-documents-by-jurisdiction-level.md). _Avoid_: Document Discovery, discovery, crawl, scrape.
+- **Documents Result**: the list Find Documents returns, grouped by Jurisdiction Level. _Avoid_: search results, hits.
+- **Document Result**: one item in a Documents Result: short title, description, links, Source Credibility, and Jurisdiction Level. Not in the Library until imported. _Avoid_: candidate, hit.
+- **Jurisdiction Level**: the government level that issued a document: National, Province, or City. For a Surabaya Case, National → Jawa Timur → Surabaya. _Avoid_: tier (reserved for Document Tier), scope.
+- **Source Credibility**: fixed ranking of origin: Official (JDIH portals, BPK, peraturan.go.id) > Government (other .go.id) > Open Web. Open Web is never verified. _Avoid_: trust score.
 - **Document Status**: active, superseded, or revoked. Supersession is proposed only from explicit revoke/amend text, and the Analyst confirms it. _Avoid_: validity.
 - **Recency**: how new a document is (effective date or year). Ranks documents and never marks one superseded on its own. _Avoid_: latest version.
 - **Metadata Card**: the agent-filled, Analyst-confirmed record of a document's type, number and year, Area, period, effective date, status, and amends/supersedes links, each field backed by a quote. _Avoid_: document info.
