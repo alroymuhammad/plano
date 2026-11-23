@@ -30,7 +30,7 @@ const READ_QUERY_INSTRUCTIONS = `You read an Analyst's question about planning a
 - inScope: true when the question asks for development or permit documents (for example izin pembangunan, bangunan gedung, tata ruang) and names Surabaya or no city. Surabaya is the only supported city. False for any other city and for off-topic questions.
 - city and province: "Surabaya" and "Jawa Timur" for an in-scope question. Otherwise the names the question gives.
 - topic: the subject in a few words.
-- documentTypes: the abbreviations of the regulation types the search phrases name, from UU, PP, Perpres, Permen, Perda, Perwali and Pergub. Empty when inScope is false.
+- documentTypes: the abbreviation of each regulation type that the search phrases name: Undang-Undang is UU, Peraturan Pemerintah is PP, Peraturan Presiden is Perpres, Peraturan Menteri is Permen, Peraturan Daerah is Perda, Peraturan Wali Kota is Perwali and Peraturan Gubernur is Pergub. An in-scope question always has at least one. Empty when inScope is false.
 - searchPhrases: one short Indonesian search phrase per level, using official document vocabulary plus the topic. National: Undang-Undang or Peraturan Pemerintah plus the topic. Province: "Peraturan Daerah Jawa Timur" plus one or two title words, such as "bangunan gedung". Leave "izin" and "perizinan" out of the province phrase, because the Jawa Timur index returns nothing for them. City: "Peraturan Wali Kota Surabaya" plus the topic. Use empty strings when inScope is false.
 Return only the fields in the schema.`
 
