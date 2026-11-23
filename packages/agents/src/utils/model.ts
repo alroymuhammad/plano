@@ -1,7 +1,6 @@
 import { AnthropicClient } from '@anvia/anthropic'
 import { OpenAIClient } from '@anvia/openai'
-
-export type Provider = 'openai' | 'anthropic'
+import type { Provider } from '../types'
 
 export const DEFAULT_MODEL = 'deepseek-v4.1-flash-1017'
 export const DEFAULT_ANTHROPIC_MODEL = 'claude-haiku-5-5'

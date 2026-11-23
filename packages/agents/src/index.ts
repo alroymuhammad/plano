@@ -1,2 +1,2 @@
-export { runAgent, type RunAgentOptions } from './core'
-export type { Provider } from './utils/model'
+export { runAgent } from './core'
+export type { Provider, RunAgentOptions } from './types'

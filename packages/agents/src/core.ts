@@ -1,15 +1,8 @@
-import { Agent, type AgentPrompt, type MemoryScope, type MemoryStore } from '@anvia/core'
+import { Agent } from '@anvia/core'
 import { BASE_INSTRUCTION } from './instruction'
 import { tools } from './tools/tools'
-import { getModel, type Provider } from './utils/model'
-
-export type RunAgentOptions = {
-  prompt: AgentPrompt
-  provider?: Provider
-  modelId?: string
-  memory?: MemoryStore
-  session?: MemoryScope
-}
+import type { RunAgentOptions } from './types'
+import { getModel } from './utils/model'
 
 export function runAgent({ prompt, provider, modelId, memory, session }: RunAgentOptions) {
   const agent = new Agent({
