@@ -4,8 +4,11 @@ let client: TavilyClient | undefined
 
 function getClient() {
   if (client) return client
+
   const apiKey = process.env.TAVILY_API_KEY
+
   if (!apiKey) throw new Error('Set TAVILY_API_KEY before using web search')
+
   client = tavily({ apiKey })
   return client
 }

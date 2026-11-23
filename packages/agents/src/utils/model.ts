@@ -7,7 +7,9 @@ export const DEFAULT_ANTHROPIC_MODEL = 'claude-haiku-5-5'
 
 function requireEnv(name: string) {
   const value = process.env[name]
+
   if (!value) throw new Error(`Set ${name} before running an agent`)
+
   return value
 }
 

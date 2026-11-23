@@ -30,7 +30,9 @@ function SignIn() {
       password: String(form.get('password')),
     })
     setPending(false)
+
     if (error) return setError(error.message)
+
     navigate({ to: '/' })
   }
 
