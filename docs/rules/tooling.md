@@ -1,12 +1,12 @@
 # Tooling
 
 - Package manager: pnpm only. Add deps with `pnpm --filter <name> add`, root tooling with `pnpm add -Dw`.
-- `pnpm lint` — oxlint. Must pass.
-- `pnpm format` — oxfmt (writes files). Run before committing.
+- `pnpm lint` — oxlint. Must pass. Custom rules live in the local plugin `tooling/oxlint/plano.mjs` (decision 0012).
+- `pnpm format` — `oxlint --fix`, then oxfmt (writes files). Run before committing.
 - `pnpm build` — builds/typechecks all apps. Must pass.
 - Dev: `docker compose up -d`, `pnpm db:migrate`, then `pnpm dev:api`, `pnpm dev:platform`.
 - DB: `pnpm db:generate` (migration from schema), `pnpm db:migrate` (apply).
-- Style: no semicolons, single quotes. Match surrounding code.
+- Style: no semicolons, single quotes, a blank line before and after every `if` (decision 0012). Match surrounding code.
 
 ## Commits
 

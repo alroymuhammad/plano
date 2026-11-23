@@ -8,7 +8,7 @@
     "db:migrate": "pnpm --filter @plano/db migrate",
     "build": "pnpm -r build",
     "lint": "oxlint",
-    "format": "oxfmt"
+    "format": "oxlint --fix && oxfmt"
   },
   "devDependencies": {
     "oxfmt": "^0.79.0",

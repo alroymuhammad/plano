@@ -1,8 +1,12 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": ["typescript", "react", "import"],
+  "jsPlugins": ["./tooling/oxlint/plano.mjs"],
   "categories": {
     "correctness": "error"
+  },
+  "rules": {
+    "plano/padding-around-if": "error"
   },
   "ignorePatterns": ["**/dist", "**/routeTree.gen.ts", "packages/ui/src", "packages/db/migrations"]
 }

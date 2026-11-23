@@ -9,6 +9,7 @@ packages/agents     Anvia agents
 packages/ui         shared UI
 packages/observability  logging / tracing
 packages/db         persistence
+tooling/            repo tooling (oxlint plugin)
 ```
 
 ## Rules
