@@ -6,7 +6,7 @@
 - `pnpm build` — builds/typechecks all apps. Must pass.
 - Dev: `docker compose up -d`, `pnpm db:migrate`, then `pnpm dev:api`, `pnpm dev:platform`.
 - DB: `pnpm db:generate` (migration from schema), `pnpm db:migrate` (apply).
-- Style: no semicolons, single quotes, a blank line before and after every `if` (decision 0012). Match surrounding code.
+- Style: no semicolons, single quotes, a blank line before and after every `if` (decision 0012), no nested ternaries, no conditional spread (`...(x && {...})`, `...(x ? a : b)`); use an `if` instead. Lint enforces all three. Match surrounding code.
 
 ## Commits
 

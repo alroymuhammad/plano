@@ -44,7 +44,28 @@ const paddingAroundIf = {
   },
 }
 
+const noConditionalSpread = {
+  meta: {
+    type: 'suggestion',
+    messages: { conditional: 'Avoid conditional spread. Build the value with an if statement.' },
+  },
+  create(context) {
+    function check(node) {
+      const arg = node.argument
+
+      if (
+        arg.type === 'ConditionalExpression' ||
+        (arg.type === 'LogicalExpression' && arg.operator === '&&')
+      ) {
+        context.report({ node, messageId: 'conditional' })
+      }
+    }
+
+    return { SpreadElement: check, JSXSpreadAttribute: check }
+  },
+}
+
 export default {
   meta: { name: 'plano' },
-  rules: { 'padding-around-if': paddingAroundIf },
+  rules: { 'padding-around-if': paddingAroundIf, 'no-conditional-spread': noConditionalSpread },
 }
