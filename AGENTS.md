@@ -25,3 +25,17 @@ Constraints for anyone (human or agent) changing this repo. Details live in `doc
 
 - `pnpm format`, `pnpm lint`, and `pnpm build` must pass.
 - State what you verified and what you didn't.
+
+## Agent skills
+
+### Issue tracker
+
+GitHub Issues on `alroymuhammad/plano`, via `gh`, with sub-issues and native blocked-by links. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default labels: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: glossary in `docs/product/glossary.md`, decisions in `docs/decision/` and `docs/product/`. See `docs/agents/domain.md`.
