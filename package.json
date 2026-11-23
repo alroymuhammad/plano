@@ -6,6 +6,8 @@
     "dev:platform": "pnpm --filter platform dev",
     "db:generate": "pnpm --filter @plano/db generate",
     "db:migrate": "pnpm --filter @plano/db migrate",
+    "lens:up": "docker compose -f lens/docker-compose.yml up -d",
+    "lens:down": "docker compose -f lens/docker-compose.yml down",
     "build": "pnpm -r build",
     "lint": "oxlint",
     "format": "oxlint --fix && oxfmt"

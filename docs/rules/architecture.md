@@ -10,6 +10,7 @@ packages/ui         shared UI
 packages/observability  logging / tracing
 packages/db         persistence
 tooling/            repo tooling (oxlint plugin)
+lens/               self-hosted Anvia Lens (docker compose)
 ```
 
 ## Rules

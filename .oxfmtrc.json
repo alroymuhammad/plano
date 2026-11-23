@@ -8,6 +8,7 @@
     "packages/db/migrations",
     "pnpm-lock.yaml",
     "packages/ui/src",
-    "packages/ui/components.json"
+    "packages/ui/components.json",
+    "lens/docker-compose.yml"
   ]
 }
