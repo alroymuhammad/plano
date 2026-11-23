@@ -1,2 +1,10 @@
+export { findDocuments } from './find-documents'
 export { runAgent } from './core'
-export type { Provider, RunAgentOptions } from './types'
+export type {
+  DocumentResult,
+  DocumentsResult,
+  JurisdictionLevel,
+  Provider,
+  RunAgentOptions,
+  SourceCredibility,
+} from './types'
