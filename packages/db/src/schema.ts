@@ -1,7 +1,5 @@
 import { boolean, index, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
 
-// Auth tables, shaped for better-auth's drizzle adapter.
-
 export const user = pgTable('user', {
   id: text().primaryKey(),
   name: text().notNull(),
@@ -64,7 +62,6 @@ export const verification = pgTable(
   (t) => [index('verification_identifier_idx').on(t.identifier)],
 )
 
-// Agent memory tables, owned by @anvia/memory-drizzle (decision 0011).
 export {
   agentMemoryErrors,
   agentMemoryMessages,

@@ -3,7 +3,6 @@ import { OpenAIClient } from '@anvia/openai'
 
 export type Provider = 'openai' | 'anthropic'
 
-// Cheapest working model on the gateway.
 export const DEFAULT_MODEL = 'deepseek-v4.1-flash-1017'
 export const DEFAULT_ANTHROPIC_MODEL = 'claude-haiku-5-5'
 
@@ -13,7 +12,6 @@ function requireEnv(name: string) {
   return value
 }
 
-// Both providers default to the Devscale gateway (OpenAI-compatible).
 export function getModel(provider: Provider = 'openai', modelId?: string) {
   if (provider === 'anthropic') {
     const client = new AnthropicClient({

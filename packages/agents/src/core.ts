@@ -7,7 +7,6 @@ export type RunAgentOptions = {
   prompt: AgentPrompt
   provider?: Provider
   modelId?: string
-  // Pass both to persist the conversation across runs.
   memory?: MemoryStore
   session?: MemoryScope
 }

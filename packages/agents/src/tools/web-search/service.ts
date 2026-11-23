@@ -2,7 +2,6 @@ import { tavily, type TavilyClient } from '@tavily/core'
 
 let client: TavilyClient | undefined
 
-// Created on first use so importing the package doesn't require the key.
 function getClient() {
   if (client) return client
   const apiKey = process.env.TAVILY_API_KEY
