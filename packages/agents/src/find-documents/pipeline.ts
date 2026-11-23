@@ -1,7 +1,12 @@
 import { Pipeline, type PipelineObservabilityOptions } from '@anvia/core/pipeline'
 import { z } from 'zod'
 import { getClient } from '../tools/web-search/service'
-import type { DocumentResult, DocumentsResult, JurisdictionLevel } from '../types'
+import type {
+  DocumentResult,
+  DocumentsResult,
+  JurisdictionLevel,
+  QueryUnderstanding,
+} from '../types'
 import { getModel } from '../utils/model'
 import { credibilityOf, LEVELS, SOURCE_DOMAINS } from './source-map'
 
@@ -11,9 +16,10 @@ const OUT_OF_SCOPE_REPLY =
 const QuerySchema = z.object({
   inScope: z.boolean(),
   topic: z.string(),
+  documentTypes: z.array(z.string()),
   city: z.string(),
   province: z.string(),
-  phrases: z.object({
+  searchPhrases: z.object({
     national: z.string(),
     province: z.string(),
     city: z.string(),
@@ -24,7 +30,8 @@ const READ_QUERY_INSTRUCTIONS = `You read an Analyst's question about planning a
 - inScope: true when the question asks for development or permit documents (for example izin pembangunan, bangunan gedung, tata ruang) and names Surabaya or no city. Surabaya is the only supported city. False for any other city and for off-topic questions.
 - city and province: "Surabaya" and "Jawa Timur" for an in-scope question. Otherwise the names the question gives.
 - topic: the subject in a few words.
-- phrases: one short Indonesian search phrase per level, using official document vocabulary plus the topic. National: Undang-Undang or Peraturan Pemerintah plus the topic. Province: "Peraturan Daerah Jawa Timur" plus one or two title words, such as "bangunan gedung". Leave "izin" and "perizinan" out of the province phrase, because the Jawa Timur index returns nothing for them. City: "Peraturan Wali Kota Surabaya" plus the topic. Use empty strings when inScope is false.
+- documentTypes: the abbreviations of the regulation types the search phrases name, from UU, PP, Perpres, Permen, Perda, Perwali and Pergub. Empty when inScope is false.
+- searchPhrases: one short Indonesian search phrase per level, using official document vocabulary plus the topic. National: Undang-Undang or Peraturan Pemerintah plus the topic. Province: "Peraturan Daerah Jawa Timur" plus one or two title words, such as "bangunan gedung". Leave "izin" and "perizinan" out of the province phrase, because the Jawa Timur index returns nothing for them. City: "Peraturan Wali Kota Surabaya" plus the topic. Use empty strings when inScope is false.
 Return only the fields in the schema.`
 
 const DOC_TYPES: Array<[RegExp, string]> = [
@@ -55,7 +62,7 @@ function searchLevel(level: JurisdictionLevel) {
     run: async ({ input }): Promise<LevelResults> => {
       if (!input.inScope) return null
 
-      const response = await getClient().search(input.phrases[level], {
+      const response = await getClient().search(input.searchPhrases[level], {
         searchDepth: 'basic',
         maxResults: 5,
         includeDomains: SOURCE_DOMAINS[level],
@@ -74,10 +81,24 @@ function searchLevel(level: JurisdictionLevel) {
   })
 }
 
-function groupLevels(outputs: Record<JurisdictionLevel, LevelResults>): DocumentsResult {
+function understandingBranch() {
+  return new Pipeline({
+    id: 'find-documents-understanding',
+    name: 'Find Documents: understanding',
+    inputSchema: QuerySchema,
+  }).step({
+    id: 'understanding',
+    run: ({ input }) => input,
+  })
+}
+
+function groupLevels(
+  outputs: Record<JurisdictionLevel, LevelResults> & { understanding: QueryUnderstanding },
+): DocumentsResult {
+  const { understanding } = outputs
   const skipped = LEVELS.every((level) => outputs[level] === null)
 
-  if (skipped) return { status: 'out_of_scope', reply: OUT_OF_SCOPE_REPLY }
+  if (skipped) return { status: 'out_of_scope', reply: OUT_OF_SCOPE_REPLY, understanding }
 
   return {
     status: 'found',
@@ -86,6 +107,7 @@ function groupLevels(outputs: Record<JurisdictionLevel, LevelResults>): Document
       province: outputs.province ?? [],
       city: outputs.city ?? [],
     },
+    understanding,
   }
 }
 
@@ -111,6 +133,7 @@ export function createFindDocumentsPipeline(
         national: searchLevel('national'),
         province: searchLevel('province'),
         city: searchLevel('city'),
+        understanding: understandingBranch(),
       },
     })
     .step({

@@ -5,6 +5,7 @@ export type {
   DocumentsResult,
   JurisdictionLevel,
   Provider,
+  QueryUnderstanding,
   RunAgentOptions,
   SourceCredibility,
 } from './types'

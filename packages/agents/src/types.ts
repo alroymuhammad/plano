@@ -25,12 +25,23 @@ export type DocumentResult = {
   docType: string
 }
 
+export type QueryUnderstanding = {
+  topic: string
+  documentTypes: string[]
+  city: string
+  province: string
+  inScope: boolean
+  searchPhrases: Record<JurisdictionLevel, string>
+}
+
 export type DocumentsResult =
   | {
       status: 'out_of_scope'
       reply: string
+      understanding: QueryUnderstanding
     }
   | {
       status: 'found'
       levels: Record<JurisdictionLevel, DocumentResult[]>
+      understanding: QueryUnderstanding
     }
