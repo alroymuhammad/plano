@@ -2,7 +2,7 @@ import { tavily, type TavilyClient } from '@tavily/core'
 
 let client: TavilyClient | undefined
 
-function getClient() {
+export function getClient() {
   if (client) return client
 
   const apiKey = process.env.TAVILY_API_KEY
