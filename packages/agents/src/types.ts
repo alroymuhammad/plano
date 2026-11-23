@@ -1,4 +1,5 @@
 import type { AgentPrompt, MemoryScope, MemoryStore } from '@anvia/core'
+import type { AgentObservabilityOptions } from '@anvia/core/observability'
 
 export type Provider = 'openai' | 'anthropic'
 
@@ -8,4 +9,5 @@ export type RunAgentOptions = {
   modelId?: string
   memory?: MemoryStore
   session?: MemoryScope
+  observability?: AgentObservabilityOptions
 }

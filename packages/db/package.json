@@ -10,7 +10,7 @@
     "migrate": "drizzle-kit migrate"
   },
   "dependencies": {
-    "@anvia/core": "^1.20.0",
+    "@anvia/core": "^1.21.0",
     "@anvia/memory-drizzle": "^1.2.1",
     "drizzle-orm": "^0.45.4",
     "postgres": "^4.1.1"

@@ -95,13 +95,13 @@ importers:
     dependencies:
       '@anvia/anthropic':
         specifier: ^1.2.2
-        version: 1.2.2(@anvia/core@1.20.0(zod@4.6.7))(zod@4.6.7)
+        version: 1.2.2(@anvia/core@1.21.0(zod@4.6.7))(zod@4.6.7)
       '@anvia/core':
-        specifier: ^1.20.0
-        version: 1.20.0(zod@4.6.7)
+        specifier: ^1.21.0
+        version: 1.21.0(zod@4.6.7)
       '@anvia/openai':
         specifier: ^1.3.8
-        version: 1.3.8(@anvia/core@1.20.0(zod@4.6.7))(google-auth-library@10.9.1)(zod@4.6.7)
+        version: 1.3.8(@anvia/core@1.21.0(zod@4.6.7))(google-auth-library@10.9.1)(zod@4.6.7)
       '@tavily/core':
         specifier: ^1.1.0
         version: 1.1.0(debug@4.4.3)(zod@4.6.7)
@@ -119,11 +119,11 @@ importers:
   packages/db:
     dependencies:
       '@anvia/core':
-        specifier: ^1.20.0
-        version: 1.20.0(zod@4.6.7)
+        specifier: ^1.21.0
+        version: 1.21.0(zod@4.6.7)
       '@anvia/memory-drizzle':
         specifier: ^1.2.1
-        version: 1.2.1(@anvia/core@1.20.0(zod@4.6.7))(drizzle-orm@0.45.4(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1))
+        version: 1.2.1(@anvia/core@1.21.0(zod@4.6.7))(drizzle-orm@0.45.4(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1))
       drizzle-orm:
         specifier: ^0.45.4
         version: 0.45.4(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
@@ -137,21 +137,27 @@ importers:
 
   packages/observability:
     dependencies:
+      '@anvia/core':
+        specifier: ^1.21.0
+        version: 1.21.0(zod@4.6.7)
+      '@anvia/lens':
+        specifier: ^1.3.0
+        version: 1.3.0(@anvia/core@1.21.0(zod@4.6.7))
       '@anvia/logger':
         specifier: ^1.2.1
-        version: 1.2.1(@anvia/core@1.20.0(zod@4.6.7))
+        version: 1.2.1(@anvia/core@1.21.0(zod@4.6.7))
       '@anvia/otel':
         specifier: ^1.3.2
-        version: 1.3.2(@anvia/core@1.20.0(zod@4.6.7))
+        version: 1.3.2(@anvia/core@1.21.0(zod@4.6.7))
 
   packages/ui:
     dependencies:
       '@anvia/react':
         specifier: ^1.1.5
-        version: 1.1.5(@anvia/client@1.8.1(@anvia/core@1.20.0(zod@4.6.7)))(@anvia/core@1.20.0(zod@4.6.7))(react@19.3.1)
+        version: 1.1.5(@anvia/client@1.8.1(@anvia/core@1.21.0(zod@4.6.7)))(@anvia/core@1.21.0(zod@4.6.7))(react@19.3.1)
       '@anvia/react-ui':
         specifier: ^1.3.2
-        version: 1.3.2(@anvia/client@1.8.1(@anvia/core@1.20.0(zod@4.6.7)))(@anvia/react@1.1.5(@anvia/client@1.8.1(@anvia/core@1.20.0(zod@4.6.7)))(@anvia/core@1.20.0(zod@4.6.7))(react@19.3.1))(@floating-ui/dom@1.8.0)(@tiptap/extensions@3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        version: 1.3.2(@anvia/client@1.8.1(@anvia/core@1.21.0(zod@4.6.7)))(@anvia/react@1.1.5(@anvia/client@1.8.1(@anvia/core@1.21.0(zod@4.6.7)))(@anvia/core@1.21.0(zod@4.6.7))(react@19.3.1))(@floating-ui/dom@1.8.0)(@tiptap/extensions@3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@base-ui/react':
         specifier: ^1.9.0
         version: 1.9.0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -266,14 +272,20 @@ packages:
       '@anvia/durable':
         optional: true
 
-  '@anvia/core@1.20.0':
-    resolution: {integrity: sha512-IrSlXJGuLVm4WmC8XLcy9V9rzWbOiAMHwm2S3Evs6l3vC831AYi7FJvLE0IFuGn6q0tgh8iKq6EGfe2RCw6Sjg==}
+  '@anvia/core@1.21.0':
+    resolution: {integrity: sha512-QzrmQDpIC/kDzhyoKZzBlAtrhVxj2v83USnVr4IooXjgM/iBHDzJToK2k7zyAi2zzFFl8BKddoxjKLPyY/pfog==}
     peerDependencies:
       '@valibot/to-json-schema': ^1.8.0
       zod: ^4.6.7
     peerDependenciesMeta:
       '@valibot/to-json-schema':
         optional: true
+
+  '@anvia/lens@1.3.0':
+    resolution: {integrity: sha512-zNL3Gj9m3tzzPkRfd2zwR4rvy1ro5/LdOhdTuJXnxm3L5jOBDhVnv1e3vnsKIIWFvpRhtuytGp0LskNCbOxLMw==}
+    engines: {node: '>=24'}
+    peerDependencies:
+      '@anvia/core': ^1.21.0
 
   '@anvia/logger@1.2.1':
     resolution: {integrity: sha512-gQprYXl8cj0pOmjuc9aFZtGlavSepAvGdaO/9Gr1LJfBX7to821py0gz2kSEmlGuubmNPWSOeHJxVQ+V6z/wtw==}
@@ -296,6 +308,11 @@ packages:
     resolution: {integrity: sha512-OCe1JpznorsrHuub8Y4sEw+90kDilY3ihxhcQakR2zKkpwkpYFUjn9sE9sHJjbN6N4dsl7QHRsUZ84QPcLnkUg==}
     peerDependencies:
       '@anvia/core': ^1.18.0
+
+  '@anvia/otel@1.4.0':
+    resolution: {integrity: sha512-YsK4hPzS8J4GQ1aolSGUTjKbx3mAiAyKxCUB9W25VFGKv73PNkfs3uSXRXOq06oxYTUZccDUE2Yq8ib50xQ74w==}
+    peerDependencies:
+      '@anvia/core': ^1.21.0
 
   '@anvia/react-ui@1.3.2':
     resolution: {integrity: sha512-7DtfIr6JhjIhCdOmj5BPG9gRnJ+Vi17Ghn0gDHfkeXc/kEO4u4ZZMyxJ7LgKODf3xCW4/uoFUbckjv8EzgLA8Q==}
@@ -1113,6 +1130,64 @@ packages:
   '@opentelemetry/api@1.10.0':
     resolution: {integrity: sha512-lMkyes8iHrG+mk6WH7X70MdCLI2RS0FwNBY1PyQ8UemaijE2m5mv5A0Niy3HtbYTFrgkUEQjFMXmSAk2hQDuPQ==}
     engines: {node: '>=8.0.0'}
+
+  '@opentelemetry/core@3.1.1':
+    resolution: {integrity: sha512-6wc9r0zrTsAVOd/5UrZBsrHhXWNfwisolgWxd8o3Eu1HKIz8cAxQjOdGrrJB406ceFiGV+ckTcLdXzB+y/QVTA==}
+    engines: {node: '>=22.15.0'}
+    peerDependencies:
+      '@opentelemetry/api': '>=1.10.0 <1.11.0'
+
+  '@opentelemetry/exporter-logs-otlp-http@0.301.2':
+    resolution: {integrity: sha512-l3K1Fp2qaxAS8wKPyjVm7/QfnvJXZZfPuGXa+AYzNeoOk6qxcZwWZhLe9SYemWxDrtPTl3Mj82diLgVzbz54Hw==}
+    engines: {node: '>=22.15.0'}
+    peerDependencies:
+      '@opentelemetry/api': ^1.10.0
+
+  '@opentelemetry/exporter-trace-otlp-http@0.301.2':
+    resolution: {integrity: sha512-mGyy0Jv/jgEnVdLME6SyxzPJgZml2vIZAJTF1/SKoM8baqDFsQSeFQ15vjo3qDxTOnbf04t2Y62oofsUy0ETDw==}
+    engines: {node: '>=22.15.0'}
+    peerDependencies:
+      '@opentelemetry/api': ^1.10.0
+
+  '@opentelemetry/otlp-exporter-base@0.301.2':
+    resolution: {integrity: sha512-XlC8Mqeqk5vY9/jXU2No4tAPDO4g7d3QqgxznctJrM1wzF/xKUiBvQwlQguGL98nEBweq2NCkXMGj4QIGSpplg==}
+    engines: {node: '>=22.15.0'}
+    peerDependencies:
+      '@opentelemetry/api': ^1.10.0
+
+  '@opentelemetry/otlp-transformer@0.301.2':
+    resolution: {integrity: sha512-Ap4MhVvrta1YAXoLKLdX9KuEy8zfupMRaDmbOFm0afxPqe56dAo2cCe52TDN6t175E6i4hnrBMzDXpnDR843eg==}
+    engines: {node: '>=22.15.0'}
+    peerDependencies:
+      '@opentelemetry/api': '>=1.10.0 <1.11.0'
+
+  '@opentelemetry/resources@3.1.1':
+    resolution: {integrity: sha512-dSd0FI1rfl+WHeaZxCTCEvwv6vcmUqkOHHTGWMkmyHg+PyL/wLbCqgsGKgI0wOwT0KGy9IMPAvY85hT8IPwApA==}
+    engines: {node: '>=22.15.0'}
+    peerDependencies:
+      '@opentelemetry/api': '>=1.10.0 <1.11.0'
+
+  '@opentelemetry/sdk-logs@3.1.1':
+    resolution: {integrity: sha512-Z2V826tjNXRaCP7EtaJGzNuk16o8rq8OWnYBS60tfCkGyUv3Eugrz3GIj7AiXb5MAyeeOR2PJ9EC8WjeGeAgbg==}
+    engines: {node: '>=22.15.0'}
+    peerDependencies:
+      '@opentelemetry/api': '>=1.10.0 <1.11.0'
+
+  '@opentelemetry/sdk-metrics@3.1.1':
+    resolution: {integrity: sha512-QBDkERTMERMxwtH7hHbE6esoo+5Tdb79MtF9lMh1EIFlij39prkSEWlfSD2flUGGv15b0GQ1X2jj/JqG9gQBTw==}
+    engines: {node: '>=22.15.0'}
+    peerDependencies:
+      '@opentelemetry/api': '>=1.10.0 <1.11.0'
+
+  '@opentelemetry/sdk-trace@3.1.1':
+    resolution: {integrity: sha512-DJZXZJu1H3kek9Kh9SqJ46yN3faiNiabnqkEtl9eVnBvs4KuK+ynmk9jOyB0NfWAXWGZlTivCf46uwiXyr2PGA==}
+    engines: {node: '>=22.15.0'}
+    peerDependencies:
+      '@opentelemetry/api': '>=1.10.0 <1.11.0'
+
+  '@opentelemetry/semantic-conventions@1.45.0':
+    resolution: {integrity: sha512-aOP45mbcOKbQVvFWfQmgoOPT8R2iwbbbgl83k4CujGV9BrJhFr3qG55MFpwFs4YLabpuW3HhzUY9eQxPlDqaZw==}
+    engines: {node: '>=14'}
 
   '@oxc-project/types@0.156.0':
     resolution: {integrity: sha512-1Duyg48TdJNdyhEB8Xn1L36bT9Pv6GUtlKjHxOys8xkaF/rQq3XJE+bAurSK/AgIz5mGFsb77cn9Pb20+WCScw==}
@@ -4176,37 +4251,48 @@ snapshots:
       - supports-color
       - zod
 
-  '@anvia/anthropic@1.2.2(@anvia/core@1.20.0(zod@4.6.7))(zod@4.6.7)':
+  '@anvia/anthropic@1.2.2(@anvia/core@1.21.0(zod@4.6.7))(zod@4.6.7)':
     dependencies:
       '@anthropic-ai/sdk': 1.10.0(zod@4.6.7)
       '@anthropic-ai/vertex-sdk': 1.1.3(zod@4.6.7)
-      '@anvia/core': 1.20.0(zod@4.6.7)
+      '@anvia/core': 1.21.0(zod@4.6.7)
     transitivePeerDependencies:
       - supports-color
       - zod
 
-  '@anvia/client@1.8.1(@anvia/core@1.20.0(zod@4.6.7))':
+  '@anvia/client@1.8.1(@anvia/core@1.21.0(zod@4.6.7))':
     dependencies:
-      '@anvia/core': 1.20.0(zod@4.6.7)
+      '@anvia/core': 1.21.0(zod@4.6.7)
 
-  '@anvia/core@1.20.0(zod@4.6.7)':
+  '@anvia/core@1.21.0(zod@4.6.7)':
     dependencies:
       yaml: 2.9.1
       zod: 4.6.7
 
-  '@anvia/logger@1.2.1(@anvia/core@1.20.0(zod@4.6.7))':
+  '@anvia/lens@1.3.0(@anvia/core@1.21.0(zod@4.6.7))':
     dependencies:
-      '@anvia/core': 1.20.0(zod@4.6.7)
+      '@anvia/core': 1.21.0(zod@4.6.7)
+      '@anvia/otel': 1.4.0(@anvia/core@1.21.0(zod@4.6.7))
+      '@opentelemetry/api': 1.10.0
+      '@opentelemetry/exporter-logs-otlp-http': 0.301.2(@opentelemetry/api@1.10.0)
+      '@opentelemetry/exporter-trace-otlp-http': 0.301.2(@opentelemetry/api@1.10.0)
+      '@opentelemetry/resources': 3.1.1(@opentelemetry/api@1.10.0)
+      '@opentelemetry/sdk-logs': 3.1.1(@opentelemetry/api@1.10.0)
+      '@opentelemetry/sdk-trace': 3.1.1(@opentelemetry/api@1.10.0)
+
+  '@anvia/logger@1.2.1(@anvia/core@1.21.0(zod@4.6.7))':
+    dependencies:
+      '@anvia/core': 1.21.0(zod@4.6.7)
       pino: 10.4.0
 
-  '@anvia/memory-drizzle@1.2.1(@anvia/core@1.20.0(zod@4.6.7))(drizzle-orm@0.45.4(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1))':
+  '@anvia/memory-drizzle@1.2.1(@anvia/core@1.21.0(zod@4.6.7))(drizzle-orm@0.45.4(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1))':
     dependencies:
-      '@anvia/core': 1.20.0(zod@4.6.7)
+      '@anvia/core': 1.21.0(zod@4.6.7)
       drizzle-orm: 0.45.4(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
 
-  '@anvia/openai@1.3.8(@anvia/core@1.20.0(zod@4.6.7))(google-auth-library@10.9.1)(zod@4.6.7)':
+  '@anvia/openai@1.3.8(@anvia/core@1.21.0(zod@4.6.7))(google-auth-library@10.9.1)(zod@4.6.7)':
     dependencies:
-      '@anvia/core': 1.20.0(zod@4.6.7)
+      '@anvia/core': 1.21.0(zod@4.6.7)
       openai: 7.59.0(google-auth-library@10.9.1)(zod@4.6.7)
     transitivePeerDependencies:
       - '@aws-sdk/credential-provider-node'
@@ -4217,16 +4303,21 @@ snapshots:
       - ws
       - zod
 
-  '@anvia/otel@1.3.2(@anvia/core@1.20.0(zod@4.6.7))':
+  '@anvia/otel@1.3.2(@anvia/core@1.21.0(zod@4.6.7))':
     dependencies:
-      '@anvia/core': 1.20.0(zod@4.6.7)
+      '@anvia/core': 1.21.0(zod@4.6.7)
       '@opentelemetry/api': 1.10.0
       '@opentelemetry/api-logs': 0.223.0
 
-  '@anvia/react-ui@1.3.2(@anvia/client@1.8.1(@anvia/core@1.20.0(zod@4.6.7)))(@anvia/react@1.1.5(@anvia/client@1.8.1(@anvia/core@1.20.0(zod@4.6.7)))(@anvia/core@1.20.0(zod@4.6.7))(react@19.3.1))(@floating-ui/dom@1.8.0)(@tiptap/extensions@3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
+  '@anvia/otel@1.4.0(@anvia/core@1.21.0(zod@4.6.7))':
     dependencies:
-      '@anvia/client': 1.8.1(@anvia/core@1.20.0(zod@4.6.7))
-      '@anvia/react': 1.1.5(@anvia/client@1.8.1(@anvia/core@1.20.0(zod@4.6.7)))(@anvia/core@1.20.0(zod@4.6.7))(react@19.3.1)
+      '@anvia/core': 1.21.0(zod@4.6.7)
+      '@opentelemetry/api': 1.10.0
+
+  '@anvia/react-ui@1.3.2(@anvia/client@1.8.1(@anvia/core@1.21.0(zod@4.6.7)))(@anvia/react@1.1.5(@anvia/client@1.8.1(@anvia/core@1.21.0(zod@4.6.7)))(@anvia/core@1.21.0(zod@4.6.7))(react@19.3.1))(@floating-ui/dom@1.8.0)(@tiptap/extensions@3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
+    dependencies:
+      '@anvia/client': 1.8.1(@anvia/core@1.21.0(zod@4.6.7))
+      '@anvia/react': 1.1.5(@anvia/client@1.8.1(@anvia/core@1.21.0(zod@4.6.7)))(@anvia/core@1.21.0(zod@4.6.7))(react@19.3.1)
       '@radix-ui/react-slot': 1.5.0(@types/react@19.3.0)(react@19.3.1)
       '@tiptap/core': 3.34.0(@tiptap/pm@3.34.0)
       '@tiptap/extension-document': 3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))
@@ -4250,10 +4341,10 @@ snapshots:
       - '@types/react-dom'
       - supports-color
 
-  '@anvia/react@1.1.5(@anvia/client@1.8.1(@anvia/core@1.20.0(zod@4.6.7)))(@anvia/core@1.20.0(zod@4.6.7))(react@19.3.1)':
+  '@anvia/react@1.1.5(@anvia/client@1.8.1(@anvia/core@1.21.0(zod@4.6.7)))(@anvia/core@1.21.0(zod@4.6.7))(react@19.3.1)':
     dependencies:
-      '@anvia/client': 1.8.1(@anvia/core@1.20.0(zod@4.6.7))
-      '@anvia/core': 1.20.0(zod@4.6.7)
+      '@anvia/client': 1.8.1(@anvia/core@1.21.0(zod@4.6.7))
+      '@anvia/core': 1.21.0(zod@4.6.7)
       react: 19.3.1
 
   '@babel/code-frame@7.29.7':
@@ -4760,6 +4851,68 @@ snapshots:
       '@opentelemetry/api': 1.10.0
 
   '@opentelemetry/api@1.10.0': {}
+
+  '@opentelemetry/core@3.1.1(@opentelemetry/api@1.10.0)':
+    dependencies:
+      '@opentelemetry/api': 1.10.0
+      '@opentelemetry/semantic-conventions': 1.45.0
+
+  '@opentelemetry/exporter-logs-otlp-http@0.301.2(@opentelemetry/api@1.10.0)':
+    dependencies:
+      '@opentelemetry/api': 1.10.0
+      '@opentelemetry/otlp-exporter-base': 0.301.2(@opentelemetry/api@1.10.0)
+      '@opentelemetry/otlp-transformer': 0.301.2(@opentelemetry/api@1.10.0)
+      '@opentelemetry/sdk-logs': 3.1.1(@opentelemetry/api@1.10.0)
+
+  '@opentelemetry/exporter-trace-otlp-http@0.301.2(@opentelemetry/api@1.10.0)':
+    dependencies:
+      '@opentelemetry/api': 1.10.0
+      '@opentelemetry/otlp-exporter-base': 0.301.2(@opentelemetry/api@1.10.0)
+      '@opentelemetry/otlp-transformer': 0.301.2(@opentelemetry/api@1.10.0)
+      '@opentelemetry/sdk-trace': 3.1.1(@opentelemetry/api@1.10.0)
+
+  '@opentelemetry/otlp-exporter-base@0.301.2(@opentelemetry/api@1.10.0)':
+    dependencies:
+      '@opentelemetry/api': 1.10.0
+      '@opentelemetry/core': 3.1.1(@opentelemetry/api@1.10.0)
+      '@opentelemetry/otlp-transformer': 0.301.2(@opentelemetry/api@1.10.0)
+
+  '@opentelemetry/otlp-transformer@0.301.2(@opentelemetry/api@1.10.0)':
+    dependencies:
+      '@opentelemetry/api': 1.10.0
+      '@opentelemetry/core': 3.1.1(@opentelemetry/api@1.10.0)
+      '@opentelemetry/resources': 3.1.1(@opentelemetry/api@1.10.0)
+      '@opentelemetry/sdk-logs': 3.1.1(@opentelemetry/api@1.10.0)
+      '@opentelemetry/sdk-metrics': 3.1.1(@opentelemetry/api@1.10.0)
+      '@opentelemetry/sdk-trace': 3.1.1(@opentelemetry/api@1.10.0)
+
+  '@opentelemetry/resources@3.1.1(@opentelemetry/api@1.10.0)':
+    dependencies:
+      '@opentelemetry/api': 1.10.0
+      '@opentelemetry/core': 3.1.1(@opentelemetry/api@1.10.0)
+      '@opentelemetry/semantic-conventions': 1.45.0
+
+  '@opentelemetry/sdk-logs@3.1.1(@opentelemetry/api@1.10.0)':
+    dependencies:
+      '@opentelemetry/api': 1.10.0
+      '@opentelemetry/core': 3.1.1(@opentelemetry/api@1.10.0)
+      '@opentelemetry/resources': 3.1.1(@opentelemetry/api@1.10.0)
+      '@opentelemetry/semantic-conventions': 1.45.0
+
+  '@opentelemetry/sdk-metrics@3.1.1(@opentelemetry/api@1.10.0)':
+    dependencies:
+      '@opentelemetry/api': 1.10.0
+      '@opentelemetry/core': 3.1.1(@opentelemetry/api@1.10.0)
+      '@opentelemetry/resources': 3.1.1(@opentelemetry/api@1.10.0)
+
+  '@opentelemetry/sdk-trace@3.1.1(@opentelemetry/api@1.10.0)':
+    dependencies:
+      '@opentelemetry/api': 1.10.0
+      '@opentelemetry/core': 3.1.1(@opentelemetry/api@1.10.0)
+      '@opentelemetry/resources': 3.1.1(@opentelemetry/api@1.10.0)
+      '@opentelemetry/semantic-conventions': 1.45.0
+
+  '@opentelemetry/semantic-conventions@1.45.0': {}
 
   '@oxc-project/types@0.156.0': {}
 

@@ -4,7 +4,14 @@ import { tools } from './tools/tools'
 import type { RunAgentOptions } from './types'
 import { getModel } from './utils/model'
 
-export function runAgent({ prompt, provider, modelId, memory, session }: RunAgentOptions) {
+export function runAgent({
+  prompt,
+  provider,
+  modelId,
+  memory,
+  session,
+  observability,
+}: RunAgentOptions) {
   const agent = new Agent({
     id: 'assistant',
     model: getModel(provider, modelId),
@@ -12,6 +19,7 @@ export function runAgent({ prompt, provider, modelId, memory, session }: RunAgen
     tools,
     memory: memory && { store: memory, savePolicy: 'turn' },
     maxTurns: 75,
+    observability,
   })
   return agent.stream({ prompt, session })
 }
