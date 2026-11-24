@@ -1,7 +1,8 @@
 import { defineEvalCases, defineEvalSuite, EvalOutcome } from '@anvia/core/evals'
 import { findDocuments } from '../index'
 import { LEVELS } from '../find-documents/source-map'
-import type { DocumentResult, DocumentsResult, JurisdictionLevel } from '../types'
+import type { DocumentResult, JurisdictionLevel } from '../types'
+import { docType } from './metrics/doc-type'
 import { types } from './types'
 
 const cases = defineEvalCases([
@@ -100,5 +101,5 @@ export const findDocumentsSuite = defineEvalSuite({
   name: 'find-documents',
   cases,
   target: (input) => findDocuments(input),
-  metrics: [scope, documents, understanding],
+  metrics: [scope, documents, understanding, docType],
 })
