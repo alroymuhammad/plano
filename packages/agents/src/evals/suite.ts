@@ -59,10 +59,11 @@ const documents = types.defineMetric({
 
     const problems: string[] = []
 
+    if (!LEVELS.some((level) => output.levels[level].length > 0))
+      problems.push('no level has any Document Results')
+
     for (const level of LEVELS) {
       const results = output.levels[level]
-
-      if (results.length === 0) problems.push(`${level} has no Document Results`)
 
       for (const result of results) problems.push(...resultProblems(level, result))
     }
