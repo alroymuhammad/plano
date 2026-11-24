@@ -220,6 +220,10 @@ const PERWALI_TITLE =
 const PERWALI_URL = 'https://jdih.surabaya.go.id/peraturan/perwali-89-2024'
 const KEPUTUSAN_TITLE = 'Keputusan Sekretaris Daerah Provinsi Jawa Timur selaku pengelola barang'
 const KEPUTUSAN_URL = 'https://jdih.jatimprov.go.id/peraturan/keputusan-sekretaris-daerah/contoh'
+// The title opens with no type phrase, so the excerpt's opening phrase gives the type.
+const EXCERPT_TITLE = 'Izin Mendirikan Bangunan di Kota Surabaya'
+const EXCERPT_URL = 'https://jdih.surabaya.go.id/control/excerpt-perwali'
+const EXCERPT_TEXT = 'PERATURAN WALIKOTA SURABAYA NOMOR 33 TAHUN 2023 TENTANG PEMBERIAN INSENTIF.'
 
 // Real Surabaya Perwali results from the live run. Each title states the document's own number and
 // year. The excerpt and URL can show other numbers, such as a cited or amended document, which the
@@ -511,7 +515,7 @@ const metricControls: Record<string, FindDocumentsEvalOutput> = {
       }),
     ],
   }),
-  'mostly-other': foundFixture({
+  'genuine-other-kept': foundFixture({
     city: [
       documentResult({
         title: DOWNLOAD_TITLE,
@@ -862,6 +866,44 @@ const metricControls: Record<string, FindDocumentsEvalOutput> = {
     excerpt: 'PERATURAN WALIKOTA SURABAYA NOMOR 125 TAHUN 2022 TENTANG PEMBERIAN INSENTIF',
     number: '125',
     year: 2022,
+  }),
+  // The excerpt opens with a Perwali phrase, so the document is a Perwali whatever its title says.
+  'excerpt-perwali-typed-perwali': foundFixture({
+    city: [
+      documentResult({
+        title: EXCERPT_TITLE,
+        docType: 'Perwali',
+        sourceUrl: EXCERPT_URL,
+        level: 'city',
+        excerpt: EXCERPT_TEXT,
+        number: '33',
+        year: 2023,
+      }),
+    ],
+  }),
+  // The typed companion keeps the share-of-typed check from failing this control for another reason.
+  'excerpt-perwali-typed-other': foundFixture({
+    city: [
+      documentResult({
+        title: EXCERPT_TITLE,
+        docType: 'Other',
+        sourceUrl: EXCERPT_URL,
+        level: 'city',
+        excerpt: EXCERPT_TEXT,
+      }),
+      perwali12,
+    ],
+  }),
+  'excerpt-perwali-typed-pergub': foundFixture({
+    city: [
+      documentResult({
+        title: EXCERPT_TITLE,
+        docType: 'Pergub',
+        sourceUrl: EXCERPT_URL,
+        level: 'city',
+        excerpt: EXCERPT_TEXT,
+      }),
+    ],
   }),
 }
 
