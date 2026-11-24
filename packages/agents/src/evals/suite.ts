@@ -4,6 +4,7 @@ import { LEVELS } from '../find-documents/source-map'
 import type { DocumentResult, JurisdictionLevel } from '../types'
 import { docType } from './metrics/doc-type'
 import { level } from './metrics/level'
+import { listingUrls } from './metrics/listing-urls'
 import { noDeadDownloadLinks } from './metrics/no-dead-download-links'
 import { numberYear } from './metrics/number-year'
 import { region } from './metrics/region'
@@ -114,5 +115,6 @@ export const findDocumentsSuite = defineEvalSuite({
     level,
     region,
     noDeadDownloadLinks,
+    listingUrls,
   ],
 })
