@@ -3,6 +3,7 @@ export { runAgent } from './core'
 export type {
   DocumentResult,
   DocumentsResult,
+  FindDocumentsOptions,
   JurisdictionLevel,
   Provider,
   QueryUnderstanding,

@@ -1,5 +1,6 @@
 import type { AgentPrompt, MemoryScope, MemoryStore } from '@anvia/core'
 import type { AgentObservabilityOptions } from '@anvia/core/observability'
+import type { PipelineObservabilityOptions } from '@anvia/core/pipeline'
 
 export type Provider = 'openai' | 'anthropic'
 
@@ -10,6 +11,10 @@ export type RunAgentOptions = {
   memory?: MemoryStore
   session?: MemoryScope
   observability?: AgentObservabilityOptions
+}
+
+export type FindDocumentsOptions = {
+  observability?: PipelineObservabilityOptions
 }
 
 export type JurisdictionLevel = 'national' | 'province' | 'city'

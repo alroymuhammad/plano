@@ -1,9 +1,10 @@
-import { Pipeline, type PipelineObservabilityOptions } from '@anvia/core/pipeline'
+import { Pipeline } from '@anvia/core/pipeline'
 import { z } from 'zod'
 import { getClient } from '../tools/web-search/service'
 import type {
   DocumentResult,
   DocumentsResult,
+  FindDocumentsOptions,
   JurisdictionLevel,
   QueryUnderstanding,
 } from '../types'
@@ -111,9 +112,7 @@ function groupLevels(
   }
 }
 
-export function createFindDocumentsPipeline(
-  options: { observability?: PipelineObservabilityOptions } = {},
-) {
+export function createFindDocumentsPipeline(options: FindDocumentsOptions = {}) {
   return new Pipeline({
     id: 'find-documents',
     name: 'Find Documents',
