@@ -19,3 +19,19 @@ export function credibilityOf(url: string): SourceCredibility {
 
   return 'open_web'
 }
+
+const DOC_TYPES: Array<[RegExp, string]> = [
+  [/^undang-undang\b/i, 'UU'],
+  [/^peraturan pemerintah\b/i, 'PP'],
+  [/^peraturan presiden\b/i, 'Perpres'],
+  [/^peraturan menteri\b/i, 'Permen'],
+  [/^peraturan daerah\b/i, 'Perda'],
+  [/^peraturan wali ?kota\b/i, 'Perwali'],
+  [/^peraturan gubernur\b/i, 'Pergub'],
+]
+
+export function docTypeOf(title: string) {
+  const match = DOC_TYPES.find(([pattern]) => pattern.test(title))
+
+  return match?.[1] ?? 'Other'
+}

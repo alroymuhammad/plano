@@ -10,7 +10,7 @@ import {
   QueryUnderstandingSchema,
 } from '../types'
 import { getModel } from '../utils/model'
-import { credibilityOf, LEVELS, SOURCE_DOMAINS } from './source-map'
+import { credibilityOf, docTypeOf, LEVELS, SOURCE_DOMAINS } from './source-map'
 
 const OUT_OF_SCOPE_REPLY =
   'Find Documents only covers Surabaya development and permit documents. Ask about a Surabaya Case, or use web search for other topics.'
@@ -23,23 +23,7 @@ const READ_QUERY_INSTRUCTIONS = `You read an Analyst's question about planning a
 - searchPhrases: one short Indonesian search phrase per level, using official document vocabulary plus the topic. National: Undang-Undang or Peraturan Pemerintah plus the topic. Province: "Peraturan Daerah Jawa Timur" plus one or two title words, such as "bangunan gedung". Leave "izin" and "perizinan" out of the province phrase, because the Jawa Timur index returns nothing for them. City: "Peraturan Wali Kota Surabaya" plus the topic. Use empty strings when inScope is false.
 Return only the fields in the schema.`
 
-const DOC_TYPES: Array<[RegExp, string]> = [
-  [/^undang-undang\b/i, 'UU'],
-  [/^peraturan pemerintah\b/i, 'PP'],
-  [/^peraturan presiden\b/i, 'Perpres'],
-  [/^peraturan menteri\b/i, 'Permen'],
-  [/^peraturan daerah\b/i, 'Perda'],
-  [/^peraturan wali ?kota\b/i, 'Perwali'],
-  [/^peraturan gubernur\b/i, 'Pergub'],
-]
-
 type LevelResults = DocumentResult[] | null
-
-function docTypeOf(title: string) {
-  const match = DOC_TYPES.find(([pattern]) => pattern.test(title))
-
-  return match?.[1] ?? 'Other'
-}
 
 function searchLevel(level: JurisdictionLevel) {
   return new Pipeline({
