@@ -5,6 +5,7 @@ import {
   type DocumentResult,
   type DocumentsResult,
   type FindDocumentsOptions,
+  type JurisdictionLevel,
   type QueryUnderstanding,
   QueryUnderstandingSchema,
 } from '../types'
@@ -15,6 +16,7 @@ import {
   credibilityOf,
   docTypeOf,
   isListingUrl,
+  LEVELS,
   levelOf,
   numberYearOf,
   searchPhraseOf,
@@ -64,8 +66,14 @@ async function openWebHits(query: string): Promise<Hit[]> {
   return hitsOf(response.results)
 }
 
-// A search branch makes no search call for an out-of-scope question.
-function searchBranch(name: string, search: (understanding: QueryUnderstanding) => Promise<Hit[]>) {
+// A search branch makes no search call for an out-of-scope question. Every level the branch
+// covers gets the raw URLs of its hits, so url-in-source can trace each result to its search.
+function searchBranch(
+  name: string,
+  levels: readonly JurisdictionLevel[],
+  options: FindDocumentsOptions,
+  search: (understanding: QueryUnderstanding) => Promise<Hit[]>,
+) {
   return new Pipeline({
     id: `find-documents-${name}`,
     name: `Find Documents: ${name}`,
@@ -75,14 +83,22 @@ function searchBranch(name: string, search: (understanding: QueryUnderstanding) 
     run: async ({ input }): Promise<Hits> => {
       if (!input.inScope) return null
 
-      return search(input)
+      const hits = await search(input)
+
+      for (const level of levels)
+        options.onSearch?.(
+          level,
+          hits.map((hit) => hit.sourceUrl),
+        )
+
+      return hits
     },
   })
 }
 
-function nationalBranch() {
+function nationalBranch(options: FindDocumentsOptions) {
   // One search per portal, so one busy portal cannot take every national result.
-  return searchBranch('national', async ({ searchPhrases }) => {
+  return searchBranch('national', ['national'], options, async ({ searchPhrases }) => {
     const hits = await Promise.all(
       SOURCE_DOMAINS.national.map((domain) => restrictedHits(searchPhrases.national, [domain])),
     )
@@ -91,21 +107,24 @@ function nationalBranch() {
   })
 }
 
-function provinceBranch() {
-  return searchBranch('province', ({ searchPhrases }) =>
+function provinceBranch(options: FindDocumentsOptions) {
+  return searchBranch('province', ['province'], options, ({ searchPhrases }) =>
     restrictedHits(searchPhraseOf('province', searchPhrases.province), SOURCE_DOMAINS.province),
   )
 }
 
-function cityBranch() {
-  return searchBranch('city', ({ searchPhrases }) =>
+function cityBranch(options: FindDocumentsOptions) {
+  return searchBranch('city', ['city'], options, ({ searchPhrases }) =>
     restrictedHits(searchPhrases.city, SOURCE_DOMAINS.city),
   )
 }
 
-// The open web takes the city phrase. Its results keep the credibility their host earns.
-function openWebBranch() {
-  return searchBranch('open-web', ({ searchPhrases }) => openWebHits(searchPhrases.city))
+// The open web takes the city phrase. Its results keep the credibility their host earns. Its URLs
+// count for every level, because an open-web result can be filed under any level.
+function openWebBranch(options: FindDocumentsOptions) {
+  return searchBranch('open-web', LEVELS, options, ({ searchPhrases }) =>
+    openWebHits(searchPhrases.city),
+  )
 }
 
 function understandingBranch() {
@@ -141,6 +160,27 @@ function groupLevels({
   }
 }
 
+function withUsage(model: ReturnType<typeof getModel>, onUsage: FindDocumentsOptions['onUsage']) {
+  if (!onUsage) return model
+
+  return new Proxy(model, {
+    get(target, property) {
+      if (property === 'completion') {
+        return async (...args: Parameters<typeof target.completion>) => {
+          const response = await target.completion(...args)
+
+          onUsage(response.usage)
+          return response
+        }
+      }
+
+      const value = Reflect.get(target, property, target)
+
+      return typeof value === 'function' ? value.bind(target) : value
+    },
+  })
+}
+
 export function createFindDocumentsPipeline(options: FindDocumentsOptions = {}) {
   return new Pipeline({
     id: 'find-documents',
@@ -150,7 +190,7 @@ export function createFindDocumentsPipeline(options: FindDocumentsOptions = {}) 
   })
     .extract({
       id: 'read-query',
-      model: getModel(),
+      model: withUsage(getModel(), options.onUsage),
       outputSchema: QueryUnderstandingSchema,
       instructions: READ_QUERY_INSTRUCTIONS,
       text: ({ input }) => input,
@@ -158,10 +198,10 @@ export function createFindDocumentsPipeline(options: FindDocumentsOptions = {}) 
     .parallel({
       id: 'search',
       branches: {
-        national: nationalBranch(),
-        province: provinceBranch(),
-        city: cityBranch(),
-        openWeb: openWebBranch(),
+        national: nationalBranch(options),
+        province: provinceBranch(options),
+        city: cityBranch(options),
+        openWeb: openWebBranch(options),
         understanding: understandingBranch(),
       },
     })

@@ -1,12 +1,6 @@
-import {
-  defineEvalCases,
-  defineEvalExpectations,
-  defineEvalSuite,
-  EvalOutcome,
-} from '@anvia/core/evals'
-import type { DocumentResult, DocumentsResult } from '../../types'
-import { documentResult, foundFixture } from '../fixtures'
-import { types } from '../types'
+import { EvalOutcome } from '@anvia/core/evals'
+import type { DocumentResult } from '../../types'
+import { evalTypes } from '../types'
 
 // The spec for a duplicate. It copies the merge rule rather than importing it, so the metric checks
 // the output and not the code. Two results at one level with the same type, number and year are one
@@ -19,9 +13,10 @@ function duplicateKeyOf(result: DocumentResult) {
   return [result.jurisdictionLevel, result.docType, number, result.year].join('|')
 }
 
-const merge = types.defineMetric({
+export const merge = evalTypes.defineMetric({
   name: 'merge',
   dataType: 'BOOLEAN',
+  required: true,
   evaluate: ({ output }) => {
     if (output.status !== 'found') return EvalOutcome.pass(true)
 
@@ -43,68 +38,3 @@ const merge = types.defineMetric({
     return EvalOutcome.fail(false, { comment: problems.join('; ') })
   },
 })
-
-const controlCases = defineEvalCases([
-  { id: 'same-document-twice', input: 'same-document-twice', expected: { status: 'found' } },
-  { id: 'different-documents', input: 'different-documents', expected: { status: 'found' } },
-])
-
-const fixtures: Record<string, DocumentsResult> = {
-  'same-document-twice': foundFixture({
-    city: [
-      documentResult({
-        title: 'Peraturan Wali Kota Surabaya Nomor 118 Tahun 2023 tentang Bangunan Gedung',
-        docType: 'Perwali',
-        sourceUrl: 'https://jdih.surabaya.go.id/peraturan/4301',
-        level: 'city',
-        number: '118',
-        year: 2023,
-      }),
-      documentResult({
-        title: 'Peraturan Walikota Surabaya No. 118 Tahun 2023 tentang Bangunan Gedung',
-        docType: 'Perwali',
-        sourceUrl: 'https://example.com/perwali-118-2023',
-        level: 'city',
-        credibility: 'open_web',
-        number: '118',
-        year: 2023,
-      }),
-    ],
-  }),
-  'different-documents': foundFixture({
-    city: [
-      documentResult({
-        title: 'Peraturan Wali Kota Surabaya Nomor 118 Tahun 2023 tentang Bangunan Gedung',
-        docType: 'Perwali',
-        sourceUrl: 'https://jdih.surabaya.go.id/peraturan/4301',
-        level: 'city',
-        number: '118',
-        year: 2023,
-      }),
-      documentResult({
-        title: 'Peraturan Wali Kota Surabaya Nomor 33 Tahun 2023 tentang Bangunan Gedung',
-        docType: 'Perwali',
-        sourceUrl: 'https://jdih.surabaya.go.id/peraturan/4302',
-        level: 'city',
-        number: '33',
-        year: 2023,
-      }),
-    ],
-  }),
-}
-
-export const mergeControl = defineEvalSuite({
-  name: 'merge-control',
-  cases: controlCases,
-  target: (_input, testCase) => fixtures[testCase.id],
-  metrics: [merge],
-})
-
-export const mergeControlExpectations = defineEvalExpectations(mergeControl, {
-  outcomes: {
-    'same-document-twice': { merge: 'fail' },
-    'different-documents': { merge: 'pass' },
-  },
-})
-
-export { merge }

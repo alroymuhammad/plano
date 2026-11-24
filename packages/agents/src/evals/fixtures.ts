@@ -1,12 +1,12 @@
-// Synthetic Document Results for the negative controls. Titles and URLs are modelled
-// on the baseline runs. Metrics that fall back to the URL path read the URLs.
+import { Usage } from '@anvia/core'
+import { LEVELS } from '../find-documents/source-map'
 import type {
   DocumentResult,
-  DocumentsResult,
   JurisdictionLevel,
   QueryUnderstanding,
   SourceCredibility,
 } from '../types'
+import type { FindDocumentsEvalOutput } from './types'
 
 const understanding: QueryUnderstanding = {
   inScope: true,
@@ -44,16 +44,19 @@ export function documentResult(fields: {
   }
 }
 
+// Each level's searched URLs are the source URLs of its own results, so url-in-source traces every
+// result. No model or search ran, so usage is empty.
 export function foundFixture(
   levels: Partial<Record<JurisdictionLevel, DocumentResult[]>>,
-): DocumentsResult {
-  return {
-    status: 'found',
-    levels: {
-      national: levels.national ?? [],
-      province: levels.province ?? [],
-      city: levels.city ?? [],
-    },
-    understanding,
+): FindDocumentsEvalOutput {
+  const buckets: Record<JurisdictionLevel, DocumentResult[]> = {
+    national: levels.national ?? [],
+    province: levels.province ?? [],
+    city: levels.city ?? [],
   }
+  const searched: FindDocumentsEvalOutput['searched'] = {}
+
+  for (const level of LEVELS) searched[level] = buckets[level].map((result) => result.sourceUrl)
+
+  return { status: 'found', levels: buckets, understanding, searched, usage: Usage.empty() }
 }

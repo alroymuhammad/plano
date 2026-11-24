@@ -5,7 +5,10 @@ export async function findDocuments(
   query: string,
   options: FindDocumentsOptions = {},
 ): Promise<DocumentsResult> {
-  const { output } = await createFindDocumentsPipeline(options).run({ input: query })
+  const { output } = await createFindDocumentsPipeline(options).run({
+    input: query,
+    abortSignal: options.signal,
+  })
 
   return output
 }
