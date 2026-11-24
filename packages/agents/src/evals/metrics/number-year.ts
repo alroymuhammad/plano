@@ -97,6 +97,11 @@ const controlCases = defineEvalCases([
     input: 'slashed-number-without-tahun',
     expected: { status: 'found' },
   },
+  { id: 'law-cited-first', input: 'law-cited-first', expected: { status: 'found' } },
+  { id: 'title-only-blank', input: 'title-only-blank', expected: { status: 'found' } },
+  { id: 'other-type-blank', input: 'other-type-blank', expected: { status: 'found' } },
+  { id: 'province-region-words', input: 'province-region-words', expected: { status: 'found' } },
+  { id: 'cited-after-tentang', input: 'cited-after-tentang', expected: { status: 'found' } },
 ])
 
 const UU_TITLE = 'UU No. 28 Tahun 2002 tentang Bangunan Gedung'
@@ -211,6 +216,64 @@ const fixtures: Record<string, DocumentsResult> = {
       }),
     ],
   }),
+  'law-cited-first': foundFixture({
+    national: [
+      documentResult({
+        title: 'Peraturan Pemerintah tentang Bangunan Gedung',
+        docType: 'PP',
+        sourceUrl: 'https://peraturan.go.id/id/bangunan-gedung',
+        level: 'national',
+        excerpt:
+          'Berdasarkan Undang-Undang Nomor 28 Tahun 2002, Peraturan Pemerintah Nomor 16 Tahun 2021 mengatur bangunan gedung.',
+        number: '16',
+        year: 2021,
+      }),
+    ],
+  }),
+  'title-only-blank': foundFixture({
+    national: [
+      documentResult({
+        title: UU_TITLE,
+        docType: 'UU',
+        sourceUrl: 'https://peraturan.go.id/id/bangunan-gedung',
+        level: 'national',
+      }),
+    ],
+  }),
+  'other-type-blank': foundFixture({
+    city: [
+      documentResult({
+        title: 'Keputusan Wali Kota Surabaya Nomor 5 Tahun 2019 tentang Bangunan Gedung',
+        docType: 'Other',
+        sourceUrl: 'https://jdih.surabaya.go.id/peraturan/4301',
+        level: 'city',
+      }),
+    ],
+  }),
+  'province-region-words': foundFixture({
+    province: [
+      documentResult({
+        title: 'Peraturan Daerah tentang Bangunan Gedung',
+        docType: 'Perda',
+        sourceUrl: 'https://jdih.jatimprov.go.id/peraturan/bangunan-gedung',
+        level: 'province',
+        excerpt: 'Peraturan Daerah Provinsi Jawa Timur Nomor 5 Tahun 2019 mengatur bangunan gedung.',
+        number: '5',
+        year: 2019,
+      }),
+    ],
+  }),
+  'cited-after-tentang': foundFixture({
+    province: [
+      documentResult({
+        title: 'Peraturan Daerah tentang Bangunan Gedung',
+        docType: 'Perda',
+        sourceUrl: 'https://jdih.jatimprov.go.id/peraturan/bangunan-gedung',
+        level: 'province',
+        excerpt: 'Peraturan Daerah tentang Pajak Daerah Nomor 5 Tahun 2011 mengatur bangunan gedung.',
+      }),
+    ],
+  }),
 }
 
 export const numberYearControl = defineEvalSuite({
@@ -231,6 +294,11 @@ export const numberYearControlExpectations = defineEvalExpectations(numberYearCo
     'slashed-number-from-title': { 'number-year': 'pass' },
     'slashed-number-taken-as-year': { 'number-year': 'fail' },
     'slashed-number-without-tahun': { 'number-year': 'pass' },
+    'law-cited-first': { 'number-year': 'pass' },
+    'title-only-blank': { 'number-year': 'pass' },
+    'other-type-blank': { 'number-year': 'pass' },
+    'province-region-words': { 'number-year': 'pass' },
+    'cited-after-tentang': { 'number-year': 'pass' },
   },
 })
 
