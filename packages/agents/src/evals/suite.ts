@@ -136,8 +136,9 @@ export function createFindDocumentsSuite(options: SuiteOptions = {}) {
     name: 'find-documents',
     cases,
     targetConcurrency: 2,
-    // Budget per case: about seven Tavily searches plus the read-query model call, with headroom.
-    // Tavily cannot be aborted, so a search already in flight keeps running after the signal fires.
+    // Budget per case: one read-query model call, three parallel Tavily searches (one per level)
+    // and the download-link stage (capped at 8 s), with headroom. Tavily cannot be aborted, so a
+    // search already in flight keeps running after the signal fires.
     caseTimeoutMs: 120_000,
     target: async (
       input,
