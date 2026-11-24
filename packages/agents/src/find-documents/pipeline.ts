@@ -14,13 +14,13 @@ import { checkDownloadLinks } from './download-check'
 import { mergeDuplicates } from './merge'
 import {
   credibilityOf,
-  docTypeOf,
   isListingUrl,
   LEVELS,
   levelOf,
   numberYearOf,
   searchPhraseOf,
   SOURCE_DOMAINS,
+  typeOf,
 } from './source-map'
 
 const OUT_OF_SCOPE_REPLY =
@@ -225,7 +225,7 @@ export function createFindDocumentsPipeline(options: FindDocumentsOptions = {}) 
 
           if (jurisdictionLevel === null) return []
 
-          const docType = docTypeOf(hit.title)
+          const docType = typeOf(hit.title, hit.excerpt)
 
           return {
             title: hit.title,

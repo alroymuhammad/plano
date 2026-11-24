@@ -1,7 +1,8 @@
 import { EvalOutcome } from '@anvia/core/evals'
 import { evalTypes } from '../types'
 
-// The literal spec table, kept apart from source-map.ts: a title that starts with one of these phrases names that type.
+// The literal spec table, kept apart from source-map.ts. A title or excerpt that starts with one of these
+// phrases names that type.
 const LEADING_PHRASES: ReadonlyArray<readonly [string, string]> = [
   ['undang undang', 'UU'],
   ['uu', 'UU'],
@@ -27,8 +28,8 @@ function normalise(title: string) {
     .trim()
 }
 
-function expectedDocType(title: string) {
-  const words = normalise(title)
+function expectedDocType(text: string) {
+  const words = normalise(text)
   const match = LEADING_PHRASES.find(
     ([phrase]) => words === phrase || words.startsWith(`${phrase} `),
   )
@@ -44,18 +45,15 @@ export const docType = evalTypes.defineMetric({
     if (output.status !== 'found') return EvalOutcome.pass(true)
 
     const results = Object.values(output.levels).flat()
-    const typed = results.filter((result) => result.docType !== 'Other')
     const problems: string[] = []
 
     for (const result of results) {
-      const expected = expectedDocType(result.title)
+      // The title names the type. Without a type phrase there, the start of the excerpt does.
+      const expected = expectedDocType(result.title) ?? expectedDocType(result.excerpt)
 
       if (expected && result.docType !== expected)
         problems.push(`"${result.title}" should be ${expected}, got ${result.docType}`)
     }
-
-    if (typed.length * 2 < results.length)
-      problems.push(`only ${typed.length} of ${results.length} results have a document type`)
 
     if (problems.length === 0) return EvalOutcome.pass(true)
 

@@ -61,6 +61,15 @@ export function docTypeOf(title: string) {
   return match?.[1] ?? 'Other'
 }
 
+// The title's type phrase gives the type. Without one, a type phrase at the start of the excerpt does.
+export function typeOf(title: string, excerpt: string) {
+  const fromTitle = docTypeOf(title)
+
+  if (fromTitle !== 'Other') return fromTitle
+
+  return docTypeOf(excerpt)
+}
+
 // A number and year come from the document's own identifier. The title is read first, then the
 // decoded URL path, then the excerpt. An Other document has no type phrase, so only its URL is read.
 // A "No." or "Nomor" token names the number, kept whole. The year is the one after "Tahun", else the
