@@ -25,7 +25,7 @@ Return only the fields in the schema.`
 
 type LevelResults = DocumentResult[] | null
 
-function searchLevel(level: JurisdictionLevel) {
+function searchLevel(level: JurisdictionLevel, options: FindDocumentsOptions) {
   return new Pipeline({
     id: `find-documents-${level}`,
     name: `Find Documents: ${level}`,
@@ -41,6 +41,11 @@ function searchLevel(level: JurisdictionLevel) {
         includeDomains: SOURCE_DOMAINS[level],
         includeDomainsMode: 'restrict',
       })
+
+      options.onSearch?.(
+        level,
+        response.results.map((result) => result.url),
+      )
 
       return response.results.map((result) => ({
         title: result.title,
@@ -84,6 +89,27 @@ function groupLevels(
   }
 }
 
+function withUsage(model: ReturnType<typeof getModel>, onUsage: FindDocumentsOptions['onUsage']) {
+  if (!onUsage) return model
+
+  return new Proxy(model, {
+    get(target, property) {
+      if (property === 'completion') {
+        return async (...args: Parameters<typeof target.completion>) => {
+          const response = await target.completion(...args)
+
+          onUsage(response.usage)
+          return response
+        }
+      }
+
+      const value = Reflect.get(target, property, target)
+
+      return typeof value === 'function' ? value.bind(target) : value
+    },
+  })
+}
+
 export function createFindDocumentsPipeline(options: FindDocumentsOptions = {}) {
   return new Pipeline({
     id: 'find-documents',
@@ -93,7 +119,7 @@ export function createFindDocumentsPipeline(options: FindDocumentsOptions = {}) 
   })
     .extract({
       id: 'read-query',
-      model: getModel(),
+      model: withUsage(getModel(), options.onUsage),
       outputSchema: QueryUnderstandingSchema,
       instructions: READ_QUERY_INSTRUCTIONS,
       text: ({ input }) => input,
@@ -101,9 +127,9 @@ export function createFindDocumentsPipeline(options: FindDocumentsOptions = {}) 
     .parallel({
       id: 'search-levels',
       branches: {
-        national: searchLevel('national'),
-        province: searchLevel('province'),
-        city: searchLevel('city'),
+        national: searchLevel('national', options),
+        province: searchLevel('province', options),
+        city: searchLevel('city', options),
         understanding: understandingBranch(),
       },
     })

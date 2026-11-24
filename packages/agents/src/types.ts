@@ -1,4 +1,4 @@
-import type { AgentPrompt, MemoryScope, MemoryStore } from '@anvia/core'
+import type { AgentPrompt, MemoryScope, MemoryStore, Usage } from '@anvia/core'
 import type { AgentObservabilityOptions } from '@anvia/core/observability'
 import type { PipelineObservabilityOptions } from '@anvia/core/pipeline'
 import { z } from 'zod'
@@ -16,6 +16,9 @@ export type RunAgentOptions = {
 
 export type FindDocumentsOptions = {
   observability?: PipelineObservabilityOptions
+  signal?: AbortSignal
+  onSearch?: (level: JurisdictionLevel, sourceUrls: string[]) => void
+  onUsage?: (usage: Usage) => void
 }
 
 export type JurisdictionLevel = 'national' | 'province' | 'city'
