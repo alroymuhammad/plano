@@ -73,6 +73,21 @@ const controlCases = defineEvalCases([
     input: 'download-without-number',
     expected: { status: 'found' },
   },
+  {
+    id: 'slashed-number-from-title',
+    input: 'slashed-number-from-title',
+    expected: { status: 'found' },
+  },
+  {
+    id: 'slashed-number-taken-as-year',
+    input: 'slashed-number-taken-as-year',
+    expected: { status: 'found' },
+  },
+  {
+    id: 'slashed-number-without-tahun',
+    input: 'slashed-number-without-tahun',
+    expected: { status: 'found' },
+  },
 ])
 
 const UU_TITLE = 'UU No. 28 Tahun 2002 tentang Bangunan Gedung'
@@ -82,6 +97,9 @@ const PERDA_URL =
 const DOWNLOAD_TITLE = 'WALI KOTA SURABAYA PROVINSI JAWA TIMUR'
 const DOWNLOAD_URL = 'https://jdih.surabaya.go.id/peraturan/download/4576'
 const EXCERPT_13 = 'Mencabut Peraturan Walikota Nomor 13 Tahun 2018'
+const PERMEN_TITLE =
+  'Peraturan Menteri PUPR No. 19/PRT/M/2018 Tahun 2018 tentang Pedoman Bangunan Gedung'
+const PERMEN_URL = 'https://peraturan.go.id/id/permen-pupr-19-prt-m-2018'
 
 const fixtures: Record<string, DocumentsResult> = {
   'uu-number-from-title': foundFixture({
@@ -148,6 +166,42 @@ const fixtures: Record<string, DocumentsResult> = {
       }),
     ],
   }),
+  'slashed-number-from-title': foundFixture({
+    national: [
+      documentResult({
+        title: PERMEN_TITLE,
+        docType: 'Permen',
+        sourceUrl: PERMEN_URL,
+        level: 'national',
+        number: '19/PRT/M/2018',
+        year: 2018,
+      }),
+    ],
+  }),
+  'slashed-number-taken-as-year': foundFixture({
+    national: [
+      documentResult({
+        title: PERMEN_TITLE,
+        docType: 'Permen',
+        sourceUrl: PERMEN_URL,
+        level: 'national',
+        number: '2018',
+        year: 2018,
+      }),
+    ],
+  }),
+  'slashed-number-without-tahun': foundFixture({
+    national: [
+      documentResult({
+        title: 'Peraturan Menteri PUPR No. 14/PRT/M/2017 tentang Persyaratan Teknis',
+        docType: 'Permen',
+        sourceUrl: 'https://peraturan.go.id/id/permen-pupr-14-prt-m-2017',
+        level: 'national',
+        number: '14/PRT/M/2017',
+        year: 2017,
+      }),
+    ],
+  }),
 }
 
 export const numberYearControl = defineEvalSuite({
@@ -165,6 +219,9 @@ export const numberYearControlExpectations = defineEvalExpectations(numberYearCo
     'uu-year-wrong': { 'number-year': 'fail' },
     'perda-number-from-url': { 'number-year': 'pass' },
     'download-without-number': { 'number-year': 'pass' },
+    'slashed-number-from-title': { 'number-year': 'pass' },
+    'slashed-number-taken-as-year': { 'number-year': 'fail' },
+    'slashed-number-without-tahun': { 'number-year': 'pass' },
   },
 })
 
