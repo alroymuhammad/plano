@@ -11,7 +11,7 @@ import {
 } from '../types'
 import { getModel } from '../utils/model'
 import { checkDownloadLinks } from './download-check'
-import { mergeDuplicates } from './merge'
+import { CREDIBILITY_RANK, mergeDuplicates } from './merge'
 import {
   credibilityOf,
   isListingUrl,
@@ -138,6 +138,15 @@ function understandingBranch() {
   })
 }
 
+// A level shows its first five results in Source Credibility order. The sort is stable, so search
+// order holds within a tier.
+function topFiveOf(results: DocumentResult[], level: JurisdictionLevel) {
+  return results
+    .filter((result) => result.jurisdictionLevel === level)
+    .sort((a, b) => CREDIBILITY_RANK[a.credibility] - CREDIBILITY_RANK[b.credibility])
+    .slice(0, 5)
+}
+
 function groupLevels({
   understanding,
   results,
@@ -152,9 +161,9 @@ function groupLevels({
   return {
     status: 'found',
     levels: {
-      national: results.filter((result) => result.jurisdictionLevel === 'national'),
-      province: results.filter((result) => result.jurisdictionLevel === 'province'),
-      city: results.filter((result) => result.jurisdictionLevel === 'city'),
+      national: topFiveOf(results, 'national'),
+      province: topFiveOf(results, 'province'),
+      city: topFiveOf(results, 'city'),
     },
     understanding,
   }

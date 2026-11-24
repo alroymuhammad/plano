@@ -2,7 +2,7 @@ import type { DocumentResult, SourceCredibility } from '../types'
 import { downloadUrlOf } from './download-check'
 
 // Official first, then other .go.id, then Open Web.
-const CREDIBILITY_RANK: Record<SourceCredibility, number> = {
+export const CREDIBILITY_RANK: Record<SourceCredibility, number> = {
   official: 0,
   government: 1,
   open_web: 2,
