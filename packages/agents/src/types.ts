@@ -3,13 +3,10 @@ import type { AgentObservabilityOptions } from '@anvia/core/observability'
 import type { PipelineObservabilityOptions } from '@anvia/core/pipeline'
 import { z } from 'zod'
 
-export type Provider = 'openai' | 'anthropic'
-
 export type RunAgentOptions = {
   prompt: AgentPrompt
   instructions?: string
   tools?: AnyTool[]
-  provider?: Provider
   modelId?: string
   memory?: MemoryStore
   session?: MemoryScope

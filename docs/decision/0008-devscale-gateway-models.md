@@ -1,6 +1,6 @@
 # 0008 — Devscale gateway for models, Anthropic adapter as fallback
 
-Status: accepted
+Status: superseded by 0018
 Date: 2026-11-20
 
 ## Context

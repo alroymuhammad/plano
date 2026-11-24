@@ -8,7 +8,6 @@ export function runAgent({
   prompt,
   instructions = BASE_INSTRUCTION,
   tools = defaultTools,
-  provider,
   modelId,
   memory,
   session,
@@ -16,7 +15,7 @@ export function runAgent({
 }: RunAgentOptions) {
   const agent = new Agent({
     id: 'assistant',
-    model: getModel(provider, modelId),
+    model: getModel(modelId),
     instructions,
     tools,
     memory: memory && { store: memory, savePolicy: 'turn' },
