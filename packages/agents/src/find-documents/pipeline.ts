@@ -10,7 +10,14 @@ import {
   QueryUnderstandingSchema,
 } from '../types'
 import { getModel } from '../utils/model'
-import { credibilityOf, docTypeOf, LEVELS, numberYearOf, SOURCE_DOMAINS } from './source-map'
+import {
+  credibilityOf,
+  docTypeOf,
+  levelOf,
+  LEVELS,
+  numberYearOf,
+  SOURCE_DOMAINS,
+} from './source-map'
 
 const OUT_OF_SCOPE_REPLY =
   'Find Documents only covers Surabaya development and permit documents. Ask about a Surabaya Case, or use web search for other topics.'
@@ -42,16 +49,22 @@ function searchLevel(level: JurisdictionLevel) {
         includeDomainsMode: 'restrict',
       })
 
-      return response.results.map((result) => ({
-        title: result.title,
-        sourceUrl: result.url,
-        excerpt: result.content,
-        credibility: credibilityOf(result.url),
-        jurisdictionLevel: level,
-        docType: docTypeOf(result.title),
-        ...numberYearOf(result.title, result.url),
-        alternateUrls: [],
-      }))
+      return response.results.flatMap((result) => {
+        const jurisdictionLevel = levelOf(result.title, result.url)
+
+        if (jurisdictionLevel === null) return []
+
+        return {
+          title: result.title,
+          sourceUrl: result.url,
+          excerpt: result.content,
+          credibility: credibilityOf(result.url),
+          jurisdictionLevel,
+          docType: docTypeOf(result.title),
+          ...numberYearOf(result.title, result.url),
+          alternateUrls: [],
+        }
+      })
     },
   })
 }
@@ -75,12 +88,14 @@ function groupLevels(
 
   if (skipped) return { status: 'out_of_scope', reply: OUT_OF_SCOPE_REPLY, understanding }
 
+  const results = LEVELS.flatMap((level) => outputs[level] ?? [])
+
   return {
     status: 'found',
     levels: {
-      national: outputs.national ?? [],
-      province: outputs.province ?? [],
-      city: outputs.city ?? [],
+      national: results.filter((result) => result.jurisdictionLevel === 'national'),
+      province: results.filter((result) => result.jurisdictionLevel === 'province'),
+      city: results.filter((result) => result.jurisdictionLevel === 'city'),
     },
     understanding,
   }

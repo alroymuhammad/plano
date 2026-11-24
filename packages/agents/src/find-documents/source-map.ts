@@ -77,3 +77,40 @@ export function numberYearOf(
 ): { number: string | null; year: number | null } {
   return numberYearIn(title) ?? numberYearIn(decodedPath(url)) ?? { number: null, year: null }
 }
+
+const NATIONAL_DOC_TYPES = ['UU', 'PP', 'Perpres', 'Permen']
+
+// Kota Surabaya is city and Provinsi Jawa Timur is province. Any other region comes back as other.
+const REGION =
+  /\b(?:((?:wali ?kota|kota) surabaya)|((?:provinsi|propinsi|gubernur) jawa timur)|kabupaten|kota|provinsi|propinsi)\b/
+
+function normalise(text: string) {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim()
+}
+
+function regionIn(text: string): JurisdictionLevel | 'other' | null {
+  const match = REGION.exec(normalise(text))
+
+  if (!match) return null
+
+  if (match[1]) return 'city'
+
+  if (match[2]) return 'province'
+
+  return 'other'
+}
+
+// The issuer sets the level, never the host. A national type is national. Otherwise the first
+// region phrase in the title decides, then the decoded URL path. Any other region has no level.
+export function levelOf(title: string, url: string): JurisdictionLevel | null {
+  if (NATIONAL_DOC_TYPES.includes(docTypeOf(title))) return 'national'
+
+  const region = regionIn(title) ?? regionIn(decodedPath(url))
+
+  if (region === 'city' || region === 'province') return region
+
+  return null
+}
