@@ -6,6 +6,10 @@ import {
 } from '@anvia/core/evals'
 import { controlOutputs } from './control-outputs'
 import { maxFivePerLevel } from './metrics/max-five-per-level'
+import {
+  noDeadDownloadLinksControl,
+  noDeadDownloadLinksControlExpectations,
+} from './metrics/no-dead-download-links'
 import { numberAndYear } from './metrics/number-and-year'
 import { officialAboveUnofficial } from './metrics/official-above-unofficial'
 import { outOfScopeRejected } from './metrics/out-of-scope-rejected'
@@ -73,3 +77,10 @@ const expectations = defineEvalExpectations(suite, {
 })
 
 await runEvalCli({ ...suite, expectations, exitCode: true })
+
+// The dead-link controls fetch real URLs, so they need network access.
+await runEvalCli({
+  ...noDeadDownloadLinksControl,
+  expectations: noDeadDownloadLinksControlExpectations,
+  exitCode: true,
+})
