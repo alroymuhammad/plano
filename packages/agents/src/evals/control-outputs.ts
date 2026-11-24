@@ -1,6 +1,6 @@
 import { Usage } from '@anvia/core'
 import type { DocumentResult, QueryUnderstanding } from '../types'
-import type { FindDocumentsEvalOutput } from './types'
+import type { FindDocumentsEvalOutput, IdentifiedDocumentResult } from './types'
 
 // Literal outputs for the negative and positive controls. Each fixture is
 // built so only the metric under test can fail: every other metric must pass.
@@ -53,6 +53,31 @@ const perwali3: DocumentResult = {
 }
 
 const undatedExcerpt = 'Pengaturan izin mendirikan bangunan di Kota Surabaya.'
+
+// The number is fabricated: the excerpt shows 3 and the URL shows neither number.
+const fabricatedNumber: IdentifiedDocumentResult = {
+  ...perwali3,
+  sourceUrl: 'https://jdih.surabaya.go.id/control/perwali-izin-bangunan',
+  number: '12',
+  year: '2021',
+}
+
+// The number and year are shown in the excerpt, but the title does not name them.
+const titleOmitsNumber: IdentifiedDocumentResult = {
+  ...perwali3,
+  title: 'Peraturan Wali Kota Surabaya tentang Izin Mendirikan Bangunan',
+  excerpt: 'Peraturan Wali Kota Surabaya Nomor 3 Tahun 2021 mengatur izin mendirikan bangunan.',
+  number: '3',
+  year: '2021',
+}
+
+// No number or year is set, so the result passes.
+const numberUnset: DocumentResult = {
+  ...perwali3,
+  title: 'Izin Mendirikan Bangunan di Kota Surabaya',
+  sourceUrl: 'https://jdih.surabaya.go.id/control/izin-bangunan',
+  excerpt: undatedExcerpt,
+}
 
 const perwaliNumbered = (number: number): DocumentResult => ({
   title: `Peraturan Wali Kota Surabaya Nomor ${number} Tahun 2020 tentang Izin Mendirikan Bangunan`,
@@ -112,26 +137,16 @@ export const controlOutputs: Record<string, FindDocumentsEvalOutput> = {
   },
   'number-and-year-negative': {
     status: 'found',
-    levels: {
-      national: [],
-      province: [],
-      city: [
-        {
-          ...perwali3,
-          sourceUrl: 'https://jdih.surabaya.go.id/control/perwali-izin-bangunan',
-          excerpt: undatedExcerpt,
-        },
-      ],
-    },
+    levels: { national: [], province: [], city: [fabricatedNumber] },
     understanding: surabayaPermit,
-    searched: { city: ['https://jdih.surabaya.go.id/control/perwali-izin-bangunan'] },
+    searched: { city: [fabricatedNumber.sourceUrl] },
     usage: Usage.empty(),
   },
   'number-and-year-positive': {
     status: 'found',
-    levels: { national: [], province: [], city: [{ ...perwali3, excerpt: undatedExcerpt }] },
+    levels: { national: [], province: [], city: [titleOmitsNumber, numberUnset] },
     understanding: surabayaPermit,
-    searched: { city: [perwali3.sourceUrl] },
+    searched: { city: [titleOmitsNumber.sourceUrl, numberUnset.sourceUrl] },
     usage: Usage.empty(),
   },
   'max-five-per-level-negative': {

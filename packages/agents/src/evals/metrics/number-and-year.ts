@@ -1,19 +1,33 @@
 import { EvalOutcome } from '@anvia/core/evals'
-import type { DocumentResult } from '../../types'
-import { numberAndYearOf } from '../document-identity'
+import type { IdentifiedDocumentResult } from '../types'
 import { evalTypes } from '../types'
 
-// The title must name its number and year, and the excerpt or source URL must
-// repeat both as whole digit tokens. Otherwise a reader cannot tell which regulation it is.
-const numberAndYearShown = (result: DocumentResult) => {
-  const numbered = numberAndYearOf(result.title)
+// Only digit runs count, so "No.", "Nomor" and "Tahun" are ignored. Leading zeros are dropped, so "03" matches "3".
+const digitRunsOf = (text: string) =>
+  (text.match(/\d+/g) ?? []).map((run) => run.replace(/^0+(?=\d)/, ''))
 
-  if (!numbered) return false
+// Decoded before its digits are read, so an escape such as "%20" adds no digits.
+const decodedUrl = (url: string) => {
+  try {
+    return decodeURIComponent(url)
+  } catch {
+    return url
+  }
+}
 
-  const text = `${result.excerpt} ${result.sourceUrl}`
-  const shown = (digits: string) => new RegExp(`(?<!\\d)${digits}(?!\\d)`).test(text)
+// Each number or year that a result sets must appear in its excerpt or source URL.
+// A blank field is unset and passes. The title is not checked.
+const setValuesShown = (result: IdentifiedDocumentResult) => {
+  const shown = new Set(digitRunsOf(`${result.excerpt} ${decodedUrl(result.sourceUrl)}`))
+  const values = [result.number, result.year].filter(
+    (value): value is string => value !== undefined && value.trim() !== '',
+  )
 
-  return shown(numbered.number) && shown(numbered.year)
+  return values.every((value) => {
+    const runs = digitRunsOf(value)
+
+    return runs.length > 0 && runs.every((run) => shown.has(run))
+  })
 }
 
 export const numberAndYear = evalTypes.defineMetric({
@@ -25,7 +39,7 @@ export const numberAndYear = evalTypes.defineMetric({
 
     const unshown = Object.values(output.levels)
       .flat()
-      .some((result) => !numberAndYearShown(result))
+      .some((result) => !setValuesShown(result))
 
     return unshown ? EvalOutcome.fail(false) : EvalOutcome.pass(true)
   },

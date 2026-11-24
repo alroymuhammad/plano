@@ -116,6 +116,9 @@ const understanding = evalTypes.defineMetric({
   },
 })
 
+// Every trust rule gates the exit code, so the dead-link rule is required here, not in its own file.
+const requiredDeadLinks: typeof noDeadDownloadLinks = { ...noDeadDownloadLinks, required: true }
+
 // Mutable so Studio's eval type accepts it.
 const metrics = [
   scope,
@@ -124,7 +127,7 @@ const metrics = [
   outOfScopeRejected,
   officialAboveUnofficial,
   urlInSource,
-  noDeadDownloadLinks,
+  requiredDeadLinks,
   numberAndYear,
   maxFivePerLevel,
 ]
