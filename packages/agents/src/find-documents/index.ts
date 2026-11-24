@@ -2,11 +2,11 @@ import type { DocumentsResult, FindDocumentsOptions } from '../types'
 import { createFindDocumentsPipeline } from './pipeline'
 
 export async function findDocuments(
-  query: string,
+  findDocumentPrompt: string,
   options: FindDocumentsOptions = {},
 ): Promise<DocumentsResult> {
   const { output } = await createFindDocumentsPipeline(options).run({
-    input: query,
+    input: { findDocumentPrompt },
     abortSignal: options.signal,
   })
 

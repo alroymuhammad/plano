@@ -1,6 +1,6 @@
 # 0014 — Find Documents as a fixed Anvia pipeline over Tavily
 
-Status: accepted
+Status: superseded by 0016
 Date: 2026-11-23
 
 ## Context
