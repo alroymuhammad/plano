@@ -5,6 +5,7 @@ import { findDocuments } from '../index'
 import { LEVELS } from '../find-documents/source-map'
 import type { DocumentResult, FindDocumentsOptions, JurisdictionLevel } from '../types'
 import { maxFivePerLevel } from './metrics/max-five-per-level'
+import { noDeadDownloadLinks } from './metrics/no-dead-download-links'
 import { numberAndYear } from './metrics/number-and-year'
 import { officialAboveUnofficial } from './metrics/official-above-unofficial'
 import { outOfScopeRejected } from './metrics/out-of-scope-rejected'
@@ -123,6 +124,7 @@ const metrics = [
   outOfScopeRejected,
   officialAboveUnofficial,
   urlInSource,
+  noDeadDownloadLinks,
   numberAndYear,
   maxFivePerLevel,
 ]
