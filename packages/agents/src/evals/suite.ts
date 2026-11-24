@@ -1,34 +1,48 @@
-import { createEvalTypes, defineEvalCases, defineEvalSuite, EvalOutcome } from '@anvia/core/evals'
+import { Usage } from '@anvia/core'
+import { defineEvalCases, defineEvalSuite, EvalOutcome } from '@anvia/core/evals'
+import type { EvalTargetContext } from '@anvia/core/evals'
 import { findDocuments } from '../index'
 import { LEVELS } from '../find-documents/source-map'
-import type { DocumentResult, DocumentsResult, JurisdictionLevel } from '../types'
+import type { DocumentResult, FindDocumentsOptions, JurisdictionLevel } from '../types'
+import { maxFivePerLevel } from './metrics/max-five-per-level'
 import { noDeadDownloadLinks } from './metrics/no-dead-download-links'
+import { numberAndYear } from './metrics/number-and-year'
+import { officialAboveUnofficial } from './metrics/official-above-unofficial'
+import { outOfScopeRejected } from './metrics/out-of-scope-rejected'
+import { urlInSource } from './metrics/url-in-source'
+import type { FindDocumentsEvalOutput } from './types'
+import { evalTypes } from './types'
 
-type Expected = { status: DocumentsResult['status'] }
+// Mutable so Studio's eval type accepts it. defineEvalCases returns a readonly tuple.
+const cases = [
+  ...defineEvalCases([
+    {
+      id: 'surabaya-permit',
+      input: 'dokumen terkait izin pembangunan di Surabaya',
+      expected: { status: 'found' },
+    },
+    {
+      id: 'malang-out-of-scope',
+      input: 'dokumen terkait izin pembangunan di Malang',
+      expected: { status: 'out_of_scope' },
+    },
+    {
+      id: 'bandung-out-of-scope',
+      input: 'dokumen terkait izin pembangunan di Bandung',
+      expected: { status: 'out_of_scope' },
+    },
+    {
+      id: 'off-topic-out-of-scope',
+      input: 'resep rendang yang enak',
+      expected: { status: 'out_of_scope' },
+    },
+  ]),
+]
 
-const types = createEvalTypes<string, DocumentsResult, Expected>()
-
-const cases = defineEvalCases([
-  {
-    id: 'surabaya-permit',
-    input: 'dokumen terkait izin pembangunan di Surabaya',
-    expected: { status: 'found' },
-  },
-  {
-    id: 'malang-out-of-scope',
-    input: 'dokumen terkait izin pembangunan di Malang',
-    expected: { status: 'out_of_scope' },
-  },
-  {
-    id: 'off-topic-out-of-scope',
-    input: 'resep rendang yang enak',
-    expected: { status: 'out_of_scope' },
-  },
-])
-
-const scope = types.defineMetric({
+const scope = evalTypes.defineMetric({
   name: 'scope',
   dataType: 'BOOLEAN',
+  required: true,
   evaluate: ({ output, case: testCase }) => {
     if (output.status === testCase.expected?.status) return EvalOutcome.pass(true)
 
@@ -52,9 +66,10 @@ function resultProblems(level: JurisdictionLevel, result: DocumentResult) {
   return problems
 }
 
-const documents = types.defineMetric({
+const documents = evalTypes.defineMetric({
   name: 'documents',
   dataType: 'BOOLEAN',
+  required: true,
   evaluate: ({ output }) => {
     if (output.status !== 'found') return EvalOutcome.pass(true)
 
@@ -75,9 +90,10 @@ const documents = types.defineMetric({
   },
 })
 
-const understanding = types.defineMetric({
+const understanding = evalTypes.defineMetric({
   name: 'understanding',
   dataType: 'BOOLEAN',
+  required: true,
   evaluate: ({ output }) => {
     const { understanding: read } = output
     const problems: string[] = []
@@ -100,9 +116,55 @@ const understanding = types.defineMetric({
   },
 })
 
-export const findDocumentsSuite = defineEvalSuite({
-  name: 'find-documents',
-  cases,
-  target: (input) => findDocuments(input),
-  metrics: [scope, documents, understanding, noDeadDownloadLinks],
-})
+// Every trust rule gates the exit code, so the dead-link rule is required here, not in its own file.
+const requiredDeadLinks: typeof noDeadDownloadLinks = { ...noDeadDownloadLinks, required: true }
+
+// Mutable so Studio's eval type accepts it.
+const metrics = [
+  scope,
+  documents,
+  understanding,
+  outOfScopeRejected,
+  officialAboveUnofficial,
+  urlInSource,
+  requiredDeadLinks,
+  numberAndYear,
+  maxFivePerLevel,
+]
+
+type SuiteOptions = Pick<FindDocumentsOptions, 'observability'>
+
+export function createFindDocumentsSuite(options: SuiteOptions = {}) {
+  return defineEvalSuite({
+    name: 'find-documents',
+    cases,
+    targetConcurrency: 2,
+    // Budget per case: one read-query model call, three parallel Tavily searches (one per level)
+    // and the download-link stage (capped at 8 s), with headroom. Tavily cannot be aborted, so a
+    // search already in flight keeps running after the signal fires.
+    caseTimeoutMs: 120_000,
+    target: async (
+      input,
+      _testCase,
+      context?: EvalTargetContext,
+    ): Promise<FindDocumentsEvalOutput> => {
+      const searched: FindDocumentsEvalOutput['searched'] = {}
+      let usage = Usage.empty()
+
+      const result = await findDocuments(input, {
+        observability: options.observability,
+        signal: context?.signal,
+        onSearch: (level, sourceUrls) => {
+          searched[level] = sourceUrls
+        },
+        onUsage: (next) => {
+          usage = Usage.add(usage, next)
+        },
+      })
+
+      return { ...result, searched, usage }
+    },
+    targetUsage: ({ output }) => output.usage,
+    metrics,
+  })
+}

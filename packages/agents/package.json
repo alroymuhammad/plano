@@ -8,7 +8,8 @@
   "scripts": {
     "build": "tsc --noEmit",
     "dev:studio": "tsx watch --env-file=../../.env src/studio.ts",
-    "eval": "tsx --env-file=../../.env src/evals/run.ts"
+    "eval": "tsx --env-file=../../.env src/evals/run.ts",
+    "eval:controls": "tsx src/evals/controls.ts"
   },
   "dependencies": {
     "@anvia/anthropic": "^1.2.2",
