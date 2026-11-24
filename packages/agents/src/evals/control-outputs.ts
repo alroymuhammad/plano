@@ -221,6 +221,59 @@ const PERWALI_URL = 'https://jdih.surabaya.go.id/peraturan/perwali-89-2024'
 const KEPUTUSAN_TITLE = 'Keputusan Sekretaris Daerah Provinsi Jawa Timur selaku pengelola barang'
 const KEPUTUSAN_URL = 'https://jdih.jatimprov.go.id/peraturan/keputusan-sekretaris-daerah/contoh'
 
+// Real Surabaya Perwali results from the live run. Each title states the document's own number and
+// year. The excerpt and URL can show other numbers, such as a cited or amended document, which the
+// controls must not read as its own.
+const LIVE_4301 = {
+  title:
+    'Peraturan Walikota PERWALI Nomor 33 Tahun 2023 tentang Pemberian Insentif Berupa Pembebasan atau Pengurangan Denda Pelaksanaan Kemajuan Pembangunan di Lapangan pada Saat Pengajuan Izin Mendirikan Bangunan/Persetujuan Bangunan Gedung dalam Rangka Hari Jadi Kota Surabaya Ke-730',
+  sourceUrl: 'https://jdih.surabaya.go.id/peraturan/4301',
+  excerpt:
+    '-Perwali No. 38 Th 2019, -Perwali No. 73 Th 2021.\n| Judul  Peraturan Walikota Nomor 33 Tahun 2023 tentang Pemberian Insentif',
+}
+const LIVE_4232 = {
+  title:
+    'Peraturan Walikota PERWALI Nomor 116 Tahun 2022 tentang Perubahan atas Peraturan Walikota Surabaya Nomor 6 Tahun 2017 tentang Perubahan Tarif Retribusi Izin Mendirikan Bangunan',
+  sourceUrl: 'https://jdih.surabaya.go.id/peraturan/4232',
+  excerpt:
+    'Peraturan ini mengubah lampiran dalam Peraturan Walikota Surabaya Nomor 6 Tahun 2017 terkait indeks fungsi bangunan.',
+}
+const LIVE_4241 = {
+  title:
+    'Peraturan Walikota PERWALI Nomor 125 Tahun 2022 tentang Perubahan atas Peraturan Walikota Surabaya Nomor 110 Tahun 2022 tentang Pemberian Insentif Berupa Pembebasan atau Pengurangan Denda Pelaksanaan Kemajuan Pembangunan di Lapangan pada Saat Pengajuan Izin Mendirikan Bangunan/Persetujuan Bangunan Gedung dalam Rangka Hari Pahlawan',
+  sourceUrl: 'https://jdih.surabaya.go.id/peraturan/4241',
+  excerpt:
+    '| Peraturan Walikota TENTANG PERUBAHAN ATAS PERATURAN WALIKOTA SURABAYA NOMOR 110 TAHUN 2022 |\n[...] Peraturan Walikota Nomor 125 • Tahun 2022 Berlaku',
+}
+const LIVE_BPK_272069 = {
+  title:
+    'PERWALI Kota Surabaya No. 118 Tahun 2023 tentang PERUBAHAN ATAS PERATURAN WALIKOTA SURABAYA NOMOR 13 TAHUN 2018 TENTANG PEDOMAN TEKNIS PELAYANAN IZIN MENDIRIKAN BANGUNAN - JDIH BPK',
+  sourceUrl: 'https://peraturan.bpk.go.id/Details/272069/perwali-kota-surabaya-no-118-tahun-2023',
+  excerpt:
+    'Ketentuan dalam Peraturan Walikota Surabaya Nomor 13 Tahun 2018 tentang Pedoman Teknis Pelayanan Izin Mendirikan Bangunan diubah.\nPERWALI Kota Surabaya No. 118 Tahun 2023 • Perwali Kota Surabaya 118/2023',
+}
+const LIVE_DDTC = {
+  title: 'Peraturan Walikota Kota Surabaya Nomor: 79 Tahun 2023',
+  sourceUrl:
+    'https://perpajakan.ddtc.co.id/id/sumber-hukum/peraturan-daerah/peraturan-walikota-kota-surabaya-79-tahun-2023',
+  excerpt:
+    'maka Peraturan Walikota Surabaya Nomor 34 Tahun 2023 tentang Tata Cara Pengenaan Sanksi Administratif Pelanggaran Peraturan Daerah Kota Surabaya Nomor 7 Tahun 2009.',
+}
+
+// A city Perwali result built from a live case, with the number and year the control gives it.
+function perwaliFixture(result: {
+  title: string
+  sourceUrl: string
+  excerpt: string
+  number?: string
+  year?: number
+  credibility?: SourceCredibility
+}) {
+  return foundFixture({
+    city: [documentResult({ ...result, docType: 'Perwali', level: 'city' })],
+  })
+}
+
 // A credibility control is one Perwali result at the given URL, labelled with the credibility to check.
 function credibilityFixture(sourceUrl: string, label: SourceCredibility) {
   return foundFixture({
@@ -348,19 +401,19 @@ const metricControls: Record<string, FindDocumentsEvalOutput> = {
         sourceUrl: 'https://peraturan.go.id/id/bangunan-gedung',
         level: 'national',
         excerpt:
-          'Berdasarkan Undang-Undang Nomor 28 Tahun 2002, Peraturan Pemerintah Nomor 16 Tahun 2021 mengatur bangunan gedung.',
+          'Berdasarkan Undang-Undang Nomor 28 Tahun 2002.\nPeraturan Pemerintah Nomor 16 Tahun 2021 mengatur bangunan gedung.',
         number: '16',
         year: 2021,
       }),
     ],
   }),
   'title-only-blank': foundFixture({
-    national: [
+    city: [
       documentResult({
-        title: UU_TITLE,
-        docType: 'UU',
-        sourceUrl: 'https://peraturan.go.id/id/bangunan-gedung',
-        level: 'national',
+        title: 'Peraturan Wali Kota Surabaya tentang Bangunan Gedung',
+        docType: 'Perwali',
+        sourceUrl: 'https://jdih.surabaya.go.id/peraturan/bangunan-gedung',
+        level: 'city',
       }),
     ],
   }),
@@ -775,6 +828,41 @@ const metricControls: Record<string, FindDocumentsEvalOutput> = {
     'https://jdih.surabaya.go.id/peraturan/4301',
     'open_web',
   ),
+  'regression-4301-number-from-title': perwaliFixture({ ...LIVE_4301, number: '33', year: 2023 }),
+  'regression-4232-number-from-title': perwaliFixture({ ...LIVE_4232, number: '116', year: 2022 }),
+  'regression-4241-number-from-title': perwaliFixture({ ...LIVE_4241, number: '125', year: 2022 }),
+  'regression-bpk-272069-number-from-title': perwaliFixture({
+    ...LIVE_BPK_272069,
+    number: '118',
+    year: 2023,
+  }),
+  'regression-ddtc-number-from-title': perwaliFixture({
+    ...LIVE_DDTC,
+    number: '79',
+    year: 2023,
+    credibility: 'open_web',
+  }),
+  'regression-4301-reference-number': perwaliFixture({ ...LIVE_4301, number: '38', year: 2023 }),
+  'regression-4232-amended-number': perwaliFixture({ ...LIVE_4232, number: '6', year: 2017 }),
+  'regression-4241-blank': perwaliFixture(LIVE_4241),
+  'regression-bpk-272069-amended-number': perwaliFixture({
+    ...LIVE_BPK_272069,
+    number: '13',
+    year: 2018,
+  }),
+  'regression-ddtc-reference-number': perwaliFixture({
+    ...LIVE_DDTC,
+    number: '34',
+    year: 2023,
+    credibility: 'open_web',
+  }),
+  'excerpt-nomor-tahun-tentang': perwaliFixture({
+    title: 'Peraturan Walikota Surabaya tentang Izin Mendirikan Bangunan',
+    sourceUrl: 'https://jdih.surabaya.go.id/peraturan/izin-bangunan',
+    excerpt: 'PERATURAN WALIKOTA SURABAYA NOMOR 125 TAHUN 2022 TENTANG PEMBERIAN INSENTIF',
+    number: '125',
+    year: 2022,
+  }),
 }
 
 export const controlOutputs: Record<string, FindDocumentsEvalOutput> = {

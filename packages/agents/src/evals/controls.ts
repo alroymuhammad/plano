@@ -99,6 +99,17 @@ const cases = defineEvalCases([
   inScope('not-a-url'),
   inScope('bare-go-id'),
   inScope('official-marked-open-web'),
+  inScope('regression-4301-number-from-title'),
+  inScope('regression-4232-number-from-title'),
+  inScope('regression-4241-number-from-title'),
+  inScope('regression-bpk-272069-number-from-title'),
+  inScope('regression-ddtc-number-from-title'),
+  inScope('regression-4301-reference-number'),
+  inScope('regression-4232-amended-number'),
+  inScope('regression-4241-blank'),
+  inScope('regression-bpk-272069-amended-number'),
+  inScope('regression-ddtc-reference-number'),
+  inScope('excerpt-nomor-tahun-tentang'),
 ])
 
 const suite = defineEvalSuite({
@@ -187,6 +198,17 @@ const expectations = defineEvalExpectations(suite, {
     'not-a-url': { credibility: 'pass' },
     'bare-go-id': { credibility: 'pass' },
     'official-marked-open-web': { credibility: 'fail' },
+    'regression-4301-number-from-title': { 'number-year': 'pass', 'number-and-year': 'pass' },
+    'regression-4232-number-from-title': { 'number-year': 'pass', 'number-and-year': 'pass' },
+    'regression-4241-number-from-title': { 'number-year': 'pass', 'number-and-year': 'pass' },
+    'regression-bpk-272069-number-from-title': { 'number-year': 'pass', 'number-and-year': 'pass' },
+    'regression-ddtc-number-from-title': { 'number-year': 'pass', 'number-and-year': 'pass' },
+    'regression-4301-reference-number': { 'number-year': 'fail' },
+    'regression-4232-amended-number': { 'number-year': 'fail' },
+    'regression-4241-blank': { 'number-year': 'fail' },
+    'regression-bpk-272069-amended-number': { 'number-year': 'fail' },
+    'regression-ddtc-reference-number': { 'number-year': 'fail' },
+    'excerpt-nomor-tahun-tentang': { 'number-year': 'pass' },
   },
 })
 
