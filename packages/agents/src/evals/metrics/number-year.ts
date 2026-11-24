@@ -8,16 +8,13 @@ import type { DocumentsResult } from '../../types'
 import { documentResult, foundFixture } from '../fixtures'
 import { types } from '../types'
 
-// The spec for a number and year, kept apart from source-map.ts. The first "number year" pair in
-// the title names the document; when the title has none, the decoded URL path is the fallback.
-const NUMBER_YEAR = /\b(\d+) (?:tahun |th )?(\d{4})\b/
-
-function normalise(text: string) {
-  return text
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, ' ')
-    .trim()
-}
+// The spec for a number and year, kept apart from source-map.ts. A "No." or "Nomor" token names the
+// number, kept whole. The year is the one after "Tahun", else the last part of a slashed number.
+// Without that token, the first "number year" pair is used. The title is read first, then the path.
+const NUMBER_AFTER_NO = /\b(?:nomor|no)\b[.:\s-]*(\d+(?:[./]\w+)*)/i
+const YEAR_AFTER_TAHUN = /\btahun[\s-]*(\d{4})\b/i
+const SLASHED_YEAR = /\/(\d{4})$/
+const PLAIN_PAIR = /(?<![\w/.])(\d+)[\s-]+(?:tahun[\s-]+)?(\d{4})\b/i
 
 function pathOf(sourceUrl: string) {
   try {
@@ -27,12 +24,24 @@ function pathOf(sourceUrl: string) {
   }
 }
 
+function anchoredIn(text: string, number: string) {
+  const year = YEAR_AFTER_TAHUN.exec(text)?.[1] ?? SLASHED_YEAR.exec(number)?.[1]
+
+  if (!year) return null
+
+  return { number, year: Number(year) }
+}
+
 function numberYearIn(text: string) {
-  const match = NUMBER_YEAR.exec(normalise(text))
+  const anchored = NUMBER_AFTER_NO.exec(text)
 
-  if (!match) return null
+  if (anchored) return anchoredIn(text, anchored[1])
 
-  return { number: match[1], year: Number(match[2]) }
+  const pair = PLAIN_PAIR.exec(text)
+
+  if (!pair) return null
+
+  return { number: pair[1], year: Number(pair[2]) }
 }
 
 function expectedNumberYear(title: string, sourceUrl: string) {
