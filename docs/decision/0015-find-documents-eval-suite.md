@@ -1,6 +1,6 @@
 # 0015 — Find Documents eval suite runtime
 
-Status: accepted
+Status: accepted; search count superseded by 0016
 Date: 2026-11-24
 
 ## Context

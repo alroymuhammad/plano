@@ -27,5 +27,5 @@ Date: 2026-11-24
 - A number or year that the excerpt and URL do not state stays blank, so some results show none. Results without one, and Other documents, are not merged and can show twice.
 - A level with more than five results drops the rest, so Open Web results are the first to go.
 - A document with no type phrase at the start of its title or excerpt is typed Other, so its number and year come from its URL only.
-- This supersedes the search count in 0015 (three searches per case, at most six in flight). With seven per case and two cases at a time, up to fourteen can be in flight. 0015 is not edited here, so it still states the old count until it is marked superseded by 0016.
+- This supersedes the search count in 0015 (three searches per case, at most six in flight). With seven per case and two cases at a time, up to fourteen can be in flight. 0015's status line records the supersession.
 - A change to a rule needs its control and its metric changed together, and `eval:controls` run.
