@@ -10,6 +10,7 @@ import {
 } from '../types'
 import { getModel } from '../utils/model'
 import { checkDownloadLinks } from './download-check'
+import { mergeDuplicates } from './merge'
 import {
   credibilityOf,
   docTypeOf,
@@ -195,6 +196,13 @@ export function createFindDocumentsPipeline(options: FindDocumentsOptions = {}) 
             alternateUrls: [],
           }
         }),
+      }),
+    })
+    .step({
+      id: 'merge-duplicates',
+      run: ({ input }) => ({
+        understanding: input.understanding,
+        results: mergeDuplicates(input.results),
       }),
     })
     .step({
