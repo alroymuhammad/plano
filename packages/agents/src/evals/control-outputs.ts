@@ -293,6 +293,14 @@ function credibilityFixture(sourceUrl: string, label: SourceCredibility) {
   })
 }
 
+// The title has no type phrase and names no region, nor does the URL. The excerpt opens with a
+// PP phrase, so the document is national.
+const EXCERPT_PP = {
+  title: 'Tata Ruang dan Bangunan Gedung',
+  sourceUrl: 'https://peraturan.go.id/id/tata-ruang-bangunan-gedung',
+  excerpt: 'Peraturan Pemerintah Nomor 16 Tahun 2021 tentang Tata Ruang dan Bangunan Gedung.',
+}
+
 const metricControls: Record<string, FindDocumentsEvalOutput> = {
   'uu-number-from-url': foundFixture({
     national: [
@@ -902,6 +910,30 @@ const metricControls: Record<string, FindDocumentsEvalOutput> = {
         sourceUrl: EXCERPT_URL,
         level: 'city',
         excerpt: EXCERPT_TEXT,
+      }),
+    ],
+  }),
+  // The excerpt's PP phrase makes the document national, so the level metric must accept National.
+  'excerpt-pp-national': foundFixture({
+    national: [
+      documentResult({
+        ...EXCERPT_PP,
+        docType: 'PP',
+        level: 'national',
+        number: '16',
+        year: 2021,
+      }),
+    ],
+  }),
+  // The same document under city, which the level metric must reject.
+  'excerpt-pp-under-city': foundFixture({
+    city: [
+      documentResult({
+        ...EXCERPT_PP,
+        docType: 'PP',
+        level: 'city',
+        number: '16',
+        year: 2021,
       }),
     ],
   }),

@@ -113,6 +113,8 @@ const cases = defineEvalCases([
   inScope('regression-bpk-272069-amended-number'),
   inScope('regression-ddtc-reference-number'),
   inScope('excerpt-nomor-tahun-tentang'),
+  inScope('excerpt-pp-national'),
+  inScope('excerpt-pp-under-city'),
 ])
 
 const suite = defineEvalSuite({
@@ -215,6 +217,8 @@ const expectations = defineEvalExpectations(suite, {
     'regression-bpk-272069-amended-number': { 'number-year': 'fail' },
     'regression-ddtc-reference-number': { 'number-year': 'fail' },
     'excerpt-nomor-tahun-tentang': { 'number-year': 'pass' },
+    'excerpt-pp-national': { level: 'pass', region: 'pass' },
+    'excerpt-pp-under-city': { level: 'fail', region: 'pass' },
   },
 })
 
