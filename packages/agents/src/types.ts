@@ -25,6 +25,7 @@ export type SourceCredibility = 'official' | 'government' | 'open_web'
 export type DocumentResult = {
   title: string
   sourceUrl: string
+  officialUrl?: string
   excerpt: string
   credibility: SourceCredibility
   jurisdictionLevel: JurisdictionLevel

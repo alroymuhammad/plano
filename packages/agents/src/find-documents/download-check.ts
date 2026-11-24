@@ -6,6 +6,7 @@ type Probe = number | 'unresolvable' | 'failed'
 
 const REQUEST_TIMEOUT_MS = 5000
 const STAGE_TIMEOUT_MS = 8000
+const FILE_EXTENSION = /\.(pdf|docx?|xlsx?|zip)$/
 
 function isUnresolvable(error: unknown) {
   const cause = error instanceof Error ? error.cause : undefined
@@ -53,6 +54,35 @@ export async function checkLink(url: string, signal: AbortSignal): Promise<LinkS
   return 'unknown'
 }
 
+function isFileUrl(url: string): boolean {
+  try {
+    const { protocol, pathname } = new URL(url)
+    const path = pathname.toLowerCase()
+    const isWeb = protocol === 'https:' || protocol === 'http:'
+
+    return isWeb && (FILE_EXTENSION.test(path) || path.includes('/download/'))
+  } catch {
+    return false
+  }
+}
+
+// Returns one of the URLs as given: a file link is one the search already found, never a built one.
+export function downloadUrlOf(urls: string[]): string | undefined {
+  return urls.find(isFileUrl)
+}
+
+// A result without a download link takes its first file URL, the source before the official link.
+function withDownloadUrl(result: DocumentResult): DocumentResult {
+  if (result.downloadUrl) return result
+
+  const urls = [result.sourceUrl, result.officialUrl].filter((url) => url !== undefined)
+  const downloadUrl = downloadUrlOf(urls)
+
+  if (!downloadUrl) return result
+
+  return { ...result, downloadUrl }
+}
+
 function withoutLink(result: DocumentResult): DocumentResult {
   const copy = { ...result }
 
@@ -87,7 +117,7 @@ export async function checkDownloadLinks(
 
   const signal = AbortSignal.any(signals)
   const checkLevel = (results: DocumentResult[]) =>
-    Promise.all(results.map((result) => checkResult(result, signal)))
+    Promise.all(results.map((result) => checkResult(withDownloadUrl(result), signal)))
   const [national, province, city] = await Promise.all([
     checkLevel(output.levels.national),
     checkLevel(output.levels.province),
