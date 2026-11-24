@@ -225,14 +225,16 @@ export function createFindDocumentsPipeline(options: FindDocumentsOptions = {}) 
 
           if (jurisdictionLevel === null) return []
 
+          const docType = docTypeOf(hit.title)
+
           return {
             title: hit.title,
             sourceUrl: hit.sourceUrl,
             excerpt: hit.excerpt,
             credibility: credibilityOf(hit.sourceUrl),
             jurisdictionLevel,
-            docType: docTypeOf(hit.title),
-            ...numberYearOf(hit.title, hit.sourceUrl),
+            docType,
+            ...numberYearOf(docType, hit.excerpt, hit.sourceUrl),
             alternateUrls: [],
           }
         }),

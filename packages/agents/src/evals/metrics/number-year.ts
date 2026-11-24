@@ -1,9 +1,21 @@
 import { EvalOutcome } from '@anvia/core/evals'
+import type { DocumentResult } from '../../types'
 import { evalTypes } from '../types'
 
-// The spec for a number and year, kept apart from source-map.ts. A "No." or "Nomor" token names the
-// number, kept whole. The year is the one after "Tahun", else the last part of a slashed number.
-// Without that token, the first "number year" pair is used. The title is read first, then the path.
+// The spec for a number and year, kept apart from source-map.ts. A typed document reads the excerpt
+// after its own type phrase, up to "tentang". Otherwise the decoded URL path is read. A "No." or
+// "Nomor" token names the number, kept whole. The year is the one after "Tahun", else the last part
+// of a slashed number. Without that token, the first "number year" pair is used. The title is never
+// read.
+const TYPE_PHRASES: Partial<Record<string, RegExp>> = {
+  UU: /\b(?:undang[\s-]*undang|uu)\b/i,
+  PP: /\b(?:peraturan\s+pemerintah|pp)\b/i,
+  Perpres: /\b(?:peraturan\s+presiden|perpres)\b/i,
+  Permen: /\b(?:peraturan\s+menteri|permen)\b/i,
+  Perda: /\b(?:peraturan\s+daerah|perda)\b/i,
+  Perwali: /\b(?:peraturan\s+wali\s?kota|perwali)\b/i,
+  Pergub: /\b(?:peraturan\s+gubernur|pergub)\b/i,
+}
 const NUMBER_AFTER_NO = /\b(?:nomor|no)\b[.:\s-]*(\d+(?:[./]\w+)*)/i
 const YEAR_AFTER_TAHUN = /\btahun[\s-]*(\d{4})\b/i
 const SLASHED_YEAR = /\/(\d{4})$/
@@ -37,8 +49,21 @@ function numberYearIn(text: string) {
   return { number: pair[1], year: Number(pair[2]) }
 }
 
-function expectedNumberYear(title: string, sourceUrl: string) {
-  return numberYearIn(title) ?? numberYearIn(pathOf(sourceUrl)) ?? { number: null, year: null }
+function ownIn(docType: string, excerpt: string) {
+  const phrase = TYPE_PHRASES[docType]?.exec(excerpt)
+
+  if (!phrase) return null
+
+  const after = excerpt.slice(phrase.index + phrase[0].length).split(/\btentang\b/i)[0]
+
+  return numberYearIn(after)
+}
+
+function expectedNumberYear(result: DocumentResult) {
+  return (
+    ownIn(result.docType, result.excerpt) ??
+    numberYearIn(pathOf(result.sourceUrl)) ?? { number: null, year: null }
+  )
 }
 
 export const numberYear = evalTypes.defineMetric({
@@ -51,7 +76,7 @@ export const numberYear = evalTypes.defineMetric({
     const problems: string[] = []
 
     for (const result of Object.values(output.levels).flat()) {
-      const expected = expectedNumberYear(result.title, result.sourceUrl)
+      const expected = expectedNumberYear(result)
 
       if (result.number !== expected.number || result.year !== expected.year)
         problems.push(

@@ -61,13 +61,26 @@ export function docTypeOf(title: string) {
   return match?.[1] ?? 'Other'
 }
 
+// A number and year come from the document's own identifier, never from the title. A typed
+// document reads the excerpt after its own type phrase, up to "tentang". Otherwise the decoded URL
+// path is read. An Other document has no type phrase, so only its URL is read.
 // A "No." or "Nomor" token names the number, kept whole. The year is the one after "Tahun", else the
-// last part of a slashed number. Without that token, the first "number year" pair is used. The title
-// is read first, then the decoded URL path. The excerpt is never read, because it can cite others.
+// last part of a slashed number. Without that token, the first "number year" pair is used.
 const NUMBER_AFTER_NO = /\b(?:nomor|no)\b[.:\s-]*(\d+(?:[./]\w+)*)/i
 const YEAR_AFTER_TAHUN = /\btahun[\s-]*(\d{4})\b/i
 const SLASHED_YEAR = /\/(\d{4})$/
 const PLAIN_PAIR = /(?<![\w/.])(\d+)[\s-]+(?:tahun[\s-]+)?(\d{4})\b/i
+
+// The type phrase that opens a typed document's own identifier, in full or as the short form.
+const TYPE_PHRASES: Partial<Record<string, RegExp>> = {
+  UU: /\b(?:undang[\s-]*undang|uu)\b/i,
+  PP: /\b(?:peraturan\s+pemerintah|pp)\b/i,
+  Perpres: /\b(?:peraturan\s+presiden|perpres)\b/i,
+  Permen: /\b(?:peraturan\s+menteri|permen)\b/i,
+  Perda: /\b(?:peraturan\s+daerah|perda)\b/i,
+  Perwali: /\b(?:peraturan\s+wali\s?kota|perwali)\b/i,
+  Pergub: /\b(?:peraturan\s+gubernur|pergub)\b/i,
+}
 
 function anchoredIn(text: string, number: string) {
   const year = YEAR_AFTER_TAHUN.exec(text)?.[1] ?? SLASHED_YEAR.exec(number)?.[1]
@@ -97,11 +110,24 @@ function decodedPath(url: string) {
   }
 }
 
+// The text after a typed document's own type phrase, up to "tentang", holds its identifier. A law
+// cited before that phrase, or after "tentang", is never read.
+function ownIn(docType: string, excerpt: string) {
+  const phrase = TYPE_PHRASES[docType]?.exec(excerpt)
+
+  if (!phrase) return null
+
+  const after = excerpt.slice(phrase.index + phrase[0].length).split(/\btentang\b/i)[0]
+
+  return numberYearIn(after)
+}
+
 export function numberYearOf(
-  title: string,
+  docType: string,
+  excerpt: string,
   url: string,
 ): { number: string | null; year: number | null } {
-  return numberYearIn(title) ?? numberYearIn(decodedPath(url)) ?? { number: null, year: null }
+  return ownIn(docType, excerpt) ?? numberYearIn(decodedPath(url)) ?? { number: null, year: null }
 }
 
 const NATIONAL_DOC_TYPES = ['UU', 'PP', 'Perpres', 'Permen']

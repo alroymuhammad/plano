@@ -237,7 +237,7 @@ function credibilityFixture(sourceUrl: string, label: SourceCredibility) {
 }
 
 const metricControls: Record<string, FindDocumentsEvalOutput> = {
-  'uu-number-from-title': foundFixture({
+  'uu-number-from-url': foundFixture({
     national: [
       documentResult({
         title: UU_TITLE,
@@ -301,13 +301,14 @@ const metricControls: Record<string, FindDocumentsEvalOutput> = {
       }),
     ],
   }),
-  'slashed-number-from-title': foundFixture({
+  'slashed-number-from-excerpt': foundFixture({
     national: [
       documentResult({
         title: PERMEN_TITLE,
         docType: 'Permen',
         sourceUrl: PERMEN_URL,
         level: 'national',
+        excerpt: 'Peraturan Menteri PUPR Nomor 19/PRT/M/2018 Tahun 2018 mengatur bangunan gedung.',
         number: '19/PRT/M/2018',
         year: 2018,
       }),
@@ -320,6 +321,7 @@ const metricControls: Record<string, FindDocumentsEvalOutput> = {
         docType: 'Permen',
         sourceUrl: PERMEN_URL,
         level: 'national',
+        excerpt: 'Peraturan Menteri PUPR Nomor 19/PRT/M/2018 Tahun 2018 mengatur bangunan gedung.',
         number: '2018',
         year: 2018,
       }),
@@ -332,6 +334,7 @@ const metricControls: Record<string, FindDocumentsEvalOutput> = {
         docType: 'Permen',
         sourceUrl: 'https://peraturan.go.id/id/permen-pupr-14-prt-m-2017',
         level: 'national',
+        excerpt: 'Peraturan Menteri PUPR No. 14/PRT/M/2017 tentang Persyaratan Teknis.',
         number: '14/PRT/M/2017',
         year: 2017,
       }),
