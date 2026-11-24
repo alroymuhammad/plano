@@ -29,6 +29,7 @@ export type DocumentResult = {
   credibility: SourceCredibility
   jurisdictionLevel: JurisdictionLevel
   docType: string
+  downloadUrl?: string
 }
 
 export const QueryUnderstandingSchema = z.object({
