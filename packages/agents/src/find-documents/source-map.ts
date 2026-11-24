@@ -61,26 +61,32 @@ export function docTypeOf(title: string) {
   return match?.[1] ?? 'Other'
 }
 
-// A number and year come from the document's own identifier, never from the title. A typed
-// document reads the excerpt after its own type phrase, up to "tentang". Otherwise the decoded URL
-// path is read. An Other document has no type phrase, so only its URL is read.
+// A number and year come from the document's own identifier. The title is read first, then the
+// decoded URL path, then the excerpt. An Other document has no type phrase, so only its URL is read.
 // A "No." or "Nomor" token names the number, kept whole. The year is the one after "Tahun", else the
-// last part of a slashed number. Without that token, the first "number year" pair is used.
+// last part of a slashed number. Without that token, the URL path's first "number year" pair is used.
 const NUMBER_AFTER_NO = /\b(?:nomor|no)\b[.:\s-]*(\d+(?:[./]\w+)*)/i
 const YEAR_AFTER_TAHUN = /\btahun[\s-]*(\d{4})\b/i
 const SLASHED_YEAR = /\/(\d{4})$/
 const PLAIN_PAIR = /(?<![\w/.])(\d+)[\s-]+(?:tahun[\s-]+)?(\d{4})\b/i
 
-// The type phrase that opens a typed document's own identifier, in full or as the short form.
-const TYPE_PHRASES: Partial<Record<string, RegExp>> = {
-  UU: /\b(?:undang[\s-]*undang|uu)\b/i,
-  PP: /\b(?:peraturan\s+pemerintah|pp)\b/i,
-  Perpres: /\b(?:peraturan\s+presiden|perpres)\b/i,
-  Permen: /\b(?:peraturan\s+menteri|permen)\b/i,
-  Perda: /\b(?:peraturan\s+daerah|perda)\b/i,
-  Perwali: /\b(?:peraturan\s+wali\s?kota|perwali)\b/i,
-  Pergub: /\b(?:peraturan\s+gubernur|pergub)\b/i,
+// A typed document's own type phrase opens its title, or a line of its excerpt, in full or as the
+// short form. Only region words may come between that phrase and "Nomor".
+const OWN_PHRASES: Partial<Record<string, RegExp>> = {
+  UU: /^[\s|#*>]*(?:undang[\s-]*undang|uu)\b/im,
+  PP: /^[\s|#*>]*(?:peraturan\s+pemerintah|pp)\b/im,
+  Perpres: /^[\s|#*>]*(?:peraturan\s+presiden|perpres)\b/im,
+  Permen: /^[\s|#*>]*(?:peraturan\s+menteri|permen)\b/im,
+  Perda: /^[\s|#*>]*(?:peraturan\s+daerah|perda)\b/im,
+  Perwali: /^[\s|#*>]*(?:peraturan\s+wali\s?kota|perwali)\b/im,
+  Pergub: /^[\s|#*>]*(?:peraturan\s+gubernur|pergub)\b/im,
 }
+
+// The identifier after the phrase: region and issuer words, then "Nomor" or "No.", the number, and an
+// optional "Tahun". Any other word, such as "Perubahan atas", ends the match, so an amended document
+// is never read.
+const OWN_IDENTIFIER =
+  /^(?:[\s,.:;|*#>-]*\b(?:kota|walikota|wali|surabaya|provinsi|propinsi|jawa|timur|gubernur|perwali|perda|pergub|pupr)\b)*[\s,.:;|*#>-]*\b(?:nomor|no)\b[.:\s-]*(\d+(?:[./]\w+)*)(?:[\s,.-]*tahun[\s-]*(\d{4})\b)?/i
 
 function anchoredIn(text: string, number: string) {
   const year = YEAR_AFTER_TAHUN.exec(text)?.[1] ?? SLASHED_YEAR.exec(number)?.[1]
@@ -110,24 +116,37 @@ function decodedPath(url: string) {
   }
 }
 
-// The text after a typed document's own type phrase, up to "tentang", holds its identifier. A law
-// cited before that phrase, or after "tentang", is never read.
-function ownIn(docType: string, excerpt: string) {
-  const phrase = TYPE_PHRASES[docType]?.exec(excerpt)
+// The identifier follows the phrase, up to "tentang". A law cited before that phrase, or after
+// "tentang", is never read.
+function ownIn(docType: string, text: string) {
+  const phrase = OWN_PHRASES[docType]?.exec(text)
 
   if (!phrase) return null
 
-  const after = excerpt.slice(phrase.index + phrase[0].length).split(/\btentang\b/i)[0]
+  const after = text.slice(phrase.index + phrase[0].length).split(/\btentang\b/i)[0]
+  const identifier = OWN_IDENTIFIER.exec(after)
 
-  return numberYearIn(after)
+  if (!identifier) return null
+
+  const number = identifier[1]
+  const year = identifier[2] ?? SLASHED_YEAR.exec(number)?.[1]
+
+  if (!year) return null
+
+  return { number, year: Number(year) }
 }
 
 export function numberYearOf(
   docType: string,
+  title: string,
   excerpt: string,
   url: string,
 ): { number: string | null; year: number | null } {
-  return ownIn(docType, excerpt) ?? numberYearIn(decodedPath(url)) ?? { number: null, year: null }
+  return (
+    ownIn(docType, title) ??
+    numberYearIn(decodedPath(url)) ??
+    ownIn(docType, excerpt) ?? { number: null, year: null }
+  )
 }
 
 const NATIONAL_DOC_TYPES = ['UU', 'PP', 'Perpres', 'Permen']

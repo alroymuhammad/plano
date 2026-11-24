@@ -15,10 +15,12 @@ const decodedUrl = (url: string) => {
   }
 }
 
-// Each number or year that a result sets must appear in its excerpt or source URL.
-// A null field is unset and passes. The title is not checked.
+// Each number or year that a result sets must appear in its title, excerpt or source URL.
+// A null field is unset and passes.
 const setValuesShown = (result: DocumentResult) => {
-  const shown = new Set(digitRunsOf(`${result.excerpt} ${decodedUrl(result.sourceUrl)}`))
+  const shown = new Set(
+    digitRunsOf(`${result.title} ${result.excerpt} ${decodedUrl(result.sourceUrl)}`),
+  )
   const values = [result.number, result.year === null ? null : String(result.year)].filter(
     (value): value is string => value !== null && value.trim() !== '',
   )

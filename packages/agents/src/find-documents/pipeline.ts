@@ -234,7 +234,7 @@ export function createFindDocumentsPipeline(options: FindDocumentsOptions = {}) 
             credibility: credibilityOf(hit.sourceUrl),
             jurisdictionLevel,
             docType,
-            ...numberYearOf(docType, hit.excerpt, hit.sourceUrl),
+            ...numberYearOf(docType, hit.title, hit.excerpt, hit.sourceUrl),
             alternateUrls: [],
           }
         }),
