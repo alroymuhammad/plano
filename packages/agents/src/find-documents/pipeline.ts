@@ -10,7 +10,7 @@ import {
   QueryUnderstandingSchema,
 } from '../types'
 import { getModel } from '../utils/model'
-import { credibilityOf, docTypeOf, LEVELS, SOURCE_DOMAINS } from './source-map'
+import { credibilityOf, docTypeOf, LEVELS, numberYearOf, SOURCE_DOMAINS } from './source-map'
 
 const OUT_OF_SCOPE_REPLY =
   'Find Documents only covers Surabaya development and permit documents. Ask about a Surabaya Case, or use web search for other topics.'
@@ -49,8 +49,7 @@ function searchLevel(level: JurisdictionLevel) {
         credibility: credibilityOf(result.url),
         jurisdictionLevel: level,
         docType: docTypeOf(result.title),
-        number: null,
-        year: null,
+        ...numberYearOf(result.title, result.url),
         alternateUrls: [],
       }))
     },

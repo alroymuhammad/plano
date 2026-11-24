@@ -46,3 +46,34 @@ export function docTypeOf(title: string) {
 
   return match?.[1] ?? 'Other'
 }
+
+// The first "number year" pair in the title names the document. When the title has none, the
+// decoded URL path is the fallback. The excerpt is never read, because it can cite other documents.
+const NUMBER_YEAR = /\b(\d+) (?:tahun |th )?(\d{4})\b/
+
+function numberYearIn(text: string) {
+  const words = text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim()
+  const match = NUMBER_YEAR.exec(words)
+
+  if (!match) return null
+
+  return { number: match[1], year: Number(match[2]) }
+}
+
+function decodedPath(url: string) {
+  try {
+    return decodeURIComponent(new URL(url).pathname)
+  } catch {
+    return ''
+  }
+}
+
+export function numberYearOf(
+  title: string,
+  url: string,
+): { number: string | null; year: number | null } {
+  return numberYearIn(title) ?? numberYearIn(decodedPath(url)) ?? { number: null, year: null }
+}
