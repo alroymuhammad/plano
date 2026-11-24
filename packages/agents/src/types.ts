@@ -57,3 +57,5 @@ export type DocumentsResult =
       levels: Record<JurisdictionLevel, DocumentResult[]>
       understanding: QueryUnderstanding
     }
+
+export type DocumentsExpected = { status: DocumentsResult['status'] }

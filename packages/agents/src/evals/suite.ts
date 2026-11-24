@@ -1,11 +1,8 @@
-import { createEvalTypes, defineEvalCases, defineEvalSuite, EvalOutcome } from '@anvia/core/evals'
+import { defineEvalCases, defineEvalSuite, EvalOutcome } from '@anvia/core/evals'
 import { findDocuments } from '../index'
 import { LEVELS } from '../find-documents/source-map'
 import type { DocumentResult, DocumentsResult, JurisdictionLevel } from '../types'
-
-type Expected = { status: DocumentsResult['status'] }
-
-const types = createEvalTypes<string, DocumentsResult, Expected>()
+import { types } from './types'
 
 const cases = defineEvalCases([
   {
