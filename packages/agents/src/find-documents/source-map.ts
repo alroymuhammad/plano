@@ -183,10 +183,11 @@ function regionIn(text: string): JurisdictionLevel | 'other' | null {
   return 'other'
 }
 
-// The issuer sets the level, never the host. A national type is national. Otherwise the first
-// region phrase in the title decides, then the decoded URL path. Any other region has no level.
-export function levelOf(title: string, url: string): JurisdictionLevel | null {
-  if (NATIONAL_DOC_TYPES.includes(docTypeOf(title))) return 'national'
+// The issuer sets the level, never the host. A national doc type is national, where the doc type
+// is the one typeOf reports. Otherwise the first region phrase in the title decides, then the
+// decoded URL path. Any other region has no level.
+export function levelOf(docType: string, title: string, url: string): JurisdictionLevel | null {
+  if (NATIONAL_DOC_TYPES.includes(docType)) return 'national'
 
   const region = regionIn(title) ?? regionIn(decodedPath(url))
 

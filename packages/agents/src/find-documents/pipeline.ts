@@ -230,11 +230,10 @@ export function createFindDocumentsPipeline(options: FindDocumentsOptions = {}) 
         results: input.hits.flatMap((hit) => {
           if (isListingUrl(hit.sourceUrl)) return []
 
-          const jurisdictionLevel = levelOf(hit.title, hit.sourceUrl)
+          const docType = typeOf(hit.title, hit.excerpt)
+          const jurisdictionLevel = levelOf(docType, hit.title, hit.sourceUrl)
 
           if (jurisdictionLevel === null) return []
-
-          const docType = typeOf(hit.title, hit.excerpt)
 
           return {
             title: hit.title,

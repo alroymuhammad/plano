@@ -12,7 +12,7 @@ export const region = evalTypes.defineMetric({
     const problems: string[] = []
 
     for (const result of Object.values(output.levels).flat()) {
-      const expected = expectedLevel(result.title, result.sourceUrl)
+      const expected = expectedLevel(result.title, result.excerpt, result.sourceUrl)
 
       if (expected === null)
         problems.push(
