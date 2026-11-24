@@ -8,6 +8,20 @@ export const SOURCE_DOMAINS: Record<JurisdictionLevel, string[]> = {
   city: ['jdih.surabaya.go.id'],
 }
 
+// Words that a level's search phrase leaves out. The Jawa Timur index returns nothing for "izin"
+// or "perizinan", so the province phrase drops them.
+export const PHRASE_OMISSIONS: Partial<Record<JurisdictionLevel, RegExp>> = {
+  province: /\b(izin|perizinan)\b/gi,
+}
+
+export function searchPhraseOf(level: JurisdictionLevel, phrase: string) {
+  const omitted = PHRASE_OMISSIONS[level]
+
+  if (!omitted) return phrase
+
+  return phrase.replace(omitted, ' ').replace(/\s+/g, ' ').trim()
+}
+
 export function credibilityOf(url: string): SourceCredibility {
   let host: string
 
