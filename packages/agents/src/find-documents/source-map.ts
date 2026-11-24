@@ -128,3 +128,10 @@ export function levelOf(title: string, url: string): JurisdictionLevel | null {
 
   return null
 }
+
+// A listing page is a search or category page, not a document. Its URL carries one of these parts.
+const LISTING_PARTS = ['?tahun=', '&page=']
+
+export function isListingUrl(url: string) {
+  return LISTING_PARTS.some((part) => url.includes(part))
+}

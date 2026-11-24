@@ -13,6 +13,7 @@ import { checkDownloadLinks } from './download-check'
 import {
   credibilityOf,
   docTypeOf,
+  isListingUrl,
   levelOf,
   numberYearOf,
   searchPhraseOf,
@@ -177,6 +178,8 @@ export function createFindDocumentsPipeline(options: FindDocumentsOptions = {}) 
       run: ({ input }) => ({
         understanding: input.understanding,
         results: input.hits.flatMap((hit) => {
+          if (isListingUrl(hit.sourceUrl)) return []
+
           const jurisdictionLevel = levelOf(hit.title, hit.sourceUrl)
 
           if (jurisdictionLevel === null) return []
