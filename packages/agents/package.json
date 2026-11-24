@@ -6,7 +6,9 @@
   "main": "src/index.ts",
   "types": "src/index.ts",
   "scripts": {
-    "build": "tsc --noEmit"
+    "build": "tsc --noEmit",
+    "dev:studio": "tsx watch --env-file=../../.env src/studio.ts",
+    "eval": "tsx --env-file=../../.env src/evals/run.ts"
   },
   "dependencies": {
     "@anvia/anthropic": "^1.2.2",
@@ -16,7 +18,10 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@anvia/studio": "^1.5.0",
+    "@plano/observability": "workspace:*",
     "@types/node": "^26.6.6",
+    "tsx": "^4.23.15",
     "typescript": "^7.0.2"
   }
 }

@@ -5,7 +5,9 @@
 - `pnpm format` — `oxlint --fix`, then oxfmt (writes files). Run before committing.
 - `pnpm build` — builds/typechecks all apps. Must pass.
 - Dev: `docker compose up -d`, `pnpm db:migrate`, then `pnpm dev:api`, `pnpm dev:platform`.
-- Lens (optional tracing, decision 0013): copy `lens/.env.example` to `lens/.env` with fresh secrets, `pnpm lens:up`, open `http://localhost:8082`, create a project key, set `ANVIA_LENS_*` in `.env`. `lens/docker-compose.yml` is vendored upstream; only local edits are the project name and no `rslave` bind propagation (fails on WSL Docker).
+- Studio: `pnpm dev:studio` serves Anvia Studio on port 4021 (`http://localhost:4021/playground`) with the Find Documents pipeline. Needs `TAVILY_API_KEY` and the gateway vars in `.env`.
+- Evals: `pnpm --filter @plano/agents eval [caseId ...]` runs the agents eval suite live (model and Tavily calls cost money). No IDs runs every case.
+- Lens (optional tracing, decision 0013): copy `lens/.env.example` to `lens/.env` with fresh secrets, `pnpm lens:up`, open `http://localhost:8082`, create a project key, set `ANVIA_LENS_*` in `.env`. Lens is a no-op while `ANVIA_LENS_*` is unset. Once it is set, Lens throws without a service name, so `createLens()` defaults it to `plano` (override with `ANVIA_LENS_SERVICE_NAME`). `lens/docker-compose.yml` is vendored upstream; only local edits are the project name and no `rslave` bind propagation (fails on WSL Docker).
 - DB: `pnpm db:generate` (migration from schema), `pnpm db:migrate` (apply).
 - Style: no semicolons, single quotes, a blank line before and after every `if` (decision 0012), no nested ternaries, no conditional spread (`...(x && {...})`, `...(x ? a : b)`); use an `if` instead. Lint enforces all three. Match surrounding code.
 

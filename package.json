@@ -4,6 +4,7 @@
   "scripts": {
     "dev:api": "pnpm --filter api dev",
     "dev:platform": "pnpm --filter platform dev",
+    "dev:studio": "pnpm --filter @plano/agents dev:studio",
     "db:generate": "pnpm --filter @plano/db generate",
     "db:migrate": "pnpm --filter @plano/db migrate",
     "lens:up": "docker compose -f lens/docker-compose.yml up -d",
