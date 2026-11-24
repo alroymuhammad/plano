@@ -31,15 +31,13 @@ async function probe(url: string, method: 'HEAD' | 'GET', signal: AbortSignal): 
   }
 }
 
-// HEAD settles a live link or a missing domain. GET decides the rest, because many servers refuse HEAD.
+// HEAD settles a live link or a missing domain. GET decides the rest: many servers refuse HEAD, and HEAD can fail.
 export async function checkLink(url: string, signal: AbortSignal): Promise<LinkStatus> {
   const head = await probe(url, 'HEAD', signal)
 
   if (head === 'unresolvable') return 'dead'
 
-  if (head === 'failed') return 'unknown'
-
-  if (head < 400) return 'alive'
+  if (typeof head === 'number' && head < 400) return 'alive'
 
   const get = await probe(url, 'GET', signal)
 
@@ -91,12 +89,15 @@ function withoutLink(result: DocumentResult): DocumentResult {
   return copy
 }
 
-async function checkResult(result: DocumentResult, signal: AbortSignal): Promise<DocumentResult> {
+async function checkResult(
+  result: DocumentResult,
+  statusOf: (url: string) => Promise<LinkStatus>,
+): Promise<DocumentResult> {
   const url = result.downloadUrl
 
   if (!url) return result
 
-  const status = await checkLink(url, signal)
+  const status = await statusOf(url)
   const keep = status === 'alive' || (status === 'unknown' && result.credibility === 'official')
 
   if (keep) return result
@@ -116,8 +117,21 @@ export async function checkDownloadLinks(
   if (options.abortSignal) signals.push(options.abortSignal)
 
   const signal = AbortSignal.any(signals)
+  // One probe per URL: results that share a download link share its status.
+  const statuses = new Map<string, Promise<LinkStatus>>()
+  const statusOf = (url: string) => {
+    const known = statuses.get(url)
+
+    if (known) return known
+
+    const status = checkLink(url, signal)
+
+    statuses.set(url, status)
+
+    return status
+  }
   const checkLevel = (results: DocumentResult[]) =>
-    Promise.all(results.map((result) => checkResult(withDownloadUrl(result), signal)))
+    Promise.all(results.map((result) => checkResult(withDownloadUrl(result), statusOf)))
   const [national, province, city] = await Promise.all([
     checkLevel(output.levels.national),
     checkLevel(output.levels.province),
