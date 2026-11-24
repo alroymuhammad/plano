@@ -1,0 +1,18 @@
+{
+  "caseId": "fictional",
+  "prompt": "dokumen izin pembangunan di Gotham City",
+  "recordedAt": "2026-11-24T08:45:50.372Z",
+  "durationMs": 1736,
+  "error": null,
+  "output": {
+    "status": "out_of_scope",
+    "message": "Gotham City adalah tempat fiktif, sedangkan Plano hanya mencakup dokumen pembangunan, perizinan, dan perencanaan untuk Kota Surabaya.",
+    "levels": [],
+    "notFound": [],
+    "documents": []
+  },
+  "plan": null,
+  "queries": [],
+  "found": "",
+  "pdfs": {}
+}

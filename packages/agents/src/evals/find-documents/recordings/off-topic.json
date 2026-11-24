@@ -1,0 +1,18 @@
+{
+  "caseId": "off-topic",
+  "prompt": "resep nasi goreng",
+  "recordedAt": "2026-11-24T08:45:51.916Z",
+  "durationMs": 1543,
+  "error": null,
+  "output": {
+    "status": "out_of_scope",
+    "message": "Permintaan ini bukan tentang dokumen pembangunan, perizinan, atau perencanaan; Plano hanya mencakup dokumen tersebut untuk Kota Surabaya.",
+    "levels": [],
+    "notFound": [],
+    "documents": []
+  },
+  "plan": null,
+  "queries": [],
+  "found": "",
+  "pdfs": {}
+}
