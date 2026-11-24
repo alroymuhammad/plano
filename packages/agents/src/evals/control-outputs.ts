@@ -91,6 +91,16 @@ const perwaliNumbered = (number: number): DocumentResult => ({
 const sixPerwali = [1, 2, 3, 4, 5, 6].map(perwaliNumbered)
 const fivePerwali = sixPerwali.slice(0, 5)
 
+// The download URL is a PDF that no search returned, and the excerpt does not name it.
+const unsearchedDownload: DocumentResult = {
+  ...perwali3,
+  downloadUrl: 'https://jdih.surabaya.go.id/control/perwali-3-2021.pdf',
+}
+
+// The download URL came from a province search. A merged copy can carry it into the city level.
+const provinceDownloadUrl = 'https://jdih.jatimprov.go.id/control/perda-izin-bangunan-2021.pdf'
+const provinceDownload: DocumentResult = { ...perwali3, downloadUrl: provinceDownloadUrl }
+
 export const controlOutputs: Record<string, FindDocumentsEvalOutput> = {
   'out-of-scope-rejected-negative': {
     status: 'found',
@@ -133,6 +143,20 @@ export const controlOutputs: Record<string, FindDocumentsEvalOutput> = {
     levels: { national: [], province: [], city: [perwali3] },
     understanding: surabayaPermit,
     searched: { city: [perwali3.sourceUrl] },
+    usage: Usage.empty(),
+  },
+  'url-in-source-download-negative': {
+    status: 'found',
+    levels: { national: [], province: [], city: [unsearchedDownload] },
+    understanding: surabayaPermit,
+    searched: { city: [perwali3.sourceUrl] },
+    usage: Usage.empty(),
+  },
+  'url-in-source-download-positive': {
+    status: 'found',
+    levels: { national: [], province: [], city: [provinceDownload] },
+    understanding: surabayaPermit,
+    searched: { city: [perwali3.sourceUrl], province: [provinceDownloadUrl] },
     usage: Usage.empty(),
   },
   'number-and-year-negative': {
