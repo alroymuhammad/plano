@@ -2,6 +2,7 @@ import { defineEvalCases, defineEvalSuite, EvalOutcome } from '@anvia/core/evals
 import { findDocuments } from '../index'
 import { LEVELS } from '../find-documents/source-map'
 import type { DocumentResult, JurisdictionLevel } from '../types'
+import { credibility } from './metrics/credibility'
 import { docType } from './metrics/doc-type'
 import { level } from './metrics/level'
 import { listingUrls } from './metrics/listing-urls'
@@ -118,5 +119,6 @@ export const findDocumentsSuite = defineEvalSuite({
     noDeadDownloadLinks,
     listingUrls,
     merge,
+    credibility,
   ],
 })
