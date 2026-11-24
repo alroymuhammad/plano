@@ -1,31 +1,19 @@
 import { Pipeline } from '@anvia/core/pipeline'
 import { z } from 'zod'
 import { getClient } from '../tools/web-search/service'
-import type {
-  DocumentResult,
-  DocumentsResult,
-  FindDocumentsOptions,
-  JurisdictionLevel,
-  QueryUnderstanding,
+import {
+  type DocumentResult,
+  type DocumentsResult,
+  type FindDocumentsOptions,
+  type JurisdictionLevel,
+  type QueryUnderstanding,
+  QueryUnderstandingSchema,
 } from '../types'
 import { getModel } from '../utils/model'
 import { credibilityOf, LEVELS, SOURCE_DOMAINS } from './source-map'
 
 const OUT_OF_SCOPE_REPLY =
   'Find Documents only covers Surabaya development and permit documents. Ask about a Surabaya Case, or use web search for other topics.'
-
-const QuerySchema = z.object({
-  inScope: z.boolean(),
-  topic: z.string(),
-  documentTypes: z.array(z.string()),
-  city: z.string(),
-  province: z.string(),
-  searchPhrases: z.object({
-    national: z.string(),
-    province: z.string(),
-    city: z.string(),
-  }),
-})
 
 const READ_QUERY_INSTRUCTIONS = `You read an Analyst's question about planning and permit documents in Indonesia.
 - inScope: true when the question asks for development or permit documents (for example izin pembangunan, bangunan gedung, tata ruang) and names Surabaya or no city. Surabaya is the only supported city. False for any other city and for off-topic questions.
@@ -57,7 +45,7 @@ function searchLevel(level: JurisdictionLevel) {
   return new Pipeline({
     id: `find-documents-${level}`,
     name: `Find Documents: ${level}`,
-    inputSchema: QuerySchema,
+    inputSchema: QueryUnderstandingSchema,
   }).step({
     id: `search-${level}`,
     run: async ({ input }): Promise<LevelResults> => {
@@ -86,7 +74,7 @@ function understandingBranch() {
   return new Pipeline({
     id: 'find-documents-understanding',
     name: 'Find Documents: understanding',
-    inputSchema: QuerySchema,
+    inputSchema: QueryUnderstandingSchema,
   }).step({
     id: 'understanding',
     run: ({ input }) => input,
@@ -122,7 +110,7 @@ export function createFindDocumentsPipeline(options: FindDocumentsOptions = {}) 
     .extract({
       id: 'read-query',
       model: getModel(),
-      outputSchema: QuerySchema,
+      outputSchema: QueryUnderstandingSchema,
       instructions: READ_QUERY_INSTRUCTIONS,
       text: ({ input }) => input,
     })

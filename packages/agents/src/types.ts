@@ -1,6 +1,7 @@
 import type { AgentPrompt, MemoryScope, MemoryStore } from '@anvia/core'
 import type { AgentObservabilityOptions } from '@anvia/core/observability'
 import type { PipelineObservabilityOptions } from '@anvia/core/pipeline'
+import { z } from 'zod'
 
 export type Provider = 'openai' | 'anthropic'
 
@@ -30,14 +31,20 @@ export type DocumentResult = {
   docType: string
 }
 
-export type QueryUnderstanding = {
-  topic: string
-  documentTypes: string[]
-  city: string
-  province: string
-  inScope: boolean
-  searchPhrases: Record<JurisdictionLevel, string>
-}
+export const QueryUnderstandingSchema = z.object({
+  inScope: z.boolean(),
+  topic: z.string(),
+  documentTypes: z.array(z.string()),
+  city: z.string(),
+  province: z.string(),
+  searchPhrases: z.object({
+    national: z.string(),
+    province: z.string(),
+    city: z.string(),
+  }),
+})
+
+export type QueryUnderstanding = z.infer<typeof QueryUnderstandingSchema>
 
 export type DocumentsResult =
   | {
