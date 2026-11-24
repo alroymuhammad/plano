@@ -10,11 +10,5 @@
     "plano/no-conditional-spread": "error",
     "no-nested-ternary": "error"
   },
-  "ignorePatterns": [
-    ".claude/**",
-    "**/dist",
-    "**/routeTree.gen.ts",
-    "packages/ui/src",
-    "packages/db/migrations"
-  ]
+  "ignorePatterns": ["**/dist", "**/routeTree.gen.ts", "packages/ui/src", "packages/db/migrations"]
 }

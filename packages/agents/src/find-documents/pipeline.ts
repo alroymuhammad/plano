@@ -10,6 +10,7 @@ import {
   QueryUnderstandingSchema,
 } from '../types'
 import { getModel } from '../utils/model'
+import { checkDownloadLinks } from './download-check'
 import {
   credibilityOf,
   docTypeOf,
@@ -127,5 +128,9 @@ export function createFindDocumentsPipeline(options: FindDocumentsOptions = {}) 
     .step({
       id: 'group-levels',
       run: ({ input }) => groupLevels(input),
+    })
+    .step({
+      id: 'check-download-links',
+      run: ({ input, abortSignal }) => checkDownloadLinks(input, { abortSignal }),
     })
 }
