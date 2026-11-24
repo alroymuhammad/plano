@@ -9,7 +9,14 @@ export const SOURCE_DOMAINS: Record<JurisdictionLevel, string[]> = {
 }
 
 export function credibilityOf(url: string): SourceCredibility {
-  const host = new URL(url).hostname
+  let host: string
+
+  try {
+    host = new URL(url).hostname
+  } catch {
+    return 'open_web'
+  }
+
   const officialDomains = Object.values(SOURCE_DOMAINS).flat()
 
   if (officialDomains.some((domain) => host === domain || host.endsWith(`.${domain}`)))
