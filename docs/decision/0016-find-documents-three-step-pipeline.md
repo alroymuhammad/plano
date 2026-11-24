@@ -1,6 +1,6 @@
 # 0016 — Find Documents as a three-step chain of thought
 
-Status: accepted
+Status: superseded by 0017
 Date: 2026-11-24
 
 ## Context

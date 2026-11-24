@@ -1,4 +1,4 @@
-import type { AgentPrompt, MemoryScope, MemoryStore } from '@anvia/core'
+import type { AgentPrompt, AnyTool, MemoryScope, MemoryStore } from '@anvia/core'
 import type { AgentObservabilityOptions } from '@anvia/core/observability'
 import type { PipelineObservabilityOptions } from '@anvia/core/pipeline'
 import { z } from 'zod'
@@ -8,6 +8,7 @@ export type Provider = 'openai' | 'anthropic'
 export type RunAgentOptions = {
   prompt: AgentPrompt
   instructions?: string
+  tools?: AnyTool[]
   provider?: Provider
   modelId?: string
   memory?: MemoryStore
@@ -26,8 +27,40 @@ export const FindDocumentsInputSchema = z.object({
   findDocumentPrompt: z.string().trim().min(1),
 })
 
-// Step 3: the answer.
+export const RulePlanSchema = z.object({
+  city: z.string(),
+  province: z.string(),
+  levels: z.array(
+    z.object({
+      level: LevelSchema,
+      needed: z.boolean(),
+      reason: z
+        .string()
+        .describe('Why the applicant must or need not follow this level, in one sentence'),
+    }),
+  ),
+  rules: z.array(
+    z.object({
+      level: LevelSchema,
+      type: z
+        .string()
+        .describe('Official short type, for example UU, PP, Permen PUPR, Perda, Pergub, Perwali'),
+      region: z
+        .string()
+        .nullable()
+        .describe('Issuing region, for example "Kota Surabaya"; null for national rules'),
+      number: z.string().nullable(),
+      year: z.string().nullable(),
+      subject: z.string().describe('What the rule is about, in a few words'),
+    }),
+  ),
+})
+
+export type RulePlan = z.infer<typeof RulePlanSchema>
+
 export const DocumentsResultSchema = z.object({
+  levels: RulePlanSchema.shape.levels,
+  notFound: z.array(z.string()).describe('Planned rules with no matching search result'),
   documents: z.array(
     z.object({
       title: z.string(),
