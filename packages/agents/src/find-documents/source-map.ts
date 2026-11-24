@@ -28,17 +28,21 @@ export function credibilityOf(url: string): SourceCredibility {
 }
 
 const DOC_TYPES: Array<[RegExp, string]> = [
-  [/^undang-undang\b/i, 'UU'],
-  [/^peraturan pemerintah\b/i, 'PP'],
-  [/^peraturan presiden\b/i, 'Perpres'],
-  [/^peraturan menteri\b/i, 'Permen'],
-  [/^peraturan daerah\b/i, 'Perda'],
-  [/^peraturan wali ?kota\b/i, 'Perwali'],
-  [/^peraturan gubernur\b/i, 'Pergub'],
+  [/^(undang undang|uu)\b/, 'UU'],
+  [/^(peraturan pemerintah|pp)\b/, 'PP'],
+  [/^(peraturan presiden|perpres)\b/, 'Perpres'],
+  [/^(peraturan menteri|permen)\b/, 'Permen'],
+  [/^(peraturan daerah|perda)\b/, 'Perda'],
+  [/^(peraturan wali ?kota|perwali)\b/, 'Perwali'],
+  [/^(peraturan gubernur|pergub)\b/, 'Pergub'],
 ]
 
 export function docTypeOf(title: string) {
-  const match = DOC_TYPES.find(([pattern]) => pattern.test(title))
+  const words = title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim()
+  const match = DOC_TYPES.find(([pattern]) => pattern.test(words))
 
   return match?.[1] ?? 'Other'
 }
