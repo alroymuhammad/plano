@@ -29,6 +29,9 @@ export type DocumentResult = {
   credibility: SourceCredibility
   jurisdictionLevel: JurisdictionLevel
   docType: string
+  number: string | null
+  year: number | null
+  alternateUrls: string[]
 }
 
 export const QueryUnderstandingSchema = z.object({

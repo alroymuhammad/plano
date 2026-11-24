@@ -1,5 +1,5 @@
-// Synthetic Document Results for the negative controls. Titles are modelled on
-// the baseline runs; URLs are placeholders and no metric reads them.
+// Synthetic Document Results for the negative controls. Titles and URLs are modelled
+// on the baseline runs. Metrics that fall back to the URL path read the URLs.
 import type {
   DocumentResult,
   DocumentsResult,
@@ -27,14 +27,20 @@ export function documentResult(fields: {
   sourceUrl: string
   level: JurisdictionLevel
   credibility?: SourceCredibility
+  excerpt?: string
+  number?: string
+  year?: number
 }): DocumentResult {
   return {
     title: fields.title,
     sourceUrl: fields.sourceUrl,
-    excerpt: 'Ringkasan fixture untuk kontrol metrik.',
+    excerpt: fields.excerpt ?? 'Ringkasan fixture untuk kontrol metrik.',
     credibility: fields.credibility ?? 'official',
     jurisdictionLevel: fields.level,
     docType: fields.docType,
+    number: fields.number ?? null,
+    year: fields.year ?? null,
+    alternateUrls: [],
   }
 }
 

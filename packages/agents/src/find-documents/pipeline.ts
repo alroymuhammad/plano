@@ -49,6 +49,9 @@ function searchLevel(level: JurisdictionLevel) {
         credibility: credibilityOf(result.url),
         jurisdictionLevel: level,
         docType: docTypeOf(result.title),
+        number: null,
+        year: null,
+        alternateUrls: [],
       }))
     },
   })
