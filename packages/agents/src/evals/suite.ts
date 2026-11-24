@@ -2,6 +2,7 @@ import { createEvalTypes, defineEvalCases, defineEvalSuite, EvalOutcome } from '
 import { findDocuments } from '../index'
 import { LEVELS } from '../find-documents/source-map'
 import type { DocumentResult, DocumentsResult, JurisdictionLevel } from '../types'
+import { noDeadDownloadLinks } from './metrics/no-dead-download-links'
 
 type Expected = { status: DocumentsResult['status'] }
 
@@ -103,5 +104,5 @@ export const findDocumentsSuite = defineEvalSuite({
   name: 'find-documents',
   cases,
   target: (input) => findDocuments(input),
-  metrics: [scope, documents, understanding],
+  metrics: [scope, documents, understanding, noDeadDownloadLinks],
 })
