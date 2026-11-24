@@ -24,6 +24,11 @@ export const FindDocumentsInputSchema = z.object({
   findDocumentPrompt: z.string().trim().min(1),
 })
 
+export const ScopeSchema = z.object({
+  inScope: z.boolean(),
+  message: z.string(),
+})
+
 export const RulePlanSchema = z.object({
   city: z.string(),
   province: z.string(),
@@ -56,6 +61,8 @@ export const RulePlanSchema = z.object({
 export type RulePlan = z.infer<typeof RulePlanSchema>
 
 export const DocumentsResultSchema = z.object({
+  status: z.enum(['found', 'out_of_scope']),
+  message: z.string().nullable().describe('Why the request is out of scope; null when found'),
   levels: RulePlanSchema.shape.levels,
   notFound: z.array(z.string()).describe('Planned rules with no matching search result'),
   documents: z.array(

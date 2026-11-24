@@ -3,12 +3,15 @@ import { Pipeline } from '@anvia/core/pipeline'
 import { runAgent } from '../core'
 import { createWebSearchTool } from '../tools/web-search'
 import { searchWeb } from '../tools/web-search/service'
+import { z } from 'zod'
 import {
+  type DocumentsResult,
   DocumentsResultSchema,
   FindDocumentsInputSchema,
   type FindDocumentsOptions,
   type RulePlan,
   RulePlanSchema,
+  ScopeSchema,
 } from '../types'
 import { getModel } from '../utils/model'
 import {
@@ -17,6 +20,7 @@ import {
   CLARIFY_SEARCHES,
   MAX_RULES,
   PLAN_INSTRUCTIONS,
+  SCOPE_INSTRUCTIONS,
 } from './instructions'
 
 function ruleName(rule: RulePlan['rules'][number]) {
@@ -32,6 +36,8 @@ function ruleName(rule: RulePlan['rules'][number]) {
 }
 
 export function createFindDocumentsPipeline(options: FindDocumentsOptions = {}) {
+  const searchPipeline = createSearchPipeline(options)
+
   return new Pipeline({
     id: 'find-documents',
     name: 'Find Documents',
@@ -39,15 +45,58 @@ export function createFindDocumentsPipeline(options: FindDocumentsOptions = {}) 
     observability: options.observability,
   })
     .step({
+      id: 'scope',
+      run: async ({ input }) => {
+        const result = await generateCompletion({
+          model: getModel(),
+          prompt: input.findDocumentPrompt,
+          instructions: SCOPE_INSTRUCTIONS,
+          outputSchema: ScopeSchema,
+        })
+
+        return { request: input.findDocumentPrompt, scope: result.output }
+      },
+    })
+    .step({
+      id: 'find',
+      run: async ({ input, abortSignal }): Promise<DocumentsResult> => {
+        if (!input.scope.inScope) {
+          return {
+            status: 'out_of_scope',
+            message: input.scope.message,
+            levels: [],
+            notFound: [],
+            documents: [],
+          }
+        }
+
+        const { output } = await searchPipeline.run({
+          input: { request: input.request },
+          abortSignal,
+        })
+
+        return output
+      },
+    })
+}
+
+function createSearchPipeline(options: FindDocumentsOptions) {
+  return new Pipeline({
+    id: 'find-documents-search',
+    name: 'Find Documents search',
+    inputSchema: z.object({ request: z.string() }),
+    observability: options.observability,
+  })
+    .step({
       id: 'clarify',
       run: async ({ input }) => {
         const rules = await runAgent({
-          prompt: input.findDocumentPrompt,
+          prompt: input.request,
           instructions: CLARIFY_INSTRUCTIONS,
           tools: [createWebSearchTool(CLARIFY_SEARCHES)],
         }).text
 
-        return { request: input.findDocumentPrompt, rules }
+        return { request: input.request, rules }
       },
     })
     .step({
@@ -97,10 +146,10 @@ export function createFindDocumentsPipeline(options: FindDocumentsOptions = {}) 
           model: getModel(),
           prompt: `Request: ${input.request}\n\nPlan:\n${JSON.stringify(input.plan, null, 2)}\n\nSearch results per rule:\n${input.found}`,
           instructions: ANSWER_INSTRUCTIONS,
-          outputSchema: DocumentsResultSchema,
+          outputSchema: DocumentsResultSchema.omit({ status: true, message: true }),
         })
 
-        return result.output
+        return { status: 'found' as const, message: null, ...result.output }
       },
     })
 }
