@@ -6,6 +6,7 @@ import { getModel } from './utils/model'
 
 export function runAgent({
   prompt,
+  instructions = BASE_INSTRUCTION,
   provider,
   modelId,
   memory,
@@ -15,7 +16,7 @@ export function runAgent({
   const agent = new Agent({
     id: 'assistant',
     model: getModel(provider, modelId),
-    instructions: BASE_INSTRUCTION,
+    instructions,
     tools,
     memory: memory && { store: memory, savePolicy: 'turn' },
     maxTurns: 75,
