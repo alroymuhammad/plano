@@ -8,7 +8,9 @@ export function getEmbeddingModel() {
 
   if (!apiKey) throw new Error('Set OPENAI_API_KEY before embedding')
 
-  return new OpenAIClient({ apiKey, baseUrl: 'https://api.openai.com/v1' }).embeddingModel({
+  const baseUrl = process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1'
+
+  return new OpenAIClient({ apiKey, baseUrl }).embeddingModel({
     modelId: EMBEDDING_MODEL,
     dimensions: EMBEDDING_DIMENSIONS,
     maxBatchSize: 100,
