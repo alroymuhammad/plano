@@ -1,6 +1,6 @@
 # 0022 — Embeddings with Gemini `gemini-embedding-001`
 
-Status: accepted
+Status: superseded by 0026
 Date: 2026-11-25
 
 ## Context

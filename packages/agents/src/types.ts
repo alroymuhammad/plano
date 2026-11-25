@@ -99,7 +99,7 @@ export type IngestDocumentOptions = {
   library: LibraryStore
   analystId: string
   storageDir: string
-  // Defaults to Gemini document embeddings (decision 0022). Tests pass a fake model.
+  // Defaults to OpenAI embeddings (decision 0026). Tests pass a fake model.
   embeddingModel?: EmbeddingModel
   // Defaults to the `passages` collection. Tests use their own, so they never write to the dev collection.
   collectionName?: string
@@ -124,7 +124,7 @@ export type PassageMetadata = {
 
 // Tests pass a fake embedding model and their own collection, as for ingestion.
 export type SearchLibraryOptions = {
-  // Defaults to Gemini query embeddings (decision 0022).
+  // Defaults to OpenAI embeddings (decision 0026).
   embeddingModel?: EmbeddingModel
   // Defaults to the `passages` collection.
   collectionName?: string

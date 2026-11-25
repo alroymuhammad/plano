@@ -10,7 +10,7 @@ The repo had no test runner. The RAG slice needs tests that run against the loca
 ## Decision
 
 - Tests are `*.test.ts` files next to their code under `packages/agents/src`. `pnpm --filter @plano/agents test` runs them with `tsx --test` on Node's built-in `node:test`.
-- Tests make no paid calls. Embeddings come from a fake model passed in (decision 0022), and chat models are not called.
+- Tests make no paid calls. Embeddings come from a fake model passed in (decision 0026), and chat models are not called.
 - A test that needs a gitignored fixture skips with a message when the fixture is absent, so a fresh checkout does not fail.
 
 ## Consequences

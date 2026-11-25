@@ -187,7 +187,7 @@ function createNewDocumentPipeline(options: IngestDocumentOptions) {
               }
             }),
             store: await ensurePassageStore(options.collectionName),
-            model: options.embeddingModel ?? getEmbeddingModel('RETRIEVAL_DOCUMENT'),
+            model: options.embeddingModel ?? getEmbeddingModel(),
             concurrency: PASSAGE_INDEX_CONCURRENCY,
             abortSignal,
           })
