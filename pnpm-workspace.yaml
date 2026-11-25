@@ -14,3 +14,8 @@ minimumReleaseAgeExclude:
   - '@anvia/otel@1.4.0'
   - '@anvia/core@1.23.0'
   - '@anvia/qdrant@1.3.0'
+  - '@anvia/client@1.9.1'
+  - '@anvia/react@1.3.0'
+  - '@anvia/graph@1.3.0'
+  - '@anvia/server@1.5.1'
+  - '@anvia/studio@1.5.2'

@@ -4,7 +4,8 @@
 - `pnpm lint` — oxlint. Must pass. Custom rules live in the local plugin `tooling/oxlint/plano.mjs` (decision 0012).
 - `pnpm format` — `oxlint --fix`, then oxfmt (writes files). Run before committing.
 - `pnpm build` — builds/typechecks all apps. Must pass.
-- Dev: `docker compose up -d`, `pnpm db:migrate`, then `pnpm dev:api`, `pnpm dev:platform`.
+- Dev: `docker compose up -d` starts Postgres (`localhost:54329`) and Qdrant (REST on `localhost:6333`, dashboard at `http://localhost:6333/dashboard`, gRPC on `6334`). Then `pnpm db:migrate`, then `pnpm dev:api`, `pnpm dev:platform`.
+- Qdrant and embeddings env (decisions 0020, 0022): `QDRANT_URL` (default `http://localhost:6333`) and `QDRANT_API_KEY` configure the Qdrant client in `packages/agents`. The key is sent only when set: leave it empty for local Qdrant, set it for Qdrant Cloud. `GEMINI_API_KEY` is for embeddings only; chat models use `GATEWAY_*`.
 - Studio: `pnpm dev:studio` serves Anvia Studio on port 4021 (`http://localhost:4021/playground`) with the Find Documents pipeline (decisions 0017, 0019). Input: `{ "findDocumentPrompt": "..." }`. Needs `TAVILY_API_KEY` and the gateway vars in `.env`.
 - Evals (decision 0019): `pnpm --filter @plano/agents eval:record [caseId ...]` records live runs (spends Tavily credits; skips recorded cases unless `--force`); `pnpm --filter @plano/agents eval [caseId ...] [--no-judge]` scores the recordings.
 - Tests (decision 0024): `pnpm --filter @plano/agents test` runs `src/**/*.test.ts` with Node's test runner through `tsx`. Ingest tests use the local Postgres (`docker compose up -d postgres`, `pnpm db:migrate`) and make no paid calls. They read the RTRW fixture at `packages/agents/data/2025perda3578003.pdf` (gitignored; copy Perda Surabaya 3/2025 there) and skip with a message when it is missing.
