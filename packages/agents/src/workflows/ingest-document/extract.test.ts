@@ -11,7 +11,7 @@ import { createDb, createLibraryStore, type Db } from '@plano/db'
 import type { IngestDocumentResult } from '../../types'
 import { extractPages } from './extract'
 import { ingestDocument } from './index'
-import { fakeEmbeddingModel, qdrant } from './test-helpers'
+import { fakeEmbeddingModel, qdrant } from '../../test-helpers'
 
 // Gitignored, so a fresh checkout skips the RTRW test instead of failing it.
 const RTRW = fileURLToPath(new URL('../../../data/2025perda3578003.pdf', import.meta.url))

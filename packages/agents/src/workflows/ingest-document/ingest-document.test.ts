@@ -10,7 +10,7 @@ import type { EmbeddingModel } from '@anvia/core/embeddings'
 import { createDb, createLibraryStore, type Db, type LibraryStore } from '@plano/db'
 import type { IngestDocumentResult } from '../../types'
 import { ingestDocument } from './index'
-import { fakeEmbeddingModel, qdrant } from './test-helpers'
+import { fakeEmbeddingModel, qdrant } from '../../test-helpers'
 
 // Gitignored, so a fresh checkout skips this suite instead of failing it.
 const FIXTURE = fileURLToPath(new URL('../../../data/2025perda3578003.pdf', import.meta.url))

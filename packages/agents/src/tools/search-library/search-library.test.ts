@@ -7,7 +7,7 @@ import { after, before, describe, it } from 'node:test'
 import { createDb, createLibraryStore, type Db, type LibraryStore } from '@plano/db'
 import type { IngestDocumentInput, IngestDocumentResult } from '../../types'
 import { ingestDocument } from '../../workflows/ingest-document'
-import { fakeEmbeddingModel, qdrant } from '../../workflows/ingest-document/test-helpers'
+import { fakeEmbeddingModel, qdrant } from '../../test-helpers'
 import { createSearchLibraryTool } from './index'
 
 // A text-layer PDF with one page per entry, each a list of lines. Written by hand so the test needs no PDF library.
