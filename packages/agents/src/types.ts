@@ -99,6 +99,8 @@ export type IngestDocumentOptions = {
   library: LibraryStore
   analystId: string
   storageDir: string
+  // Holds the OCR language file (product 0011). The first OCR run downloads it here; later runs read it offline.
+  ocrDataDir: string
   // Defaults to OpenAI embeddings (decision 0026). Tests pass a fake model.
   embeddingModel?: EmbeddingModel
   // Defaults to the `passages` collection. Tests use their own, so they never write to the dev collection.

@@ -11,7 +11,7 @@ import { createDb, createLibraryStore, type Db } from '@plano/db'
 import type { IngestDocumentResult } from '../../types'
 import { extractPages } from './extract'
 import { ingestDocument } from './index'
-import { fakeEmbeddingModel, qdrant } from '../../test-helpers'
+import { fakeEmbeddingModel, OCR_DATA_DIR, qdrant } from '../../test-helpers'
 
 // Gitignored, so a fresh checkout skips the RTRW test instead of failing it.
 const RTRW = fileURLToPath(new URL('../../../data/2025perda3578003.pdf', import.meta.url))
@@ -100,7 +100,7 @@ const SCANNED_PDF = await buildScannedPdf()
 
 describe('extractPages', () => {
   it('reads the text layer of a page with text and OCRs only the scanned page', async () => {
-    const pages = await extractPages(SCANNED_PDF)
+    const pages = await extractPages(SCANNED_PDF, OCR_DATA_DIR)
 
     assert.deepEqual(
       pages.map((page) => page.page),
@@ -124,7 +124,7 @@ describe(
   },
   () => {
     it('OCRs no page, since every page has a text layer', async () => {
-      const pages = await extractPages(readFileSync(RTRW))
+      const pages = await extractPages(readFileSync(RTRW), OCR_DATA_DIR)
 
       assert.equal(pages.length, 305)
       assert.deepEqual(
@@ -160,6 +160,7 @@ describe('ingestDocument with a scanned page', () => {
         library: createLibraryStore(db),
         analystId,
         storageDir,
+        ocrDataDir: OCR_DATA_DIR,
         collectionName,
         embeddingModel: fakeEmbeddingModel(),
       },

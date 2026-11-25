@@ -5,10 +5,13 @@ import { gunzipSync } from 'node:zlib'
 import { createWorker } from 'tesseract.js'
 import { extractText, getDocumentProxy, renderPageAsImage } from 'unpdf'
 import type { ExtractedPage } from '../../types'
-import { OCR_DATA_DIR, OCR_LANG, OCR_LANG_URL, OCR_MIN_PAGE_CHARS, OCR_SCALE } from './constants'
+import { OCR_LANG, OCR_LANG_URL, OCR_MIN_PAGE_CHARS, OCR_SCALE } from './constants'
 
 // Reads each page's text layer. A page with almost none is scanned: it is rendered and OCR'd (product 0011), and marked `ocr`.
-export async function extractPages(bytes: Uint8Array): Promise<ExtractedPage[]> {
+export async function extractPages(
+  bytes: Uint8Array,
+  ocrDataDir: string,
+): Promise<ExtractedPage[]> {
   // pdf.js detaches the buffer it is given, so give it a copy.
   const pdf = await getDocumentProxy(new Uint8Array(bytes))
   const { text } = await extractText(pdf, { mergePages: false })
@@ -17,11 +20,11 @@ export async function extractPages(bytes: Uint8Array): Promise<ExtractedPage[]> 
 
   if (scanned.length === 0) return pages
 
-  await ensureLanguageFile()
+  await ensureLanguageFile(ocrDataDir)
   // tesseract.js throws a failed job out of its message handler, which would crash the process. The awaited calls
   // below still reject, so the handler only stops that throw.
   const worker = await createWorker(OCR_LANG, undefined, {
-    cachePath: OCR_DATA_DIR,
+    cachePath: ocrDataDir,
     errorHandler: () => {},
   })
 
@@ -44,8 +47,8 @@ export async function extractPages(bytes: Uint8Array): Promise<ExtractedPage[]> 
 }
 
 // tesseract.js leaves createWorker pending when its own download fails, so fetch the file here, where a failure rejects.
-async function ensureLanguageFile() {
-  const file = join(OCR_DATA_DIR, `${OCR_LANG}.traineddata`)
+async function ensureLanguageFile(ocrDataDir: string) {
+  const file = join(ocrDataDir, `${OCR_LANG}.traineddata`)
 
   if (existsSync(file)) return
 
@@ -54,7 +57,7 @@ async function ensureLanguageFile() {
 
   if (!response?.ok) throw new Error(`Could not download the OCR language from ${url}`)
 
-  await mkdir(OCR_DATA_DIR, { recursive: true })
+  await mkdir(ocrDataDir, { recursive: true })
   // Written under another name first, so an interrupted download never leaves a truncated language file.
   const partial = `${file}.partial`
 

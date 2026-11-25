@@ -112,7 +112,10 @@ function createNewDocumentPipeline(options: IngestDocumentOptions) {
       run: ({ input }) =>
         removeStoredPdfOnError(input.storageUri, async () => ({
           ...input,
-          pages: await extractPages(await readFile(fileURLToPath(input.storageUri))),
+          pages: await extractPages(
+            await readFile(fileURLToPath(input.storageUri)),
+            options.ocrDataDir,
+          ),
         })),
     })
     .step({

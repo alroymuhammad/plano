@@ -1,7 +1,11 @@
 import { createHash } from 'node:crypto'
+import { fileURLToPath } from 'node:url'
 import type { EmbeddingModel } from '@anvia/core/embeddings'
 
 const QDRANT_URL = process.env.QDRANT_URL || 'http://localhost:6333'
+
+// The OCR language cache, the folder Studio passes too. The first OCR run fills it (gitignored).
+export const OCR_DATA_DIR = fileURLToPath(new URL('../data/tessdata', import.meta.url))
 
 // Deterministic 1536-dimension vectors: identical text gets an identical vector, and no test calls OpenAI.
 export function fakeEmbeddingModel({ fail = false }: { fail?: boolean } = {}): EmbeddingModel {

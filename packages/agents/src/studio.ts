@@ -34,6 +34,7 @@ const studio = new Studio([
     library,
     analystId: DEV_ANALYST_ID,
     storageDir: fileURLToPath(new URL('../data', import.meta.url)),
+    ocrDataDir: fileURLToPath(new URL('../data/tessdata', import.meta.url)),
     observability: pipelineObservability,
   }),
   chat,

@@ -1,5 +1,3 @@
-import { fileURLToPath } from 'node:url'
-
 // About 800 tokens of Indonesian text per Passage, with about 15% overlap inside a Pasal.
 export const PASSAGE_MAX_CHARS = 3000
 export const PASSAGE_OVERLAP_CHARS = 450
@@ -15,5 +13,3 @@ export const OCR_SCALE = 2
 export const OCR_LANG = 'ind'
 // The tessdata_best model that tesseract.js uses by default; the file is about 1.2 MB.
 export const OCR_LANG_URL = 'https://cdn.jsdelivr.net/npm/@tesseract.js-data/ind/4.0.0_best_int'
-// The language file is downloaded here on first use, then read offline.
-export const OCR_DATA_DIR = fileURLToPath(new URL('../../../data/tessdata', import.meta.url))
