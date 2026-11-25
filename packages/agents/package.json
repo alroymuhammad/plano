@@ -9,7 +9,8 @@
     "build": "tsc --noEmit",
     "dev:studio": "tsx watch --env-file=../../.env src/studio.ts",
     "eval": "tsx --env-file=../../.env src/evals/find-documents/eval.ts",
-    "eval:record": "tsx --env-file=../../.env src/evals/find-documents/record.ts"
+    "eval:record": "tsx --env-file=../../.env src/evals/find-documents/record.ts",
+    "test": "tsx --env-file=../../.env --test 'src/**/*.test.ts'"
   },
   "dependencies": {
     "@anvia/core": "^1.23.0",
@@ -24,6 +25,7 @@
   },
   "devDependencies": {
     "@anvia/studio": "^1.5.0",
+    "@plano/db": "workspace:*",
     "@plano/observability": "workspace:*",
     "@types/node": "^26.6.6",
     "tsx": "^4.23.15",

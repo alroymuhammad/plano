@@ -1,6 +1,7 @@
 import type { AgentPrompt, AnyTool, MemoryScope, MemoryStore } from '@anvia/core'
 import type { AgentObservabilityOptions } from '@anvia/core/observability'
 import type { PipelineObservabilityOptions } from '@anvia/core/pipeline'
+import type { LibraryStore } from '@plano/db'
 import { z } from 'zod'
 
 export type RunAgentOptions = {
@@ -77,3 +78,36 @@ export const DocumentsResultSchema = z.object({
 })
 
 export type DocumentsResult = z.infer<typeof DocumentsResultSchema>
+
+const DocumentStatusSchema = z.enum(['active', 'superseded', 'revoked'])
+
+// Metadata Card fields typed by hand in Studio, so an ingested document counts as confirmed.
+export const IngestDocumentInputSchema = z.object({
+  path: z.string().trim().min(1).describe('Absolute path to the PDF on this machine'),
+  title: z.string().trim().min(1),
+  type: z.string().trim().min(1).describe('For example Perda, Perwali, RTRW, RDTR, RPJMD'),
+  number: z.string().trim().min(1).nullable().default(null),
+  year: z.number().int().nullable().default(null),
+  area: z.string().trim().min(1).describe('Area the document covers, for example Kota Surabaya'),
+  status: DocumentStatusSchema.default('active'),
+})
+
+export type IngestDocumentInput = z.input<typeof IngestDocumentInputSchema>
+
+export type IngestDocumentOptions = {
+  library: LibraryStore
+  analystId: string
+  storageDir: string
+  observability?: PipelineObservabilityOptions
+  signal?: AbortSignal
+}
+
+export type IngestDocumentResult =
+  | { documentId: string; skipped: true }
+  | {
+      documentId: string
+      skipped: false
+      pageCount: number
+      ocrPages: number[]
+      passageCount: number
+    }
