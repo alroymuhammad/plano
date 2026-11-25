@@ -47,6 +47,7 @@ function toPassage({
   return {
     passageId: id,
     document: {
+      id: metadata.documentId,
       title: metadata.title,
       type: metadata.type,
       number: metadata.number ?? null,

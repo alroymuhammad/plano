@@ -172,6 +172,7 @@ describe('searchLibrary', () => {
 
     assert.ok(hit, 'Pasal 2 is not in the results')
     assert.deepEqual(hit.document, {
+      id: own.documentId,
       title: METADATA.title,
       type: 'Perda',
       number: '9',
