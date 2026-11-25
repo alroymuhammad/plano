@@ -12,9 +12,14 @@
     "eval:record": "tsx --env-file=../../.env src/evals/find-documents/record.ts"
   },
   "dependencies": {
-    "@anvia/core": "^1.21.0",
-    "@anvia/openai": "^1.3.8",
+    "@anvia/core": "^1.23.0",
+    "@anvia/gemini": "^1.2.1",
+    "@anvia/openai": "^1.4.1",
+    "@anvia/qdrant": "^1.3.0",
+    "@napi-rs/canvas": "^1.2.0",
     "@tavily/core": "^1.1.0",
+    "tesseract.js": "^7.0.0",
+    "unpdf": "^2.2.2",
     "zod": "^4.6.7"
   },
   "devDependencies": {

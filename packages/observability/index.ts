@@ -6,6 +6,9 @@ import type { LensClientOptions } from '@anvia/lens'
 export function createLens(options: LensClientOptions = {}) {
   const serviceName = process.env.ANVIA_LENS_SERVICE_NAME?.trim() || 'plano'
   const client = new LensClient({ optional: true, serviceName, ...options })
+
+  if (!client.enabled) console.warn('Lens tracing is off: set ANVIA_LENS_* in .env')
+
   const observability: AgentObservabilityOptions = {
     observers: { lens: client.observer() },
     primaryTrace: 'lens',

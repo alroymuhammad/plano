@@ -94,21 +94,36 @@ importers:
   packages/agents:
     dependencies:
       '@anvia/core':
-        specifier: ^1.21.0
-        version: 1.21.0(zod@4.6.7)
+        specifier: ^1.23.0
+        version: 1.23.0(zod@4.6.7)
+      '@anvia/gemini':
+        specifier: ^1.2.1
+        version: 1.2.1(@anvia/core@1.23.0(zod@4.6.7))
       '@anvia/openai':
-        specifier: ^1.3.8
-        version: 1.3.8(@anvia/core@1.21.0(zod@4.6.7))(google-auth-library@10.9.1)(ws@8.23.0)(zod@4.6.7)
+        specifier: ^1.4.1
+        version: 1.4.1(@anvia/core@1.23.0(zod@4.6.7))(google-auth-library@10.9.1)(undici@7.29.1)(ws@8.23.0)(zod@4.6.7)
+      '@anvia/qdrant':
+        specifier: ^1.3.0
+        version: 1.3.0(@anvia/core@1.23.0(zod@4.6.7))(typescript@7.0.2)
+      '@napi-rs/canvas':
+        specifier: ^1.2.0
+        version: 1.2.0
       '@tavily/core':
         specifier: ^1.1.0
         version: 1.1.0(debug@4.4.3)(zod@4.6.7)
+      tesseract.js:
+        specifier: ^7.0.0
+        version: 7.0.0
+      unpdf:
+        specifier: ^2.2.2
+        version: 2.2.2(@napi-rs/canvas@1.2.0)
       zod:
         specifier: ^4.6.7
         version: 4.6.7
     devDependencies:
       '@anvia/studio':
         specifier: ^1.5.0
-        version: 1.5.0(@anvia/core@1.21.0(zod@4.6.7))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(immer@11.2.10)(zod@4.6.7)
+        version: 1.5.0(@anvia/core@1.23.0(zod@4.6.7))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(immer@11.2.10)(zod@4.6.7)
       '@plano/observability':
         specifier: workspace:*
         version: link:../observability
@@ -125,11 +140,11 @@ importers:
   packages/db:
     dependencies:
       '@anvia/core':
-        specifier: ^1.21.0
-        version: 1.21.0(zod@4.6.7)
+        specifier: ^1.23.0
+        version: 1.23.0(zod@4.6.7)
       '@anvia/memory-drizzle':
         specifier: ^1.2.1
-        version: 1.2.1(@anvia/core@1.21.0(zod@4.6.7))(drizzle-orm@0.45.4(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1))
+        version: 1.2.1(@anvia/core@1.23.0(zod@4.6.7))(drizzle-orm@0.45.4(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1))
       drizzle-orm:
         specifier: ^0.45.4
         version: 0.45.4(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
@@ -160,10 +175,10 @@ importers:
     dependencies:
       '@anvia/react':
         specifier: ^1.1.5
-        version: 1.1.5(@anvia/client@1.9.0(@anvia/core@1.21.0(zod@4.6.7)))(@anvia/core@1.21.0(zod@4.6.7))(@anvia/graph@1.2.0(@anvia/core@1.21.0(zod@4.6.7))(zod@4.6.7))(react@19.3.1)
+        version: 1.1.5(@anvia/client@1.9.0(@anvia/core@1.23.0(zod@4.6.7)))(@anvia/core@1.23.0(zod@4.6.7))(@anvia/graph@1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7))(react@19.3.1)
       '@anvia/react-ui':
         specifier: ^1.3.2
-        version: 1.3.2(@anvia/client@1.9.0(@anvia/core@1.21.0(zod@4.6.7)))(@anvia/graph@1.2.0(@anvia/core@1.21.0(zod@4.6.7))(zod@4.6.7))(@anvia/react@1.1.5(@anvia/client@1.9.0(@anvia/core@1.21.0(zod@4.6.7)))(@anvia/core@1.21.0(zod@4.6.7))(@anvia/graph@1.2.0(@anvia/core@1.21.0(zod@4.6.7))(zod@4.6.7))(react@19.3.1))(@floating-ui/dom@1.8.0)(@novnc/novnc@1.7.0)(@tiptap/extensions@3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        version: 1.3.2(@anvia/client@1.9.0(@anvia/core@1.23.0(zod@4.6.7)))(@anvia/graph@1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7))(@anvia/react@1.1.5(@anvia/client@1.9.0(@anvia/core@1.23.0(zod@4.6.7)))(@anvia/core@1.23.0(zod@4.6.7))(@anvia/graph@1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7))(react@19.3.1))(@floating-ui/dom@1.8.0)(@novnc/novnc@1.7.0)(@tiptap/extensions@3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@base-ui/react':
         specifier: ^1.9.0
         version: 1.9.0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -270,6 +285,20 @@ packages:
       '@valibot/to-json-schema':
         optional: true
 
+  '@anvia/core@1.23.0':
+    resolution: {integrity: sha512-tNSrbGcBsSyNQWMuyQB8u1KJnwehvjaej1YuXVRzUunnDS8Rq2a3WqQHP8gDi/3CEJjyndSesMy6NaBU11brpw==}
+    peerDependencies:
+      '@valibot/to-json-schema': ^1.8.0
+      zod: ^4.6.7
+    peerDependenciesMeta:
+      '@valibot/to-json-schema':
+        optional: true
+
+  '@anvia/gemini@1.2.1':
+    resolution: {integrity: sha512-9YLqsUy28hDgjqfBoV2q6QF7QL72Az6aPIzrOgjcUGNUCi9F8Do1v/DnR9BgUPZ4JmvZEw3DKjnOWByyKm5JWg==}
+    peerDependencies:
+      '@anvia/core': ^1.22.0
+
   '@anvia/graph@1.2.0':
     resolution: {integrity: sha512-kV/MOm5q2jW7RxI/pnL/f1xcV3gt4NJDSvkkdvnOAzjFxT8z35gwEk+bM0xfwJHpbQhw0fJ24Ww5GgqHrc3S/w==}
     peerDependencies:
@@ -294,10 +323,10 @@ packages:
       '@anvia/core': ^1.20.0
       drizzle-orm: '>=0.45.3 <1.0.0'
 
-  '@anvia/openai@1.3.8':
-    resolution: {integrity: sha512-G6VPoTvivqIs4Liyso6ESxPiGIfA7FQDaIT3OaOJvjjw5DI84MHryLANmxSJjOHvlGfpadzSBcwjJeK/LHaMyg==}
+  '@anvia/openai@1.4.1':
+    resolution: {integrity: sha512-/sqosEtnzFz37Q2pf6Psps+jikTcdLhuy5rQf6RSTIVHIiDhOKDIQbqStHfZy3Wr1aOqRryA2x1MizkXUWel7g==}
     peerDependencies:
-      '@anvia/core': ^1.18.0
+      '@anvia/core': ^1.22.0
 
   '@anvia/otel@1.3.2':
     resolution: {integrity: sha512-OCe1JpznorsrHuub8Y4sEw+90kDilY3ihxhcQakR2zKkpwkpYFUjn9sE9sHJjbN6N4dsl7QHRsUZ84QPcLnkUg==}
@@ -309,8 +338,14 @@ packages:
     peerDependencies:
       '@anvia/core': ^1.21.0
 
+  '@anvia/qdrant@1.3.0':
+    resolution: {integrity: sha512-KHSvGmV2u+DC8DzSs17pSYdMH4rkz7XIzkmWBNqQxfP1/0Gv3DGiVM1gprvDkzz1ONv4F/Iy5VuUnbXiv3uXrA==}
+    peerDependencies:
+      '@anvia/core': ^1.23.0
+
   '@anvia/react-ui@1.3.2':
     resolution: {integrity: sha512-7DtfIr6JhjIhCdOmj5BPG9gRnJ+Vi17Ghn0gDHfkeXc/kEO4u4ZZMyxJ7LgKODf3xCW4/uoFUbckjv8EzgLA8Q==}
+    deprecated: Merged into @anvia/react. Install @anvia/react and replace @anvia/react-ui imports with @anvia/react.
     peerDependencies:
       '@anvia/client': ^1.8.1
       '@anvia/graph': ^1.2.0
@@ -1028,6 +1063,15 @@ packages:
   '@fontsource-variable/geist@5.3.0':
     resolution: {integrity: sha512-j0m+vLQuG5XAYoHtGCVu0spvlGreR3EzpECUVzkFmI1mTVnAO38l/NEPDCFgZ177JxzYJCLSmTQibIiYPilGrA==}
 
+  '@google/genai@2.32.0':
+    resolution: {integrity: sha512-60c79uXpR0a47bmGqDxbXEBuQUalNmwo5mx5kqb91jIW4FoqpsLSt86DeVhRhtH5+s/16Wqxt3sXzFQn2U1OHQ==}
+    engines: {node: '>=20.0.0'}
+    peerDependencies:
+      '@modelcontextprotocol/sdk': ^1.25.2
+    peerDependenciesMeta:
+      '@modelcontextprotocol/sdk':
+        optional: true
+
   '@hono/node-server@2.1.9':
     resolution: {integrity: sha512-Sk4NQd3GFY0WZWCzndwFMPwJhtD0y9qjsQ+pjID0/03nK9pxyBCUoUHCho8QYBLBVhi0ssL8UkNPHqbgSOFPIQ==}
     engines: {node: '>=20'}
@@ -1130,6 +1174,81 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
+
+  '@napi-rs/canvas-android-arm64@1.2.0':
+    resolution: {integrity: sha512-Ya2Db4BrwM5WnQtdmA2iOw5O2yZ9vcd5fuX9GjlkQ3k87iWzDUxnijVz11IJrF8c+xBxUHzEgENXmA1yPdnZ2g==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [android]
+
+  '@napi-rs/canvas-darwin-arm64@1.2.0':
+    resolution: {integrity: sha512-7Rq4h2J4Y+JKqxaH9Zf0PGOY3asTeAbcG51MkQNaUTB7ushbhuEgY54CWRww5WK8v8VYB8epv4bLF0GI8IPlxQ==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@napi-rs/canvas-darwin-x64@1.2.0':
+    resolution: {integrity: sha512-LHeqXtEFqO1DDnKRWSvy7C+kXQTciKvZzShVZd0aTnvVwWskpbj9hwWc8lwTpjm6GsgS7oEKCNARj8xLI1qcww==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [darwin]
+
+  '@napi-rs/canvas-linux-arm-gnueabihf@1.2.0':
+    resolution: {integrity: sha512-er2hS9KLBWSFMyz6UCAAM5gYfFfCAkLXXdPnFJ8SL8clNa+hx5ooC5iREYKuaFxIfhsE86OHiiee3HjIuvtz5w==}
+    engines: {node: '>= 10'}
+    cpu: [arm]
+    os: [linux]
+
+  '@napi-rs/canvas-linux-arm64-gnu@1.2.0':
+    resolution: {integrity: sha512-wwfgI/DQOXjpQ+uLDV7R2Wh6O0lLvWRWz3mZND58csTH9fTn6+H2bfWBIu37Bcg8cjJLPE5BKjqK/a7WOYeqxA==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [linux]
+    libc: [glibc]
+
+  '@napi-rs/canvas-linux-arm64-musl@1.2.0':
+    resolution: {integrity: sha512-ftJFcPZIAer2xHMQ0BXfGTVqE2AB5tl3+dm913YunKnsG+lcS91pFKNaeM5yvp7kbTLPlMxkMpi+RKXOXEwljw==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [linux]
+    libc: [musl]
+
+  '@napi-rs/canvas-linux-riscv64-gnu@1.2.0':
+    resolution: {integrity: sha512-NFfXv9E3IuzHi3RK3KhBbjO4bCdS8PvZkUzVvkTWBCLnVw4ndNNHUCK46/lcOMcnuKg8qxQsK5X7Uwp/SPGA0g==}
+    engines: {node: '>= 10'}
+    cpu: [riscv64]
+    os: [linux]
+    libc: [glibc]
+
+  '@napi-rs/canvas-linux-x64-gnu@1.2.0':
+    resolution: {integrity: sha512-+RsdhlUA8hRoktgA5JG1XR7skZ6PCVjNfodnqDnBV1eTX7dgVBYHK7O7yKdQGac/45B5t8ufgyceQEq3Rfk6JA==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
+
+  '@napi-rs/canvas-linux-x64-musl@1.2.0':
+    resolution: {integrity: sha512-G7O6pLdb+waaiRfCVKNRymqFNulfU4tfyRKvWmOWt7Vh/VltHLvU4+oWGMMKzWehMrxLnvmeLSNkWWpzMZAy+w==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [linux]
+    libc: [musl]
+
+  '@napi-rs/canvas-win32-arm64-msvc@1.2.0':
+    resolution: {integrity: sha512-8xB9DHYScFsEukONZKfc45bTYJUAfEqL6daUxo3YqWrUC9YMfU6N2Zx3HCJTq0LwhnjjRXScZbasaaxviaA4uQ==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [win32]
+
+  '@napi-rs/canvas-win32-x64-msvc@1.2.0':
+    resolution: {integrity: sha512-GJ0DLyiTvLw5xNtdUJ0ncRuuT4Yv9zNXnrrvfvKr1/M08mbvtFVLoKiwQAaWixEcTsCh0U94/nMxkJTLH7ZMfw==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [win32]
+
+  '@napi-rs/canvas@1.2.0':
+    resolution: {integrity: sha512-6LpJr0U9BH/Iz5/z2EherYStmsjyRwmCp8wwYg0QfEnib/ip19fyJd1Y1OFbn8DbyIQKCCpSqgY1trXkIbLdEg==}
+    engines: {node: '>= 10'}
 
   '@napi-rs/wasm-runtime@1.2.6':
     resolution: {integrity: sha512-mRyDmEw9/fCDXCGfL1sbgIw/GUK0PVxRW4YwgPN61F3LQ+fSyoBFarJVzgGyhF6kRzEQZ0FejDqm4WLXSeqQmw==}
@@ -1471,6 +1590,43 @@ packages:
 
   '@pinojs/redact@0.4.0':
     resolution: {integrity: sha512-k2ENnmBugE/rzQfEcdWHcCY+/FM3VLzH9cYEsbdsoqrvzAKRhUZeRNhAZvB8OitQJ1TBed3yqWtdjzS6wJKBwg==}
+
+  '@protobufjs/aspromise@1.1.2':
+    resolution: {integrity: sha512-j+gKExEuLmKwvz3OgROXtrJ2UG2x8Ch2YZUxahh+s1F2HZ+wAceUNLkvy6zKCPVRkU++ZWQrdxsUeQXmcg4uoQ==}
+
+  '@protobufjs/base64@1.1.2':
+    resolution: {integrity: sha512-AZkcAA5vnN/v4PDqKyMR5lx7hZttPDgClv83E//FMNhR2TMcLUhfRUBHCmSl0oi9zMgDDqRUJkSxO3wm85+XLg==}
+
+  '@protobufjs/codegen@2.0.5':
+    resolution: {integrity: sha512-zgXFLzW3Ap33e6d0Wlj4MGIm6Ce8O89n/apUaGNB/jx+hw+ruWEp7EwGUshdLKVRCxZW12fp9r40E1mQrf/34g==}
+
+  '@protobufjs/eventemitter@1.1.1':
+    resolution: {integrity: sha512-vW1GmwMZNnL+gMRaovlh9yZX74kc+TTU3FObkkurpMaRtBfLP3ldjS9KQWlwZgraRE0+dheEEoAxdzcJQ8eXZg==}
+
+  '@protobufjs/fetch@1.1.1':
+    resolution: {integrity: sha512-GpptLrs57adMSuHi3VNj0mAF8dwh36LMaYF6XyJ6JMWlVsc+t42tm1HSEDmOs3A8fC9yyeisgLhsTVQokOZ0zw==}
+
+  '@protobufjs/float@1.0.2':
+    resolution: {integrity: sha512-Ddb+kVXlXst9d+R9PfTIxh1EdNkgoRe5tOX6t01f1lYWOvJnSPDBlG241QLzcyPdoNTsblLUdujGSE4RzrTZGQ==}
+
+  '@protobufjs/path@1.1.2':
+    resolution: {integrity: sha512-6JOcJ5Tm08dOHAbdR3GrvP+yUUfkjG5ePsHYczMFLq3ZmMkAD98cDgcT2iA1lJ9NVwFd4tH/iSSoe44YWkltEA==}
+
+  '@protobufjs/pool@1.1.0':
+    resolution: {integrity: sha512-0kELaGSIDBKvcgS4zkjz1PeddatrjYcmMWOlAuAPwAeccUrPHdUqo/J6LiymHHEiJT5NrF1UVwxY14f+fy4WQw==}
+
+  '@protobufjs/utf8@1.1.2':
+    resolution: {integrity: sha512-b1UQwcEZ4yCnMCD8DAL1VlbvBJE9/IX4FTIp7BG1xYpf29SLazLSrqUkj4w7Y5y7cCVP6E5tcqqcI0xemPkHug==}
+
+  '@qdrant/js-client-rest@1.20.0':
+    resolution: {integrity: sha512-NhvW4z3rbxYc1e+ksHci5hE8vNBpbi5YoB7z3dzaVcskM2el7O/exNg5fclAN+G5MXn/TRx2Rcie8YTXo2YQdg==}
+    engines: {node: '>=22.0.0'}
+    peerDependencies:
+      typescript: '>=4.7'
+
+  '@qdrant/openapi-typescript-fetch@1.2.6':
+    resolution: {integrity: sha512-oQG/FejNpItrxRHoyctYvT3rwGZOnK4jr3JdppO/c78ktDvkWiPXPHNsrDf33K9sZdRb6PR7gi4noIapu5q4HA==}
+    engines: {node: '>=18.0.0', pnpm: '>=8'}
 
   '@radix-ui/number@1.1.3':
     resolution: {integrity: sha512-Road2bidD0uu/1BGDOWNdPI06g0lIRy6IF9GZcIrDK2KGItfor8IQwQa+yM2ERgHM1MmHxaxpTzk0/Jp42lNfA==}
@@ -2602,6 +2758,9 @@ packages:
   '@types/react@19.3.0':
     resolution: {integrity: sha512-N0rFCuH9YoxG9/m61l9MfpJKfmLOVU0em7ipIz6TRgSSkvReLB9vL85GB+yr8Bs5leqpvg96JSwF4ZS1s4viQg==}
 
+  '@types/retry@0.12.0':
+    resolution: {integrity: sha512-wWKOClTTiizcZhXnPY4wikVAwmdYHp8q6DmC+EJUzAMsycb7HB32Kh9RN4+0gExjmPmZSAQjgURXIGATPegAvA==}
+
   '@types/unist@2.0.11':
     resolution: {integrity: sha512-CmBKiL6NNo/OqgmMn95Fk9Whlp2mtvIv+KNpQKN2F4SjvrEesubTRWGYSg+BnWZOnlCaSTU1sMpsBOzgbYhnsA==}
 
@@ -2875,6 +3034,9 @@ packages:
 
   bignumber.js@9.3.1:
     resolution: {integrity: sha512-Ko0uX15oIUS7wJ3Rb30Fs6SkVbLmPBAKdlm7q9+ak9bbIeFf0MwuBsQV6z7+X768/cHsfg+WlysDWJcmthjsjQ==}
+
+  bmp-js@0.1.0:
+    resolution: {integrity: sha512-vHdS19CnY3hwiNdkaqk93DvjVLfbEcI8mys4UjuWrlX1haDmroo8o4xCzh4wD6DGV6HxRCyauwhHRqMTfERtjw==}
 
   browserslist@4.29.6:
     resolution: {integrity: sha512-CmVVIQ3RVc5HxYEc9X84GvxK/C8C1wH8TlKAiO7uTxF8PDwt7r8t9Qk3J9NkMOVzX5O/HbLv3yzxZg9HPrnI9w==}
@@ -3357,6 +3519,9 @@ packages:
     resolution: {integrity: sha512-vK9P5/iUfdl95AI+JVyUuIcVtd4ofvtrOr3HNtM2yxC9bnMbEdp3x01OhQNnjb8IJYi38VlTE3mBXwcfvywuSw==}
     engines: {node: '>= 14'}
 
+  idb-keyval@6.3.0:
+    resolution: {integrity: sha512-um+2dgAWmYsu615EXpWVwSmapJhON0G43t3Ka/EVaohzPQXSMqKEqeDK/oIW3Ow+BXaF2PvSc+oBTFp793A5Ow==}
+
   immer@10.2.0:
     resolution: {integrity: sha512-d/+XTN3zfODyjr89gM3mPq1WNX2B8pYsu7eORitdwyA2sBubnTl3laYlBk4sXY5FUa5qTZGBDPJICVbvqzjlbw==}
 
@@ -3391,6 +3556,9 @@ packages:
   is-plain-obj@4.1.0:
     resolution: {integrity: sha512-+Pgi+vMuUNkJyExiMBt5IlFoMyKnr5zhJ4Uspz58WOhBF5QoIZkFyNHIbBAtHwzVAgk5RtndVNsDRN61/mmDqg==}
     engines: {node: '>=12'}
+
+  is-url@1.2.4:
+    resolution: {integrity: sha512-ITvGim8FhRiYe4IQ5uHSkj7pVaPDrCTkNd3yq3cV7iZAcJdHTUMPMEHcqSOy9xZ9qFenQCvi+2wjH9a1nXqHww==}
 
   isbot@5.2.3:
     resolution: {integrity: sha512-e8gGz3VzAuImtTMnB5PqNRRWGAswObTc+X+X5a8PttKT78VSSFec98w9ZwUoy6jJdlvJkVdLiN+WMgA8TewoZg==}
@@ -3502,6 +3670,9 @@ packages:
   lightningcss@1.33.0:
     resolution: {integrity: sha512-WkUDrojuJs0xkgGf2udWxa3yGBRxPtxUkB79i6aCZLRgc7PM8fZe9TosfPDcvEpQZbuFASnHYmRLBLUbmLOIIA==}
     engines: {node: '>= 12.0.0'}
+
+  long@5.3.2:
+    resolution: {integrity: sha512-mNAgZ1GmyNhD7AuqnTG3/VQ26o760+ZYBPKjPvugO8+nLbYfX6TVpJPseBvopbdY+qpZ/lKUnmEc1LeZYS3QAA==}
 
   longest-streak@3.1.0:
     resolution: {integrity: sha512-9Ri+o0JYgehTaVBBDoMqIl8GXtbWg711O3srftcHhZ0dqnETqLaoIK0x17fUw9rFSlK/0NlsKe0Ahhyl5pXE2g==}
@@ -3699,6 +3870,15 @@ packages:
     engines: {node: '>=10.5.0'}
     deprecated: Use your platform's native DOMException instead
 
+  node-fetch@2.7.0:
+    resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}
+    engines: {node: 4.x || >=6.0.0}
+    peerDependencies:
+      encoding: ^0.1.0
+    peerDependenciesMeta:
+      encoding:
+        optional: true
+
   node-fetch@3.3.2:
     resolution: {integrity: sha512-dRB78srN/l6gqWulah9SrxeYnxeddIG30+GOqK/9OlLVyLg3HPnr6SqOWTWOXKRwC2eGYCkZ59NNuSgvSrpgOA==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
@@ -3711,8 +3891,8 @@ packages:
     resolution: {integrity: sha512-0eJJY6hXLGf1udHwfNftBqH+g73EU4B504nZeKpz1sYRKafAghwxEJunB2O7rDZkL4PGfsMVnTXZ2EjibbqcsA==}
     engines: {node: '>=14.0.0'}
 
-  openai@7.59.0:
-    resolution: {integrity: sha512-wPYKJkLPFEdNJ2tThSg4jE1Ptsv4X3u8g8LIvu0Qz/UIhsKeCzl73rl48PtQsDVrJL/ku0liXOsbyd2TsRsPJw==}
+  openai@7.63.0:
+    resolution: {integrity: sha512-bTRCHcdcYHu9k+2+jjPuzWTNaCORLBCNLrYkTFGmotQIec2D/lIWWMZ6uc9AIazc0MA4lYw62xpdcjUMjt98xg==}
     engines: {node: '>=22.0.0'}
     peerDependencies:
       '@aws-sdk/credential-provider-node': '>=3.972.0 <4'
@@ -3737,6 +3917,10 @@ packages:
         optional: true
       zod:
         optional: true
+
+  opencollective-postinstall@2.0.3:
+    resolution: {integrity: sha512-8AV/sCtuzUeTo8gQK5qDZzARrulB3egtLzFgteqB2tcT4Mw7B8Kt7JcDHmltjz6FOAHsvTevk70gZEbhM4ZS9Q==}
+    hasBin: true
 
   orderedmap@2.1.1:
     resolution: {integrity: sha512-TvAWxi0nDe1j/rtMcWcIj94+Ffe6n7zhow33h40SKxmsmozs6dz/e+EajymfoFcHd7sxNn8yHM8839uixMOV6g==}
@@ -3769,6 +3953,10 @@ packages:
         optional: true
       vite-plus:
         optional: true
+
+  p-retry@4.6.2:
+    resolution: {integrity: sha512-312Id396EbJdvRONlngUx0NydfrIQ5lsYu0znKVUzVvArzEIt08V1qhtyESbGVd1FGX7UKtiFp5uwKZdM8wIuQ==}
+    engines: {node: '>=8'}
 
   parse-entities@4.0.2:
     resolution: {integrity: sha512-GG2AQYWoLgL877gQIKeRPGO1xF9+eG1ujIb5soS5gPvLQ1y2o8FL90w2QWNdf9I361Mpp7726c+lj3U0qK1uGw==}
@@ -3850,6 +4038,10 @@ packages:
 
   prosemirror-view@1.42.9:
     resolution: {integrity: sha512-bKbfzeKZOu2H2JQU2TaJmYu6EBcor3VnGIR4jR31cbEt1ztUnfUB6bKGV1+fJzOJdrVWR+tRU0208zM3oQx4wA==}
+
+  protobufjs@7.6.6:
+    resolution: {integrity: sha512-dYDWdjSl5RNb7SgPxGQcRU+GtvP7s2fpkrY0r432PcOIaZ0/rBcxEZnQN67iJhFuQiVw754JDoPruPCNdGsbjg==}
+    engines: {node: '>=12.0.0'}
 
   proxy-from-env@2.1.0:
     resolution: {integrity: sha512-cJ+oHTW1VAEa8cJslgmUZrc+sjRKgAKl3Zyse6+PV38hZe/V6Z14TbCuXcan9F9ghlz4QrFr2c92TNF82UkYHA==}
@@ -3984,6 +4176,9 @@ packages:
   redux@5.0.1:
     resolution: {integrity: sha512-M9/ELqF6fy8FwmkpnF0S3YKOqMyoWJ4+CS5Efg2ct3oY9daQvd/Pc71FpGZsVsbl3Cpb+IIcjBDUnnyBdQbq4w==}
 
+  regenerator-runtime@0.13.11:
+    resolution: {integrity: sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==}
+
   remark-gfm@4.0.1:
     resolution: {integrity: sha512-1quofZ2RQ9EWdeN34S79+KExV1764+wCUGop5CPL1WGdD0ocPpu91lzPGbwWMECpEpd42kJGQwzRfyov9j4yNg==}
 
@@ -4004,6 +4199,10 @@ packages:
 
   resolve-pkg-maps@1.0.0:
     resolution: {integrity: sha512-seS2Tj26TBVOC2NIc2rOe2y2ZO7efxITtLZcGSOnHHNOQ7CkiUBfw0Iw2ck6xkIhPwLhKNLS8BO+hEpngQlqzw==}
+
+  retry@0.13.1:
+    resolution: {integrity: sha512-XQBQ3I8W1Cge0Seh+6gjj03LbmRFWuoszgK9ooCpwYIrhhoO80pfq4cUkU5DkknwfOfFteRwlZ56PYOGYyFWdg==}
+    engines: {node: '>= 4'}
 
   rolldown@1.2.19:
     resolution: {integrity: sha512-QIiV1J9d0pzN4jeeTH4sjPy0AZ6cAy2cG0ExeoE1+U8Rvj+hR3gYkokx0YbeUNGlZqiQJJ2utcETe0oKXwzsuA==}
@@ -4095,6 +4294,12 @@ packages:
     resolution: {integrity: sha512-NHFiWnAbMJxNNpBwiO7jJVGDuqMxT9/oV8v57RR+fgBQShkJil5inGD8/xWy0hjLyHQyX1tu27QANhlz3KBqCg==}
     engines: {node: '>=6'}
 
+  tesseract.js-core@7.0.0:
+    resolution: {integrity: sha512-WnNH518NzmbSq9zgTPeoF8c+xmilS8rFIl1YKbk/ptuuc7p6cLNELNuPAzcmsYw450ca6bLa8j3t0VAtq435Vw==}
+
+  tesseract.js@7.0.0:
+    resolution: {integrity: sha512-exPBkd+z+wM1BuMkx/Bjv43OeLBxhL5kKWsz/9JY+DXcXdiBjiAch0V49QR3oAJqCaL5qURE0vx9Eo+G5YE7mA==}
+
   thread-stream@4.2.1:
     resolution: {integrity: sha512-Stg6edJXC/6/xqGwSXwFokrUhChJ18amEjpKH89WrQQ0oVFDF+pUUcTpiwWhFUrE89Vf16FBOlwhaw+lescxMQ==}
     engines: {node: '>=20'}
@@ -4109,6 +4314,9 @@ packages:
   tinypool@2.2.0:
     resolution: {integrity: sha512-jBrmx4lYmaC9k/mgPbylxs7kBUxHtD8256up+HjLaDFfXScKJQyil+SWXSvhAtT7XHo+yTVlpB81PGmHP8oLSQ==}
     engines: {node: ^20.0.0 || >=22.0.0}
+
+  tr46@0.0.3:
+    resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
 
   trim-lines@3.0.1:
     resolution: {integrity: sha512-kRj8B+YHZCc9kQYdWfJB2/oUl9rA99qbowYYBtr4ui4mZyAQ2JpvVBd/6U2YloATfqBhBTSMhTpgBHtU0Mf3Rg==}
@@ -4135,6 +4343,10 @@ packages:
   undici-types@8.9.0:
     resolution: {integrity: sha512-KTDyRTYX8sWmKXAikPHHSyc63CRPETMctyjKFupcC6OBLXT3xsN0e9aF7m+mIXutFWpUXuedtowG7iLOzp0kQg==}
 
+  undici@7.29.1:
+    resolution: {integrity: sha512-RYONW2MeafgYlkVOKYKkA/Ag7BmXqgIWCa8t1m0JcxrQg9pI9lEqRhAOruOBCbAohOa/gkCF+iPi9hrgvTzu6Q==}
+    engines: {node: '>=20.18.1'}
+
   unified@11.0.5:
     resolution: {integrity: sha512-xKvGhPWw3k84Qjh8bI3ZeJjqnyadK+GEFtazSfZv/rKeTkTjOJho6mFqh2SM96iIcZokxiOpg78GazTSg8+KHA==}
 
@@ -4152,6 +4364,18 @@ packages:
 
   unist-util-visit@5.2.0:
     resolution: {integrity: sha512-fpsYs/VVoZxfGY9/j3FQpZmN8wdLJaV1Pt38AaJNZu9uKIHcFU3halCdBveEq1HGKO1OEfJY65w1zvoFV1b3qQ==}
+
+  unpdf@2.2.2:
+    resolution: {integrity: sha512-oYnk0gwtIFVtkDbrll9SOEpXT4yCpCVkqQ/pxgxm9oNZ0GwpkEtRsrJZdyAvXHjaerrQTDFMaGWKWG+CKnb4cw==}
+    engines: {node: '>=24'}
+    peerDependencies:
+      '@napi-rs/canvas': ^0.1.69 || ^1.0.0
+      pdfjs-dist: '*'
+    peerDependenciesMeta:
+      '@napi-rs/canvas':
+        optional: true
+      pdfjs-dist:
+        optional: true
 
   unplugin@3.7.0:
     resolution: {integrity: sha512-GrM2uq3DQo3hvLU2FjeYhooJ8BY9N6j1Fbzgx7Pta3VVJevsD3VP4dPjZkZOS0mLvN8w9zzr9OlP+31bSMyuLw==}
@@ -4281,12 +4505,21 @@ packages:
   w3c-keyname@2.2.8:
     resolution: {integrity: sha512-dpojBhNsCNN7T82Tm7k26A6G9ML3NkhDsnw9n/eoxSRlVBB4CEtIQ/KTCLI2Fwf3ataSXRhYFkQi3SlnFwPvPQ==}
 
+  wasm-feature-detect@1.10.1:
+    resolution: {integrity: sha512-+wz9+WpMKgQ7H1tm41nJbFwAvwX4DqY0jNY8Blw5Qe6hHg1yhCJ+AqU0R4lgX7p3pyo8irYIl1+mMNoBwSj2Zg==}
+
   web-streams-polyfill@3.3.3:
     resolution: {integrity: sha512-d2JWLCivmZYTSIoge9MsgFCZrt571BikcWGYkjC1khllbTeDlGqZ2D8vD8E/lJa8WGWbb7Plm8/XJYV7IJHZZw==}
     engines: {node: '>= 8'}
 
+  webidl-conversions@3.0.1:
+    resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
+
   webpack-virtual-modules@0.6.2:
     resolution: {integrity: sha512-66/V2i5hQanC51vBQKPH4aI8NMAcBW59FVBs+rC7eGHupMyfn34q7rZIE+ETlJ+XTevqfUhVVBgSUNSW2flEUQ==}
+
+  whatwg-url@5.0.0:
+    resolution: {integrity: sha512-saE57nupxk6v3HY35+jzBwYa0rKSy0XR8JSxZPwgLr7ys0IBzhGviA1/TUGJLmSVqs8pb9AnvICXEuOHLprYTw==}
 
   ws@8.23.0:
     resolution: {integrity: sha512-wCkmX8QMOrKjgO8HW2WyDbTSGeqkocxgDzS9iR79rEAexty6/2qzilx3Ag8Tqf9ykop3irLKle0MtVn5qjVnoQ==}
@@ -4307,6 +4540,9 @@ packages:
     resolution: {integrity: sha512-3NxN8+78OdzbT7C/WjGsyfPAtJaN3FNDsWxv7Y7mcDsT/oOmgW8BpyQQFFBnvZE3j9Y2Sdz1ULFLezL7Eb2yFw==}
     engines: {node: '>= 14.6'}
     hasBin: true
+
+  zlibjs@0.3.1:
+    resolution: {integrity: sha512-+J9RrgTKOmlxFSDHo0pI1xM6BLVUv+o0ZT9ANtCxGkjIVCCUdx9alUF8Gm+dGLKbkkkidWIHFDZHDMpfITt4+w==}
 
   zod@4.6.7:
     resolution: {integrity: sha512-g8W2D2kU6a8untc053fX1uVBKzM7yqAxW/3zwk83+6RyF2+SKOuV+c0wBDhUwzV1PaGapmZH+rmcUzPf+3CGwg==}
@@ -4331,18 +4567,33 @@ packages:
 
 snapshots:
 
-  '@anvia/client@1.9.0(@anvia/core@1.21.0(zod@4.6.7))':
+  '@anvia/client@1.9.0(@anvia/core@1.23.0(zod@4.6.7))':
     dependencies:
-      '@anvia/core': 1.21.0(zod@4.6.7)
+      '@anvia/core': 1.23.0(zod@4.6.7)
 
   '@anvia/core@1.21.0(zod@4.6.7)':
     dependencies:
       yaml: 2.9.1
       zod: 4.6.7
 
-  '@anvia/graph@1.2.0(@anvia/core@1.21.0(zod@4.6.7))(zod@4.6.7)':
+  '@anvia/core@1.23.0(zod@4.6.7)':
     dependencies:
-      '@anvia/core': 1.21.0(zod@4.6.7)
+      yaml: 2.9.1
+      zod: 4.6.7
+
+  '@anvia/gemini@1.2.1(@anvia/core@1.23.0(zod@4.6.7))':
+    dependencies:
+      '@anvia/core': 1.23.0(zod@4.6.7)
+      '@google/genai': 2.32.0
+    transitivePeerDependencies:
+      - '@modelcontextprotocol/sdk'
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+
+  '@anvia/graph@1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7)':
+    dependencies:
+      '@anvia/core': 1.23.0(zod@4.6.7)
       zod: 4.6.7
 
   '@anvia/lens@1.3.0(@anvia/core@1.21.0(zod@4.6.7))':
@@ -4361,15 +4612,15 @@ snapshots:
       '@anvia/core': 1.21.0(zod@4.6.7)
       pino: 10.4.0
 
-  '@anvia/memory-drizzle@1.2.1(@anvia/core@1.21.0(zod@4.6.7))(drizzle-orm@0.45.4(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1))':
+  '@anvia/memory-drizzle@1.2.1(@anvia/core@1.23.0(zod@4.6.7))(drizzle-orm@0.45.4(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1))':
     dependencies:
-      '@anvia/core': 1.21.0(zod@4.6.7)
+      '@anvia/core': 1.23.0(zod@4.6.7)
       drizzle-orm: 0.45.4(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
 
-  '@anvia/openai@1.3.8(@anvia/core@1.21.0(zod@4.6.7))(google-auth-library@10.9.1)(ws@8.23.0)(zod@4.6.7)':
+  '@anvia/openai@1.4.1(@anvia/core@1.23.0(zod@4.6.7))(google-auth-library@10.9.1)(undici@7.29.1)(ws@8.23.0)(zod@4.6.7)':
     dependencies:
-      '@anvia/core': 1.21.0(zod@4.6.7)
-      openai: 7.59.0(google-auth-library@10.9.1)(ws@8.23.0)(zod@4.6.7)
+      '@anvia/core': 1.23.0(zod@4.6.7)
+      openai: 7.63.0(google-auth-library@10.9.1)(undici@7.29.1)(ws@8.23.0)(zod@4.6.7)
     transitivePeerDependencies:
       - '@aws-sdk/credential-provider-node'
       - '@smithy/hash-node'
@@ -4390,10 +4641,17 @@ snapshots:
       '@anvia/core': 1.21.0(zod@4.6.7)
       '@opentelemetry/api': 1.10.0
 
-  '@anvia/react-ui@1.3.2(@anvia/client@1.9.0(@anvia/core@1.21.0(zod@4.6.7)))(@anvia/graph@1.2.0(@anvia/core@1.21.0(zod@4.6.7))(zod@4.6.7))(@anvia/react@1.1.5(@anvia/client@1.9.0(@anvia/core@1.21.0(zod@4.6.7)))(@anvia/core@1.21.0(zod@4.6.7))(@anvia/graph@1.2.0(@anvia/core@1.21.0(zod@4.6.7))(zod@4.6.7))(react@19.3.1))(@floating-ui/dom@1.8.0)(@novnc/novnc@1.7.0)(@tiptap/extensions@3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
+  '@anvia/qdrant@1.3.0(@anvia/core@1.23.0(zod@4.6.7))(typescript@7.0.2)':
     dependencies:
-      '@anvia/client': 1.9.0(@anvia/core@1.21.0(zod@4.6.7))
-      '@anvia/react': 1.1.5(@anvia/client@1.9.0(@anvia/core@1.21.0(zod@4.6.7)))(@anvia/core@1.21.0(zod@4.6.7))(@anvia/graph@1.2.0(@anvia/core@1.21.0(zod@4.6.7))(zod@4.6.7))(react@19.3.1)
+      '@anvia/core': 1.23.0(zod@4.6.7)
+      '@qdrant/js-client-rest': 1.20.0(typescript@7.0.2)
+    transitivePeerDependencies:
+      - typescript
+
+  '@anvia/react-ui@1.3.2(@anvia/client@1.9.0(@anvia/core@1.23.0(zod@4.6.7)))(@anvia/graph@1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7))(@anvia/react@1.1.5(@anvia/client@1.9.0(@anvia/core@1.23.0(zod@4.6.7)))(@anvia/core@1.23.0(zod@4.6.7))(@anvia/graph@1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7))(react@19.3.1))(@floating-ui/dom@1.8.0)(@novnc/novnc@1.7.0)(@tiptap/extensions@3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
+    dependencies:
+      '@anvia/client': 1.9.0(@anvia/core@1.23.0(zod@4.6.7))
+      '@anvia/react': 1.1.5(@anvia/client@1.9.0(@anvia/core@1.23.0(zod@4.6.7)))(@anvia/core@1.23.0(zod@4.6.7))(@anvia/graph@1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7))(react@19.3.1)
       '@radix-ui/react-slot': 1.5.0(@types/react@19.3.0)(react@19.3.1)
       '@tiptap/core': 3.34.0(@tiptap/pm@3.34.0)
       '@tiptap/extension-document': 3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))
@@ -4411,7 +4669,7 @@ snapshots:
       react-markdown: 10.1.0(@types/react@19.3.0)(react@19.3.1)
       remark-gfm: 4.0.1
     optionalDependencies:
-      '@anvia/graph': 1.2.0(@anvia/core@1.21.0(zod@4.6.7))(zod@4.6.7)
+      '@anvia/graph': 1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7)
       '@novnc/novnc': 1.7.0
     transitivePeerDependencies:
       - '@floating-ui/dom'
@@ -4420,10 +4678,10 @@ snapshots:
       - '@types/react-dom'
       - supports-color
 
-  '@anvia/react-ui@1.3.2(@anvia/client@1.9.0(@anvia/core@1.21.0(zod@4.6.7)))(@anvia/graph@1.2.0(@anvia/core@1.21.0(zod@4.6.7))(zod@4.6.7))(@anvia/react@1.2.0(@anvia/client@1.9.0(@anvia/core@1.21.0(zod@4.6.7)))(@anvia/core@1.21.0(zod@4.6.7))(@anvia/graph@1.2.0(@anvia/core@1.21.0(zod@4.6.7))(zod@4.6.7))(react@19.3.1))(@novnc/novnc@1.7.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
+  '@anvia/react-ui@1.3.2(@anvia/client@1.9.0(@anvia/core@1.23.0(zod@4.6.7)))(@anvia/graph@1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7))(@anvia/react@1.2.0(@anvia/client@1.9.0(@anvia/core@1.23.0(zod@4.6.7)))(@anvia/core@1.23.0(zod@4.6.7))(@anvia/graph@1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7))(react@19.3.1))(@novnc/novnc@1.7.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@anvia/client': 1.9.0(@anvia/core@1.21.0(zod@4.6.7))
-      '@anvia/react': 1.2.0(@anvia/client@1.9.0(@anvia/core@1.21.0(zod@4.6.7)))(@anvia/core@1.21.0(zod@4.6.7))(@anvia/graph@1.2.0(@anvia/core@1.21.0(zod@4.6.7))(zod@4.6.7))(react@19.3.1)
+      '@anvia/client': 1.9.0(@anvia/core@1.23.0(zod@4.6.7))
+      '@anvia/react': 1.2.0(@anvia/client@1.9.0(@anvia/core@1.23.0(zod@4.6.7)))(@anvia/core@1.23.0(zod@4.6.7))(@anvia/graph@1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7))(react@19.3.1)
       '@radix-ui/react-slot': 1.5.0(@types/react@19.3.0)(react@19.3.1)
       '@tiptap/core': 3.34.0(@tiptap/pm@3.34.0)
       '@tiptap/extension-document': 3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))
@@ -4441,7 +4699,7 @@ snapshots:
       react-markdown: 10.1.0(@types/react@19.3.0)(react@19.3.1)
       remark-gfm: 4.0.1
     optionalDependencies:
-      '@anvia/graph': 1.2.0(@anvia/core@1.21.0(zod@4.6.7))(zod@4.6.7)
+      '@anvia/graph': 1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7)
       '@novnc/novnc': 1.7.0
     transitivePeerDependencies:
       - '@floating-ui/dom'
@@ -4450,34 +4708,34 @@ snapshots:
       - '@types/react-dom'
       - supports-color
 
-  '@anvia/react@1.1.5(@anvia/client@1.9.0(@anvia/core@1.21.0(zod@4.6.7)))(@anvia/core@1.21.0(zod@4.6.7))(@anvia/graph@1.2.0(@anvia/core@1.21.0(zod@4.6.7))(zod@4.6.7))(react@19.3.1)':
+  '@anvia/react@1.1.5(@anvia/client@1.9.0(@anvia/core@1.23.0(zod@4.6.7)))(@anvia/core@1.23.0(zod@4.6.7))(@anvia/graph@1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7))(react@19.3.1)':
     dependencies:
-      '@anvia/client': 1.9.0(@anvia/core@1.21.0(zod@4.6.7))
-      '@anvia/core': 1.21.0(zod@4.6.7)
+      '@anvia/client': 1.9.0(@anvia/core@1.23.0(zod@4.6.7))
+      '@anvia/core': 1.23.0(zod@4.6.7)
       react: 19.3.1
     optionalDependencies:
-      '@anvia/graph': 1.2.0(@anvia/core@1.21.0(zod@4.6.7))(zod@4.6.7)
+      '@anvia/graph': 1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7)
 
-  '@anvia/react@1.2.0(@anvia/client@1.9.0(@anvia/core@1.21.0(zod@4.6.7)))(@anvia/core@1.21.0(zod@4.6.7))(@anvia/graph@1.2.0(@anvia/core@1.21.0(zod@4.6.7))(zod@4.6.7))(react@19.3.1)':
+  '@anvia/react@1.2.0(@anvia/client@1.9.0(@anvia/core@1.23.0(zod@4.6.7)))(@anvia/core@1.23.0(zod@4.6.7))(@anvia/graph@1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7))(react@19.3.1)':
     dependencies:
-      '@anvia/client': 1.9.0(@anvia/core@1.21.0(zod@4.6.7))
-      '@anvia/core': 1.21.0(zod@4.6.7)
+      '@anvia/client': 1.9.0(@anvia/core@1.23.0(zod@4.6.7))
+      '@anvia/core': 1.23.0(zod@4.6.7)
       react: 19.3.1
     optionalDependencies:
-      '@anvia/graph': 1.2.0(@anvia/core@1.21.0(zod@4.6.7))(zod@4.6.7)
+      '@anvia/graph': 1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7)
 
-  '@anvia/server@1.5.0(@anvia/client@1.9.0(@anvia/core@1.21.0(zod@4.6.7)))':
+  '@anvia/server@1.5.0(@anvia/client@1.9.0(@anvia/core@1.23.0(zod@4.6.7)))':
     dependencies:
-      '@anvia/client': 1.9.0(@anvia/core@1.21.0(zod@4.6.7))
+      '@anvia/client': 1.9.0(@anvia/core@1.23.0(zod@4.6.7))
 
-  '@anvia/studio@1.5.0(@anvia/core@1.21.0(zod@4.6.7))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(immer@11.2.10)(zod@4.6.7)':
+  '@anvia/studio@1.5.0(@anvia/core@1.23.0(zod@4.6.7))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(immer@11.2.10)(zod@4.6.7)':
     dependencies:
-      '@anvia/client': 1.9.0(@anvia/core@1.21.0(zod@4.6.7))
-      '@anvia/core': 1.21.0(zod@4.6.7)
-      '@anvia/graph': 1.2.0(@anvia/core@1.21.0(zod@4.6.7))(zod@4.6.7)
-      '@anvia/react': 1.2.0(@anvia/client@1.9.0(@anvia/core@1.21.0(zod@4.6.7)))(@anvia/core@1.21.0(zod@4.6.7))(@anvia/graph@1.2.0(@anvia/core@1.21.0(zod@4.6.7))(zod@4.6.7))(react@19.3.1)
-      '@anvia/react-ui': 1.3.2(@anvia/client@1.9.0(@anvia/core@1.21.0(zod@4.6.7)))(@anvia/graph@1.2.0(@anvia/core@1.21.0(zod@4.6.7))(zod@4.6.7))(@anvia/react@1.2.0(@anvia/client@1.9.0(@anvia/core@1.21.0(zod@4.6.7)))(@anvia/core@1.21.0(zod@4.6.7))(@anvia/graph@1.2.0(@anvia/core@1.21.0(zod@4.6.7))(zod@4.6.7))(react@19.3.1))(@novnc/novnc@1.7.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      '@anvia/server': 1.5.0(@anvia/client@1.9.0(@anvia/core@1.21.0(zod@4.6.7)))
+      '@anvia/client': 1.9.0(@anvia/core@1.23.0(zod@4.6.7))
+      '@anvia/core': 1.23.0(zod@4.6.7)
+      '@anvia/graph': 1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7)
+      '@anvia/react': 1.2.0(@anvia/client@1.9.0(@anvia/core@1.23.0(zod@4.6.7)))(@anvia/core@1.23.0(zod@4.6.7))(@anvia/graph@1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7))(react@19.3.1)
+      '@anvia/react-ui': 1.3.2(@anvia/client@1.9.0(@anvia/core@1.23.0(zod@4.6.7)))(@anvia/graph@1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7))(@anvia/react@1.2.0(@anvia/client@1.9.0(@anvia/core@1.23.0(zod@4.6.7)))(@anvia/core@1.23.0(zod@4.6.7))(@anvia/graph@1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7))(react@19.3.1))(@novnc/novnc@1.7.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@anvia/server': 1.5.0(@anvia/client@1.9.0(@anvia/core@1.23.0(zod@4.6.7)))
       '@fontsource-variable/geist': 5.3.0
       '@fontsource-variable/geist-mono': 5.3.0
       '@hono/node-server': 2.1.9(hono@4.13.19)
@@ -4966,6 +5224,17 @@ snapshots:
 
   '@fontsource-variable/geist@5.3.0': {}
 
+  '@google/genai@2.32.0':
+    dependencies:
+      google-auth-library: 10.9.1
+      p-retry: 4.6.2
+      protobufjs: 7.6.6
+      ws: 8.23.0
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+
   '@hono/node-server@2.1.9(hono@4.13.19)':
     dependencies:
       hono: 4.13.19
@@ -5001,6 +5270,53 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.3
       '@jridgewell/sourcemap-codec': 1.6.0
+
+  '@napi-rs/canvas-android-arm64@1.2.0':
+    optional: true
+
+  '@napi-rs/canvas-darwin-arm64@1.2.0':
+    optional: true
+
+  '@napi-rs/canvas-darwin-x64@1.2.0':
+    optional: true
+
+  '@napi-rs/canvas-linux-arm-gnueabihf@1.2.0':
+    optional: true
+
+  '@napi-rs/canvas-linux-arm64-gnu@1.2.0':
+    optional: true
+
+  '@napi-rs/canvas-linux-arm64-musl@1.2.0':
+    optional: true
+
+  '@napi-rs/canvas-linux-riscv64-gnu@1.2.0':
+    optional: true
+
+  '@napi-rs/canvas-linux-x64-gnu@1.2.0':
+    optional: true
+
+  '@napi-rs/canvas-linux-x64-musl@1.2.0':
+    optional: true
+
+  '@napi-rs/canvas-win32-arm64-msvc@1.2.0':
+    optional: true
+
+  '@napi-rs/canvas-win32-x64-msvc@1.2.0':
+    optional: true
+
+  '@napi-rs/canvas@1.2.0':
+    optionalDependencies:
+      '@napi-rs/canvas-android-arm64': 1.2.0
+      '@napi-rs/canvas-darwin-arm64': 1.2.0
+      '@napi-rs/canvas-darwin-x64': 1.2.0
+      '@napi-rs/canvas-linux-arm-gnueabihf': 1.2.0
+      '@napi-rs/canvas-linux-arm64-gnu': 1.2.0
+      '@napi-rs/canvas-linux-arm64-musl': 1.2.0
+      '@napi-rs/canvas-linux-riscv64-gnu': 1.2.0
+      '@napi-rs/canvas-linux-x64-gnu': 1.2.0
+      '@napi-rs/canvas-linux-x64-musl': 1.2.0
+      '@napi-rs/canvas-win32-arm64-msvc': 1.2.0
+      '@napi-rs/canvas-win32-x64-msvc': 1.2.0
 
   '@napi-rs/wasm-runtime@1.2.6(@emnapi/core@2.0.0-beta.2)(@emnapi/runtime@2.0.0-beta.2)':
     dependencies:
@@ -5205,6 +5521,34 @@ snapshots:
       react-dom: 19.3.1(react@19.3.1)
 
   '@pinojs/redact@0.4.0': {}
+
+  '@protobufjs/aspromise@1.1.2': {}
+
+  '@protobufjs/base64@1.1.2': {}
+
+  '@protobufjs/codegen@2.0.5': {}
+
+  '@protobufjs/eventemitter@1.1.1': {}
+
+  '@protobufjs/fetch@1.1.1':
+    dependencies:
+      '@protobufjs/aspromise': 1.1.2
+
+  '@protobufjs/float@1.0.2': {}
+
+  '@protobufjs/path@1.1.2': {}
+
+  '@protobufjs/pool@1.1.0': {}
+
+  '@protobufjs/utf8@1.1.2': {}
+
+  '@qdrant/js-client-rest@1.20.0(typescript@7.0.2)':
+    dependencies:
+      '@qdrant/openapi-typescript-fetch': 1.2.6
+      typescript: 7.0.2
+      undici: 7.29.1
+
+  '@qdrant/openapi-typescript-fetch@1.2.6': {}
 
   '@radix-ui/number@1.1.3': {}
 
@@ -6354,6 +6698,8 @@ snapshots:
     dependencies:
       csstype: 3.2.4
 
+  '@types/retry@0.12.0': {}
+
   '@types/unist@2.0.11': {}
 
   '@types/unist@3.0.3': {}
@@ -6458,8 +6804,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  agent-base@7.1.4:
-    optional: true
+  agent-base@7.1.4: {}
 
   ansis@4.5.0: {}
 
@@ -6492,8 +6837,7 @@ snapshots:
 
   bail@2.0.2: {}
 
-  base64-js@1.5.1:
-    optional: true
+  base64-js@1.5.1: {}
 
   baseline-browser-mapping@2.11.38: {}
 
@@ -6533,8 +6877,9 @@ snapshots:
     optionalDependencies:
       zod: 4.6.7
 
-  bignumber.js@9.3.1:
-    optional: true
+  bignumber.js@9.3.1: {}
+
+  bmp-js@0.1.0: {}
 
   browserslist@4.29.6:
     dependencies:
@@ -6544,8 +6889,7 @@ snapshots:
       node-releases: 2.0.65
       update-browserslist-db: 1.4.0(browserslist@4.29.6)
 
-  buffer-equal-constant-time@1.0.1:
-    optional: true
+  buffer-equal-constant-time@1.0.1: {}
 
   buffer-from@1.1.2: {}
 
@@ -6668,8 +7012,7 @@ snapshots:
       d3-selection: 3.0.1
       d3-transition: 3.0.2(d3-selection@3.0.1)
 
-  data-uri-to-buffer@4.0.1:
-    optional: true
+  data-uri-to-buffer@4.0.1: {}
 
   date-fns@4.4.0: {}
 
@@ -6721,7 +7064,6 @@ snapshots:
   ecdsa-sig-formatter@1.0.11:
     dependencies:
       safe-buffer: 5.2.1
-    optional: true
 
   electron-to-chromium@1.5.489: {}
 
@@ -6862,7 +7204,6 @@ snapshots:
     dependencies:
       node-domexception: 1.0.0
       web-streams-polyfill: 3.3.3
-    optional: true
 
   follow-redirects@1.16.3(debug@4.4.3):
     optionalDependencies:
@@ -6879,7 +7220,6 @@ snapshots:
   formdata-polyfill@4.0.10:
     dependencies:
       fetch-blob: 3.2.0
-    optional: true
 
   fsevents@2.3.3:
     optional: true
@@ -6893,7 +7233,6 @@ snapshots:
       node-fetch: 3.3.2
     transitivePeerDependencies:
       - supports-color
-    optional: true
 
   gcp-metadata@8.1.2:
     dependencies:
@@ -6902,7 +7241,6 @@ snapshots:
       json-bigint: 1.0.0
     transitivePeerDependencies:
       - supports-color
-    optional: true
 
   gensync@1.0.0-beta.2: {}
 
@@ -6940,10 +7278,8 @@ snapshots:
       jws: 4.0.1
     transitivePeerDependencies:
       - supports-color
-    optional: true
 
-  google-logging-utils@1.1.3:
-    optional: true
+  google-logging-utils@1.1.3: {}
 
   gopd@1.2.0: {}
 
@@ -7000,7 +7336,8 @@ snapshots:
       debug: 4.4.3
     transitivePeerDependencies:
       - supports-color
-    optional: true
+
+  idb-keyval@6.3.0: {}
 
   immer@10.2.0: {}
 
@@ -7028,6 +7365,8 @@ snapshots:
 
   is-plain-obj@4.1.0: {}
 
+  is-url@1.2.4: {}
+
   isbot@5.2.3: {}
 
   jiti@2.7.0: {}
@@ -7041,7 +7380,6 @@ snapshots:
   json-bigint@1.0.0:
     dependencies:
       bignumber.js: 9.3.1
-    optional: true
 
   json5@2.2.3: {}
 
@@ -7050,13 +7388,11 @@ snapshots:
       buffer-equal-constant-time: 1.0.1
       ecdsa-sig-formatter: 1.0.11
       safe-buffer: 5.2.1
-    optional: true
 
   jws@4.0.1:
     dependencies:
       jwa: 2.0.1
       safe-buffer: 5.2.1
-    optional: true
 
   kysely@0.29.9: {}
 
@@ -7108,6 +7444,8 @@ snapshots:
       lightningcss-linux-x64-musl: 1.33.0
       lightningcss-win32-arm64-msvc: 1.33.0
       lightningcss-win32-x64-msvc: 1.33.0
+
+  long@5.3.2: {}
 
   longest-streak@3.1.0: {}
 
@@ -7506,25 +7844,30 @@ snapshots:
       react: 19.3.1
       react-dom: 19.3.1(react@19.3.1)
 
-  node-domexception@1.0.0:
-    optional: true
+  node-domexception@1.0.0: {}
+
+  node-fetch@2.7.0:
+    dependencies:
+      whatwg-url: 5.0.0
 
   node-fetch@3.3.2:
     dependencies:
       data-uri-to-buffer: 4.0.1
       fetch-blob: 3.2.0
       formdata-polyfill: 4.0.10
-    optional: true
 
   node-releases@2.0.65: {}
 
   on-exit-leak-free@2.1.2: {}
 
-  openai@7.59.0(google-auth-library@10.9.1)(ws@8.23.0)(zod@4.6.7):
+  openai@7.63.0(google-auth-library@10.9.1)(undici@7.29.1)(ws@8.23.0)(zod@4.6.7):
     optionalDependencies:
       google-auth-library: 10.9.1
+      undici: 7.29.1
       ws: 8.23.0
       zod: 4.6.7
+
+  opencollective-postinstall@2.0.3: {}
 
   orderedmap@2.1.1: {}
 
@@ -7573,6 +7916,11 @@ snapshots:
       '@oxlint/binding-win32-arm64-msvc': 1.94.0
       '@oxlint/binding-win32-ia32-msvc': 1.94.0
       '@oxlint/binding-win32-x64-msvc': 1.94.0
+
+  p-retry@4.6.2:
+    dependencies:
+      '@types/retry': 0.12.0
+      retry: 0.13.1
 
   parse-entities@4.0.2:
     dependencies:
@@ -7697,6 +8045,20 @@ snapshots:
       prosemirror-model: 1.25.13
       prosemirror-state: 1.4.4
       prosemirror-transform: 1.12.6
+
+  protobufjs@7.6.6:
+    dependencies:
+      '@protobufjs/aspromise': 1.1.2
+      '@protobufjs/base64': 1.1.2
+      '@protobufjs/codegen': 2.0.5
+      '@protobufjs/eventemitter': 1.1.1
+      '@protobufjs/fetch': 1.1.1
+      '@protobufjs/float': 1.0.2
+      '@protobufjs/path': 1.1.2
+      '@protobufjs/pool': 1.1.0
+      '@protobufjs/utf8': 1.1.2
+      '@types/node': 26.6.6
+      long: 5.3.2
 
   proxy-from-env@2.1.0: {}
 
@@ -7879,6 +8241,8 @@ snapshots:
 
   redux@5.0.1: {}
 
+  regenerator-runtime@0.13.11: {}
+
   remark-gfm@4.0.1:
     dependencies:
       '@types/mdast': 4.0.4
@@ -7919,6 +8283,8 @@ snapshots:
 
   resolve-pkg-maps@1.0.0: {}
 
+  retry@0.13.1: {}
+
   rolldown@1.2.19:
     dependencies:
       '@oxc-project/types': 0.156.0
@@ -7945,8 +8311,7 @@ snapshots:
 
   rou3@0.9.2: {}
 
-  safe-buffer@5.2.1:
-    optional: true
+  safe-buffer@5.2.1: {}
 
   safe-stable-stringify@2.5.0: {}
 
@@ -8005,6 +8370,22 @@ snapshots:
 
   tapable@2.3.4: {}
 
+  tesseract.js-core@7.0.0: {}
+
+  tesseract.js@7.0.0:
+    dependencies:
+      bmp-js: 0.1.0
+      idb-keyval: 6.3.0
+      is-url: 1.2.4
+      node-fetch: 2.7.0
+      opencollective-postinstall: 2.0.3
+      regenerator-runtime: 0.13.11
+      tesseract.js-core: 7.0.0
+      wasm-feature-detect: 1.10.1
+      zlibjs: 0.3.1
+    transitivePeerDependencies:
+      - encoding
+
   thread-stream@4.2.1:
     dependencies:
       real-require: 1.0.0
@@ -8017,6 +8398,8 @@ snapshots:
       picomatch: 4.0.7
 
   tinypool@2.2.0: {}
+
+  tr46@0.0.3: {}
 
   trim-lines@3.0.1: {}
 
@@ -8057,6 +8440,8 @@ snapshots:
 
   undici-types@8.9.0: {}
 
+  undici@7.29.1: {}
+
   unified@11.0.5:
     dependencies:
       '@types/unist': 3.0.3
@@ -8089,6 +8474,10 @@ snapshots:
       '@types/unist': 3.0.3
       unist-util-is: 6.0.1
       unist-util-visit-parents: 6.1.0
+
+  unpdf@2.2.2(@napi-rs/canvas@1.2.0):
+    optionalDependencies:
+      '@napi-rs/canvas': 1.2.0
 
   unplugin@3.7.0(esbuild@0.28.2)(rolldown@1.2.19)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1)):
     dependencies:
@@ -8179,16 +8568,26 @@ snapshots:
 
   w3c-keyname@2.2.8: {}
 
-  web-streams-polyfill@3.3.3:
-    optional: true
+  wasm-feature-detect@1.10.1: {}
+
+  web-streams-polyfill@3.3.3: {}
+
+  webidl-conversions@3.0.1: {}
 
   webpack-virtual-modules@0.6.2: {}
+
+  whatwg-url@5.0.0:
+    dependencies:
+      tr46: 0.0.3
+      webidl-conversions: 3.0.1
 
   ws@8.23.0: {}
 
   yallist@3.1.1: {}
 
   yaml@2.9.1: {}
+
+  zlibjs@0.3.1: {}
 
   zod@4.6.7: {}
 

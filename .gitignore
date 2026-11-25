@@ -4,3 +4,6 @@ dist
 **/routeTree.gen.ts
 .tanstack
 .claude/worktrees/
+
+# Local PDF storage for ingestion (stand-in for R2); never committed
+packages/agents/data/
