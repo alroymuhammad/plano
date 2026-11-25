@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
 import { parseArgs } from 'node:util'
 import type { PipelineObservabilityOptions } from '@anvia/core/pipeline'
-import { createFindDocumentsPipeline } from '../../find-documents/pipeline'
+import { createFindDocumentsPipeline } from '../../workflows/find-documents/pipeline'
 import { cases, type PdfProbe, type Recording, recordingsDir } from './cases'
 
 const { values, positionals } = parseArgs({
