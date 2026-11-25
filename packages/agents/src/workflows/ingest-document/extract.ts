@@ -1,11 +1,12 @@
+import { createHash } from 'node:crypto'
 import { existsSync } from 'node:fs'
-import { mkdir, rename, writeFile } from 'node:fs/promises'
+import { mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { gunzipSync } from 'node:zlib'
 import { createWorker } from 'tesseract.js'
 import { extractText, getDocumentProxy, renderPageAsImage } from 'unpdf'
 import type { ExtractedPage } from '../../types'
-import { OCR_LANG, OCR_LANG_URL, OCR_MIN_PAGE_CHARS, OCR_SCALE } from './constants'
+import { OCR_LANG, OCR_LANG_SHA256, OCR_LANG_URL, OCR_MIN_PAGE_CHARS, OCR_SCALE } from './constants'
 
 // Reads each page's text layer. A page with almost none is scanned: it is rendered and OCR'd (product 0011), and marked `ocr`.
 export async function extractPages(
@@ -50,17 +51,29 @@ export async function extractPages(
 async function ensureLanguageFile(ocrDataDir: string) {
   const file = join(ocrDataDir, `${OCR_LANG}.traineddata`)
 
-  if (existsSync(file)) return
+  if (!existsSync(file)) {
+    const url = `${OCR_LANG_URL}/${OCR_LANG}.traineddata.gz`
+    const response = await fetch(url).catch(() => null)
 
-  const url = `${OCR_LANG_URL}/${OCR_LANG}.traineddata.gz`
-  const response = await fetch(url).catch(() => null)
+    if (!response?.ok) throw new Error(`Could not download the OCR language from ${url}`)
 
-  if (!response?.ok) throw new Error(`Could not download the OCR language from ${url}`)
+    await mkdir(ocrDataDir, { recursive: true })
+    // Written under another name first, so an interrupted download never leaves a truncated language file.
+    const partial = `${file}.partial`
 
-  await mkdir(ocrDataDir, { recursive: true })
-  // Written under another name first, so an interrupted download never leaves a truncated language file.
-  const partial = `${file}.partial`
+    await writeFile(partial, gunzipSync(Buffer.from(await response.arrayBuffer())))
+    await rename(partial, file)
+  }
 
-  await writeFile(partial, gunzipSync(Buffer.from(await response.arrayBuffer())))
-  await rename(partial, file)
+  // Checked before every use, downloaded or cached, so tesseract never reads a file other than the pinned one.
+  const sha256 = createHash('sha256')
+    .update(await readFile(file))
+    .digest('hex')
+
+  if (sha256 !== OCR_LANG_SHA256) {
+    await rm(file, { force: true })
+    throw new Error(
+      `OCR language file ${file} has sha256 ${sha256}, not ${OCR_LANG_SHA256}. It was deleted; run again to download it.`,
+    )
+  }
 }

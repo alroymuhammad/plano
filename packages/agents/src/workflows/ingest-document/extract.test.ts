@@ -5,6 +5,7 @@ import { mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { gzipSync } from 'node:zlib'
 import { after, before, describe, it } from 'node:test'
 import { createCanvas } from '@napi-rs/canvas'
 import { createDb, createLibraryStore, type Db } from '@plano/db'
@@ -134,6 +135,36 @@ describe(
     })
   },
 )
+
+describe('the OCR language file', () => {
+  let root: string
+
+  before(async () => {
+    root = await mkdtemp(join(tmpdir(), 'plano-tessdata-'))
+  })
+
+  after(async () => {
+    await rm(root, { recursive: true, force: true })
+  })
+
+  it('deletes a cached copy that fails its sha256 and does not OCR with it', async () => {
+    await writeFile(join(root, 'ind.traineddata'), 'not the Indonesian language file')
+
+    await assert.rejects(extractPages(SCANNED_PDF, root), /sha256/)
+    assert.equal(existsSync(join(root, 'ind.traineddata')), false)
+  })
+
+  it('deletes a download that fails its sha256 and does not OCR with it', async (t) => {
+    t.mock.method(
+      globalThis,
+      'fetch',
+      async () => new Response(gzipSync('not the Indonesian language file')),
+    )
+
+    await assert.rejects(extractPages(SCANNED_PDF, join(root, 'downloaded')), /sha256/)
+    assert.equal(existsSync(join(root, 'downloaded', 'ind.traineddata')), false)
+  })
+})
 
 describe('ingestDocument with a scanned page', () => {
   const analystId = randomUUID()
