@@ -17,7 +17,7 @@ services:
       retries: 10
 
   qdrant:
-    image: qdrant/qdrant:latest
+    image: qdrant/qdrant:v1.20.2 # same minor as @qdrant/js-client-rest 1.20; bump them together
     restart: unless-stopped
     ports:
       - '6333:6333' # REST, dashboard at /dashboard
