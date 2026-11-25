@@ -122,6 +122,14 @@ export type PassageMetadata = {
   pageEnd: number
 }
 
+// Tests pass a fake embedding model and their own collection, as for ingestion.
+export type SearchLibraryOptions = {
+  // Defaults to Gemini query embeddings (decision 0022).
+  embeddingModel?: EmbeddingModel
+  // Defaults to the `passages` collection.
+  collectionName?: string
+}
+
 export type IngestDocumentResult =
   | { documentId: string; skipped: true }
   | {
