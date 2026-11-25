@@ -1,5 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs'
 import { defineEvalSuite, runEvalCli } from '@anvia/core/evals'
+import { createLens } from '@plano/observability'
 import { cases, type Recording, recordingsDir } from './cases'
 import { deterministicMetrics } from './deterministic'
 
@@ -13,7 +14,10 @@ if (unknown.length > 0) {
   process.exit(2)
 }
 
-const judgeMetrics = withJudge ? (await import('./judge')).judgeMetrics : []
+const { client, pipelineObservability } = createLens()
+const judgeMetrics = withJudge
+  ? (await import('./judge')).createJudgeMetrics(pipelineObservability)
+  : []
 
 const suite = defineEvalSuite({
   name: 'find-documents',
@@ -33,9 +37,16 @@ const suite = defineEvalSuite({
   metrics: [...deterministicMetrics, ...judgeMetrics],
 })
 
-await runEvalCli({
-  ...suite,
-  exitCode: true,
-  maxValueLength: 300,
-  caseIds: selected.length > 0 ? selected : undefined,
-})
+try {
+  await runEvalCli({
+    ...suite,
+    exitCode: true,
+    maxValueLength: 300,
+    caseIds: selected.length > 0 ? selected : undefined,
+  })
+} finally {
+  // close() flushes queued spans before it shuts the exporter down.
+  await client
+    .close()
+    .catch((error) => console.warn('Lens close failed; traces may be lost:', error))
+}
