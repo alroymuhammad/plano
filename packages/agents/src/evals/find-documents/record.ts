@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
 import { parseArgs } from 'node:util'
 import type { PipelineObservabilityOptions } from '@anvia/core/pipeline'
+import { createLens } from '@plano/observability'
 import { createFindDocumentsPipeline } from '../../workflows/find-documents/pipeline'
 import { cases, type PdfProbe, type Recording, recordingsDir } from './cases'
 
@@ -15,6 +16,8 @@ if (unknown.length > 0) {
   console.error(`unknown case id: ${unknown.join(', ')}\nusage: eval:record [caseId ...] [--force]`)
   process.exit(2)
 }
+
+const { client, pipelineObservability } = createLens()
 
 async function probePdf(url: string): Promise<PdfProbe> {
   try {
@@ -52,7 +55,9 @@ async function record(caseId: string, prompt: string): Promise<Recording> {
           end: () => {},
         }),
       },
+      lens: pipelineObservability.observers.lens,
     },
+    primaryTrace: 'lens',
   }
   const started = Date.now()
   let output: Recording['output'] = null
@@ -91,22 +96,29 @@ async function record(caseId: string, prompt: string): Promise<Recording> {
 
 mkdirSync(recordingsDir, { recursive: true })
 
-for (const testCase of cases.filter((c) => selected.includes(c.id))) {
-  const file = new URL(`${testCase.id}.json`, recordingsDir)
+try {
+  for (const testCase of cases.filter((c) => selected.includes(c.id))) {
+    const file = new URL(`${testCase.id}.json`, recordingsDir)
 
-  if (existsSync(file) && !values.force) {
-    console.log(`skip ${testCase.id}: already recorded (--force to record again)`)
-    continue
+    if (existsSync(file) && !values.force) {
+      console.log(`skip ${testCase.id}: already recorded (--force to record again)`)
+      continue
+    }
+
+    console.log(`record ${testCase.id}`)
+    const recording = await record(testCase.id, testCase.input)
+
+    if (recording.error) {
+      console.log(`  not saved, record again: ${recording.error}`)
+      continue
+    }
+
+    writeFileSync(file, `${JSON.stringify(recording, null, 2)}\n`)
+    console.log(`  ${recording.output?.status}, ${recording.queries.length} queries`)
   }
-
-  console.log(`record ${testCase.id}`)
-  const recording = await record(testCase.id, testCase.input)
-
-  if (recording.error) {
-    console.log(`  not saved, record again: ${recording.error}`)
-    continue
-  }
-
-  writeFileSync(file, `${JSON.stringify(recording, null, 2)}\n`)
-  console.log(`  ${recording.output?.status}, ${recording.queries.length} queries`)
+} finally {
+  // close() flushes queued spans before it shuts the exporter down.
+  await client
+    .close()
+    .catch((error) => console.warn('Lens close failed; traces may be lost:', error))
 }
