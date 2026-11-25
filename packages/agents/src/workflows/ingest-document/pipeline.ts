@@ -1,16 +1,24 @@
 import { createHash, randomUUID } from 'node:crypto'
-import { copyFile, mkdir, readFile } from 'node:fs/promises'
+import { copyFile, mkdir, readFile, rm } from 'node:fs/promises'
 import { join } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { Pipeline } from '@anvia/core/pipeline'
+import { ingestVectorDocuments } from '@anvia/core/vector-store'
 import { z } from 'zod'
 import {
   IngestDocumentInputSchema,
   type IngestDocumentOptions,
   type IngestDocumentResult,
+  type PassageMetadata,
 } from '../../types'
+import { getEmbeddingModel } from '../../utils/embedding'
+import { ensurePassageStore } from '../../utils/qdrant'
 import { chunkPages } from './chunk'
+import { PASSAGE_INDEX_CONCURRENCY } from './constants'
 import { extractPages } from './extract'
+
+// A Passage's id is also its Anvia document id in Qdrant, so indexing it again overwrites its point (decision 0023).
+const passageId = (documentId: string, index: number) => `${documentId}:${index}`
 
 export function createIngestDocumentPipeline(options: IngestDocumentOptions) {
   const newDocumentPipeline = createNewDocumentPipeline(options)
@@ -35,7 +43,9 @@ export function createIngestDocumentPipeline(options: IngestDocumentOptions) {
     .step({
       id: 'ingest',
       run: async ({ input: { existing, ...file }, abortSignal }): Promise<IngestDocumentResult> => {
-        if (existing) return { documentId: existing.id, skipped: true }
+        if (existing?.indexedAt) return { documentId: existing.id, skipped: true }
+
+        if (existing) await discardUnindexed(options, existing)
 
         const { output } = await newDocumentPipeline.run({
           input: { ...file, documentId: randomUUID() },
@@ -45,6 +55,22 @@ export function createIngestDocumentPipeline(options: IngestDocumentOptions) {
         return output
       },
     })
+}
+
+// A document whose run failed before indexing: its Qdrant points go first, then its rows, then its file.
+async function discardUnindexed(
+  options: IngestDocumentOptions,
+  existing: { id: string; storageUri: string },
+) {
+  const passageIds = await options.library.findPassageIds(existing.id)
+
+  if (passageIds.length > 0) {
+    const store = await ensurePassageStore(options.collectionName)
+    await store.delete({ documentIds: passageIds })
+  }
+
+  await options.library.deleteDocument(existing.id)
+  await rm(fileURLToPath(existing.storageUri), { force: true })
 }
 
 function createNewDocumentPipeline(options: IngestDocumentOptions) {
@@ -80,7 +106,7 @@ function createNewDocumentPipeline(options: IngestDocumentOptions) {
     })
     .step({
       id: 'save',
-      run: async ({ input }): Promise<IngestDocumentResult> => {
+      run: async ({ input }) => {
         await options.library.saveDocument({
           document: {
             id: input.documentId,
@@ -104,10 +130,50 @@ function createNewDocumentPipeline(options: IngestDocumentOptions) {
           })),
           passages: input.passages.map((passage) => ({
             ...passage,
-            id: `${input.documentId}:${passage.index}`,
+            id: passageId(input.documentId, passage.index),
             documentId: input.documentId,
           })),
         })
+
+        return input
+      },
+    })
+    .step({
+      id: 'index',
+      run: async ({ input, abortSignal }): Promise<IngestDocumentResult> => {
+        if (input.passages.length > 0) {
+          await ingestVectorDocuments({
+            documents: input.passages.map((passage) => {
+              const metadata: PassageMetadata = {
+                analystId: options.analystId,
+                documentId: input.documentId,
+                confirmed: true,
+                status: input.status,
+                title: input.title,
+                type: input.type,
+                heading: passage.heading,
+                pageStart: passage.pageStart,
+                pageEnd: passage.pageEnd,
+              }
+
+              if (input.number !== null) metadata.number = input.number
+
+              if (input.year !== null) metadata.year = input.year
+
+              return {
+                id: passageId(input.documentId, passage.index),
+                text: `${passage.heading}\n${passage.text}`,
+                metadata,
+              }
+            }),
+            store: await ensurePassageStore(options.collectionName),
+            model: options.embeddingModel ?? getEmbeddingModel('RETRIEVAL_DOCUMENT'),
+            concurrency: PASSAGE_INDEX_CONCURRENCY,
+            abortSignal,
+          })
+        }
+
+        await options.library.markIndexed(input.documentId)
 
         return {
           documentId: input.documentId,

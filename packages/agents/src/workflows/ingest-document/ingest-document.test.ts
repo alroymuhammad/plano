@@ -6,6 +6,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { after, before, describe, it } from 'node:test'
+import type { EmbeddingModel } from '@anvia/core/embeddings'
 import { createDb, createLibraryStore, type Db, type LibraryStore } from '@plano/db'
 import type { IngestDocumentResult } from '../../types'
 import { ingestDocument } from './index'
@@ -22,6 +23,54 @@ const METADATA = {
   year: 2025,
   area: 'Kota Surabaya',
 }
+const QDRANT_URL = process.env.QDRANT_URL || 'http://localhost:6333'
+
+// Deterministic 1536-dimension vectors: identical text gets an identical vector, and no test calls Gemini.
+function fakeEmbeddingModel({ fail = false }: { fail?: boolean } = {}): EmbeddingModel {
+  return {
+    provider: 'fake',
+    modelId: 'fake-1536',
+    dimensions: 1536,
+    maxBatchSize: 100,
+    async embedTexts(texts) {
+      if (fail) throw new Error('Embedding failed (test)')
+
+      return texts.map((document) => {
+        const digest = createHash('sha256').update(document).digest()
+
+        return {
+          document,
+          vector: Array.from({ length: 1536 }, (_, i) => 1 + digest[i % digest.length] / 255),
+        }
+      })
+    },
+  }
+}
+
+// Qdrant's REST API, the same data its dashboard shows, so the tests check the points that were written.
+async function qdrant(method: string, path: string, body?: object) {
+  const headers: Record<string, string> = { 'content-type': 'application/json' }
+
+  if (process.env.QDRANT_API_KEY) headers['api-key'] = process.env.QDRANT_API_KEY
+
+  const response = await fetch(`${QDRANT_URL}${path}`, {
+    method,
+    headers,
+    body: body === undefined ? undefined : JSON.stringify(body),
+  })
+
+  if (!response.ok) {
+    throw new Error(`${method} ${path} failed: ${response.status} ${await response.text()}`)
+  }
+
+  return (await response.json()).result
+}
+
+type Points = { id: string; payload: Record<string, unknown> }[]
+type IngestOverrides = { model?: EmbeddingModel; number?: string | null; year?: number | null }
+
+const embeddingModel = fakeEmbeddingModel()
+const failingEmbeddingModel = fakeEmbeddingModel({ fail: true })
 
 describe(
   'ingestDocument',
@@ -33,10 +82,33 @@ describe(
   () => {
     const analystId = randomUUID()
     const otherAnalystId = randomUUID()
+    const bareAnalystId = randomUUID()
+    const retryAnalystId = randomUUID()
+    const reindexAnalystId = randomUUID()
+    // A collection of its own, so these tests never write to the dev `passages` collection.
+    const collectionName = `plano-test-passages-${randomUUID()}`
     let db: Db
     let library: LibraryStore
     let storageDir: string
     let first: IngestDocumentResult
+
+    const ingest = (analyst: string, { model = embeddingModel, ...card }: IngestOverrides = {}) =>
+      ingestDocument(
+        { path: FIXTURE, ...METADATA, ...card },
+        { library, analystId: analyst, storageDir, collectionName, embeddingModel: model },
+      )
+
+    // Points in the test collection whose payload field equals the value.
+    const pointsWhere = async (field: string, value: string): Promise<Points> => {
+      const { points } = await qdrant('POST', `/collections/${collectionName}/points/scroll`, {
+        filter: { must: [{ key: field, match: { value } }] },
+        limit: 10000,
+        with_payload: true,
+        with_vector: false,
+      })
+
+      return points
+    }
 
     const documentsOf = (analyst: string) =>
       db.query.document.findMany({ where: (t, { eq }) => eq(t.analystId, analyst) })
@@ -57,6 +129,7 @@ describe(
       documents: (await documentsOf(analystId)).length,
       pages: (await pagesOf(first.documentId)).length,
       passages: (await passagesOf(first.documentId)).length,
+      points: (await pointsWhere('documentId', first.documentId)).length,
       files: readdirSync(storageDir).length,
     })
 
@@ -68,14 +141,13 @@ describe(
       db = createDb(url)
       library = createLibraryStore(db)
       storageDir = await mkdtemp(join(tmpdir(), 'plano-ingest-'))
-      first = await ingestDocument(
-        { path: FIXTURE, ...METADATA },
-        { library, analystId, storageDir },
-      )
+      first = await ingest(analystId)
     })
 
     after(async () => {
-      await db.$client`delete from "document" where "analystId" in (${analystId}, ${otherAnalystId})`
+      const analysts = [analystId, otherAnalystId, bareAnalystId, retryAnalystId, reindexAnalystId]
+      await db.$client`delete from "document" where "analystId" = any(${analysts})`
+      await qdrant('DELETE', `/collections/${collectionName}`)
       await db.$client.end()
       await rm(storageDir, { recursive: true, force: true })
     })
@@ -212,23 +284,106 @@ describe(
     it('returns skipped and writes nothing when the same file is ingested again', async () => {
       const countsBefore = await libraryCounts()
 
-      const again = await ingestDocument(
-        { path: FIXTURE, ...METADATA },
-        { library, analystId, storageDir },
-      )
+      const again = await ingest(analystId)
 
       assert.deepEqual(again, { documentId: first.documentId, skipped: true })
       assert.deepEqual(await libraryCounts(), countsBefore)
     })
 
     it('ingests the same file again for another Analyst', async () => {
-      const other = await ingestDocument(
-        { path: FIXTURE, ...METADATA },
-        { library, analystId: otherAnalystId, storageDir },
-      )
+      const other = await ingest(otherAnalystId)
 
       assert.ok(!other.skipped)
       assert.equal((await documentsOf(otherAnalystId)).length, 1)
+    })
+
+    it('marks the document indexed and writes one Qdrant point per Passage with its payload', async () => {
+      const [row] = await documentsOf(analystId)
+      assert.ok(row.indexedAt)
+
+      const passages = await passagesOf(first.documentId)
+      const points = await pointsWhere('documentId', first.documentId)
+      assert.equal(points.length, passages.length)
+
+      for (const passage of passages) {
+        const point = points.find((item) => item.payload.__anvia_document_id === passage.id)
+        assert.ok(point, `no point for Passage ${passage.id}`)
+
+        const fields = Object.fromEntries(
+          Object.entries(point.payload).filter(([key]) => !key.startsWith('__anvia_')),
+        )
+        assert.deepEqual(fields, {
+          analystId,
+          documentId: first.documentId,
+          confirmed: true,
+          status: 'active',
+          title: METADATA.title,
+          type: METADATA.type,
+          number: METADATA.number,
+          year: METADATA.year,
+          heading: passage.heading,
+          pageStart: passage.pageStart,
+          pageEnd: passage.pageEnd,
+        })
+        // The copy of the Passage text is the embedded text: its heading, a newline, then the text.
+        assert.equal(
+          JSON.parse(String(point.payload.__anvia_document)).text,
+          `${passage.heading}\n${passage.text}`,
+        )
+      }
+    })
+
+    it('leaves number and year out of the payload when the Metadata Card has none', async () => {
+      const bare = await ingest(bareAnalystId, { number: null, year: null })
+      assert.ok(!bare.skipped)
+
+      const points = await pointsWhere('documentId', bare.documentId)
+      assert.equal(points.length, bare.passageCount)
+
+      for (const point of points) {
+        assert.equal('number' in point.payload, false)
+        assert.equal('year' in point.payload, false)
+      }
+    })
+
+    it('leaves one document and one set of points when a run fails before indexing and is run again', async () => {
+      await assert.rejects(
+        ingest(retryAnalystId, { model: failingEmbeddingModel }),
+        /Embedding failed/,
+      )
+
+      const [failed] = await documentsOf(retryAnalystId)
+      assert.equal(failed.indexedAt, null)
+      assert.equal((await pointsWhere('analystId', retryAnalystId)).length, 0)
+
+      const again = await ingest(retryAnalystId)
+      assert.ok(!again.skipped)
+
+      const documents = await documentsOf(retryAnalystId)
+      assert.deepEqual(
+        documents.map((row) => row.id),
+        [again.documentId],
+      )
+      assert.ok(documents[0].indexedAt)
+      assert.equal(existsSync(fileURLToPath(failed.storageUri)), false)
+      assert.equal((await pointsWhere('analystId', retryAnalystId)).length, again.passageCount)
+    })
+
+    it('leaves one point per Passage when the same document is indexed twice', async () => {
+      const once = await ingest(reindexAnalystId)
+      assert.ok(!once.skipped)
+
+      // A run that wrote its points but stopped before it marked the document indexed.
+      await db.$client`update "document" set "indexedAt" = null where "id" = ${once.documentId}`
+
+      const twice = await ingest(reindexAnalystId)
+      assert.ok(!twice.skipped)
+      assert.deepEqual(
+        (await documentsOf(reindexAnalystId)).map((row) => row.id),
+        [twice.documentId],
+      )
+      assert.equal((await pointsWhere('documentId', once.documentId)).length, 0)
+      assert.equal((await pointsWhere('analystId', reindexAnalystId)).length, twice.passageCount)
     })
   },
 )

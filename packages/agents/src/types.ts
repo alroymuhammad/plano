@@ -1,4 +1,5 @@
 import type { AgentPrompt, AnyTool, MemoryScope, MemoryStore } from '@anvia/core'
+import type { EmbeddingModel } from '@anvia/core/embeddings'
 import type { AgentObservabilityOptions } from '@anvia/core/observability'
 import type { PipelineObservabilityOptions } from '@anvia/core/pipeline'
 import type { LibraryStore } from '@plano/db'
@@ -98,8 +99,27 @@ export type IngestDocumentOptions = {
   library: LibraryStore
   analystId: string
   storageDir: string
+  // Defaults to Gemini document embeddings (decision 0022). Tests pass a fake model.
+  embeddingModel?: EmbeddingModel
+  // Defaults to the `passages` collection. Tests use their own, so they never write to the dev collection.
+  collectionName?: string
   observability?: PipelineObservabilityOptions
   signal?: AbortSignal
+}
+
+// Qdrant payload of one Passage (decision 0023). Number and year are left out when the card has none.
+export type PassageMetadata = {
+  analystId: string
+  documentId: string
+  confirmed: boolean
+  status: 'active' | 'superseded' | 'revoked'
+  title: string
+  type: string
+  number?: string
+  year?: number
+  heading: string
+  pageStart: number
+  pageEnd: number
 }
 
 export type IngestDocumentResult =
