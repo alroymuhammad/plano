@@ -191,6 +191,8 @@ function createNewDocumentPipeline(options: IngestDocumentOptions) {
             }),
             store: await ensurePassageStore(options.collectionName),
             model: options.embeddingModel ?? getEmbeddingModel(),
+            // Passages are already sized in chunk.ts, so Anvia must not split them again.
+            chunking: { strategy: 'none' },
             concurrency: PASSAGE_INDEX_CONCURRENCY,
             abortSignal,
           })
