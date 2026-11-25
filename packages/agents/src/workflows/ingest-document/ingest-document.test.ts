@@ -10,6 +10,7 @@ import type { EmbeddingModel } from '@anvia/core/embeddings'
 import { createDb, createLibraryStore, type Db, type LibraryStore } from '@plano/db'
 import type { IngestDocumentResult } from '../../types'
 import { ingestDocument } from './index'
+import { fakeEmbeddingModel, qdrant } from './test-helpers'
 
 // Gitignored, so a fresh checkout skips this suite instead of failing it.
 const FIXTURE = fileURLToPath(new URL('../../../data/2025perda3578003.pdf', import.meta.url))
@@ -23,49 +24,6 @@ const METADATA = {
   year: 2025,
   area: 'Kota Surabaya',
 }
-const QDRANT_URL = process.env.QDRANT_URL || 'http://localhost:6333'
-
-// Deterministic 1536-dimension vectors: identical text gets an identical vector, and no test calls Gemini.
-function fakeEmbeddingModel({ fail = false }: { fail?: boolean } = {}): EmbeddingModel {
-  return {
-    provider: 'fake',
-    modelId: 'fake-1536',
-    dimensions: 1536,
-    maxBatchSize: 100,
-    async embedTexts(texts) {
-      if (fail) throw new Error('Embedding failed (test)')
-
-      return texts.map((document) => {
-        const digest = createHash('sha256').update(document).digest()
-
-        return {
-          document,
-          vector: Array.from({ length: 1536 }, (_, i) => 1 + digest[i % digest.length] / 255),
-        }
-      })
-    },
-  }
-}
-
-// Qdrant's REST API, the same data its dashboard shows, so the tests check the points that were written.
-async function qdrant(method: string, path: string, body?: object) {
-  const headers: Record<string, string> = { 'content-type': 'application/json' }
-
-  if (process.env.QDRANT_API_KEY) headers['api-key'] = process.env.QDRANT_API_KEY
-
-  const response = await fetch(`${QDRANT_URL}${path}`, {
-    method,
-    headers,
-    body: body === undefined ? undefined : JSON.stringify(body),
-  })
-
-  if (!response.ok) {
-    throw new Error(`${method} ${path} failed: ${response.status} ${await response.text()}`)
-  }
-
-  return (await response.json()).result
-}
-
 type Points = { id: string; payload: Record<string, unknown> }[]
 type IngestOverrides = { model?: EmbeddingModel; number?: string | null; year?: number | null }
 

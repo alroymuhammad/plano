@@ -11,6 +11,7 @@ import { createDb, createLibraryStore, type Db } from '@plano/db'
 import type { IngestDocumentResult } from '../../types'
 import { extractPages } from './extract'
 import { ingestDocument } from './index'
+import { fakeEmbeddingModel, qdrant } from './test-helpers'
 
 // Gitignored, so a fresh checkout skips the RTRW test instead of failing it.
 const RTRW = fileURLToPath(new URL('../../../data/2025perda3578003.pdf', import.meta.url))
@@ -136,6 +137,7 @@ describe(
 
 describe('ingestDocument with a scanned page', () => {
   const analystId = randomUUID()
+  const collectionName = `plano-test-passages-${randomUUID()}`
   let db: Db
   let sourceDir: string
   let storageDir: string
@@ -154,12 +156,19 @@ describe('ingestDocument with a scanned page', () => {
     await writeFile(path, SCANNED_PDF)
     result = await ingestDocument(
       { path, title: 'Peraturan Uji OCR', type: 'Perda', area: 'Kota Surabaya' },
-      { library: createLibraryStore(db), analystId, storageDir },
+      {
+        library: createLibraryStore(db),
+        analystId,
+        storageDir,
+        collectionName,
+        embeddingModel: fakeEmbeddingModel(),
+      },
     )
   })
 
   after(async () => {
     await db.$client`delete from "document" where "analystId" = ${analystId}`
+    await qdrant('DELETE', `/collections/${collectionName}`)
     await db.$client.end()
     await rm(sourceDir, { recursive: true, force: true })
     await rm(storageDir, { recursive: true, force: true })
