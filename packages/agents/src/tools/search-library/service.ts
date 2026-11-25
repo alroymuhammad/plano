@@ -24,7 +24,7 @@ export async function searchLibrary({
   const filter = documentIds ? { ...scope, documentId: { in: documentIds } } : scope
 
   const results = await retrieveDocuments<TextDocument<PassageMetadata>, PassageMetadata>({
-    model: embeddingModel ?? getEmbeddingModel('RETRIEVAL_QUERY'),
+    model: embeddingModel ?? getEmbeddingModel(),
     store: await ensurePassageStore(collectionName),
     query,
     topK,

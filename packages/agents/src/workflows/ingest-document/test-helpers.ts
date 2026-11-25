@@ -3,7 +3,7 @@ import type { EmbeddingModel } from '@anvia/core/embeddings'
 
 const QDRANT_URL = process.env.QDRANT_URL || 'http://localhost:6333'
 
-// Deterministic 1536-dimension vectors: identical text gets an identical vector, and no test calls Gemini.
+// Deterministic 1536-dimension vectors: identical text gets an identical vector, and no test calls OpenAI.
 export function fakeEmbeddingModel({ fail = false }: { fail?: boolean } = {}): EmbeddingModel {
   return {
     provider: 'fake',
