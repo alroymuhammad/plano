@@ -15,6 +15,13 @@
       "when": 1795165939844,
       "tag": "0001_cool_moondragon",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1795584551485,
+      "tag": "0002_silky_fenris",
+      "breakpoints": true
     }
   ]
 }

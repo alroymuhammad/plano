@@ -1,4 +1,14 @@
-import { boolean, index, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
+import {
+  boolean,
+  index,
+  integer,
+  pgEnum,
+  pgTable,
+  primaryKey,
+  text,
+  timestamp,
+  unique,
+} from 'drizzle-orm/pg-core'
 
 export const user = pgTable('user', {
   id: text().primaryKey(),
@@ -60,6 +70,60 @@ export const verification = pgTable(
     updatedAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [index('verification_identifier_idx').on(t.identifier)],
+)
+
+// Library (decision 0020). Postgres is the source of truth; Qdrant only holds vectors and a copy of Passage text.
+export const documentStatus = pgEnum('document_status', ['active', 'superseded', 'revoked'])
+
+export const document = pgTable(
+  'document',
+  {
+    id: text().primaryKey(),
+    // No foreign key yet: Studio ingests for a dev Analyst who has no user row.
+    analystId: text().notNull(),
+    title: text().notNull(),
+    type: text().notNull(),
+    number: text(),
+    year: integer(),
+    area: text().notNull(),
+    status: documentStatus().notNull().default('active'),
+    confirmed: boolean().notNull().default(false),
+    fileHash: text().notNull(),
+    storageUri: text().notNull(),
+    pageCount: integer().notNull(),
+    indexedAt: timestamp({ withTimezone: true }),
+    createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [unique('document_analystId_fileHash_unique').on(t.analystId, t.fileHash)],
+)
+
+export const documentPage = pgTable(
+  'document_page',
+  {
+    documentId: text()
+      .notNull()
+      .references(() => document.id, { onDelete: 'cascade' }),
+    page: integer().notNull(),
+    text: text().notNull(),
+    ocr: boolean().notNull().default(false),
+  },
+  (t) => [primaryKey({ columns: [t.documentId, t.page] })],
+)
+
+export const passage = pgTable(
+  'passage',
+  {
+    id: text().primaryKey(),
+    documentId: text()
+      .notNull()
+      .references(() => document.id, { onDelete: 'cascade' }),
+    index: integer().notNull(),
+    heading: text().notNull(),
+    text: text().notNull(),
+    pageStart: integer().notNull(),
+    pageEnd: integer().notNull(),
+  },
+  (t) => [index('passage_documentId_idx').on(t.documentId)],
 )
 
 export {
