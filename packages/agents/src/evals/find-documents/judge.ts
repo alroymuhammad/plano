@@ -15,8 +15,7 @@ function withoutTemperature(base: CompletionModel): CompletionModel {
   })
 }
 
-// gEval has no observability option, so each judge call runs as a one-step pipeline Lens traces.
-function withTracing(
+function withPipelineTracing(
   base: CompletionModel,
   observability: PipelineObservabilityOptions,
 ): CompletionModel {
@@ -39,7 +38,7 @@ const actual = ({ output }: { output: Recording }) =>
   JSON.stringify(output.error ? { error: output.error } : output.output, null, 2)
 
 export function createJudgeMetrics(observability: PipelineObservabilityOptions) {
-  const model = withoutTemperature(withTracing(getModel(JUDGE_MODEL), observability))
+  const model = withoutTemperature(withPipelineTracing(getModel(JUDGE_MODEL), observability))
 
   const judge = (name: string, criteria: string) =>
     gEval<string, Recording, FindDocumentsExpected, string, ['input', 'actualOutput']>({

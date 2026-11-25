@@ -10,11 +10,11 @@ import type { EmbeddingModel } from '@anvia/core/embeddings'
 import { createDb, createLibraryStore, type Db, type LibraryStore } from '@plano/db'
 import type { IngestDocumentResult } from '../../types'
 import { ingestDocument } from './index'
-import { fakeEmbeddingModel, OCR_DATA_DIR, qdrant } from '../../test-helpers'
+import { fakeEmbeddingModel, OCR_DATA_DIR, qdrantRest } from '../../test-helpers'
 
-// Gitignored, so a fresh checkout skips this suite instead of failing it.
 const FIXTURE = fileURLToPath(new URL('../../../data/2025perda3578003.pdf', import.meta.url))
 const PAGE_COUNT = 305
+const PASAL_HEADING_COUNT = 221
 const PASAL_HEADING = /^Pasal \d+[A-Z]?$/
 const BAB_OR_LAMPIRAN = /^(BAB [IVXLCDM]+|LAMPIRAN\b.*)$/
 const METADATA = {
@@ -44,7 +44,6 @@ describe(
     const retryAnalystId = randomUUID()
     const reindexAnalystId = randomUUID()
     const unsavedAnalystId = randomUUID()
-    // A collection of its own, so these tests never write to the dev `passages` collection.
     const collectionName = `plano-test-passages-${randomUUID()}`
     let db: Db
     let library: LibraryStore
@@ -65,9 +64,8 @@ describe(
         },
       )
 
-    // Points in the test collection whose payload field equals the value.
     const pointsWhere = async (field: string, value: string): Promise<Points> => {
-      const { points } = await qdrant('POST', `/collections/${collectionName}/points/scroll`, {
+      const { points } = await qdrantRest('POST', `/collections/${collectionName}/points/scroll`, {
         filter: { must: [{ key: field, match: { value } }] },
         limit: 10000,
         with_payload: true,
@@ -122,7 +120,7 @@ describe(
         unsavedAnalystId,
       ]
       await db.$client`delete from "document" where "analystId" = any(${analysts})`
-      await qdrant('DELETE', `/collections/${collectionName}`)
+      await qdrantRest('DELETE', `/collections/${collectionName}`)
       await db.$client.end()
       await rm(sourceDir, { recursive: true, force: true })
       await rm(storageDir, { recursive: true, force: true })
@@ -170,8 +168,7 @@ describe(
     it('keeps every Passage inside the text of the pages it spans', async () => {
       const pages = await pagesOf(first.documentId)
       const passages = await passagesOf(first.documentId)
-      // The RTRW has 221 Pasal headings, and each starts a Passage.
-      assert.ok(passages.length >= 221)
+      assert.ok(passages.length >= PASAL_HEADING_COUNT)
 
       for (const passage of passages) {
         assert.ok(
@@ -188,7 +185,6 @@ describe(
           `Passage ${passage.index} is not in pages ${passage.pageStart}-${passage.pageEnd}`,
         )
 
-        // The first and last lines pin the span exactly: a line never crosses a page break.
         const lines = passage.text.split('\n')
         const pageTextOf = (page: number) => pages[page - 1].text
         assert.ok(pageTextOf(passage.pageStart).includes(lines[0]))
@@ -216,18 +212,16 @@ describe(
       const documentText = pages.map((page) => page.text).join('\n')
 
       for (const passage of passages) {
-        // Headings from the document's start through the Passage's first line. The last Pasal among them is the one
-        // the Passage sits in, unless a BAB or LAMPIRAN heading came after it.
         const start = documentText.indexOf(passage.text)
-        const headings = documentText
+        const headingsBefore = documentText
           .slice(0, start + passage.text.split('\n')[0].length)
           .split('\n')
           .map((line) => line.trim())
           .filter((line) => PASAL_HEADING.test(line) || BAB_OR_LAMPIRAN.test(line))
-        const last = headings.at(-1) ?? ''
+        const lastHeading = headingsBefore.at(-1) ?? ''
 
-        if (last.startsWith('Pasal')) {
-          assert.ok(passage.heading.endsWith(` › ${last}`), passage.heading)
+        if (lastHeading.startsWith('Pasal')) {
+          assert.ok(passage.heading.endsWith(` › ${lastHeading}`), passage.heading)
         } else {
           assert.ok(!passage.heading.includes(' › Pasal '), passage.heading)
         }
@@ -301,11 +295,8 @@ describe(
           pageStart: passage.pageStart,
           pageEnd: passage.pageEnd,
         })
-        // The copy of the Passage text is the embedded text: its heading, a newline, then the text.
-        assert.equal(
-          JSON.parse(String(point.payload.__anvia_document)).text,
-          `${passage.heading}\n${passage.text}`,
-        )
+        const embeddedText = `${passage.heading}\n${passage.text}`
+        assert.equal(JSON.parse(String(point.payload.__anvia_document)).text, embeddedText)
       }
     })
 
@@ -331,7 +322,6 @@ describe(
       const [failed] = await documentsOf(retryAnalystId)
       assert.equal(failed.indexedAt, null)
       assert.equal((await pointsWhere('analystId', retryAnalystId)).length, 0)
-      // The row exists, so its file stays until the retry discards the row and the file together.
       assert.equal(existsSync(fileURLToPath(failed.storageUri)), true)
 
       const again = await ingest(retryAnalystId)
@@ -401,7 +391,6 @@ describe(
       const once = await ingest(reindexAnalystId)
       assert.ok(!once.skipped)
 
-      // A run that wrote its points but stopped before it marked the document indexed.
       await db.$client`update "document" set "indexedAt" = null where "id" = ${once.documentId}`
 
       const twice = await ingest(reindexAnalystId)

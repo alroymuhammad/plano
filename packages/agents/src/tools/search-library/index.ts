@@ -6,7 +6,6 @@ import { searchLibrary } from './service'
 const DEFAULT_TOP_K = 8
 const MAX_TOP_K = 20
 
-// Created for one Analyst, so every search stays in that Analyst's Library. That is why it is not in the default tool list.
 export function createSearchLibraryTool(analystId: string, options: SearchLibraryOptions = {}) {
   return createTool({
     name: 'searchLibrary',

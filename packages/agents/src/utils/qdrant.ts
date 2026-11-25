@@ -5,7 +5,6 @@ import { EMBEDDING_DIMENSIONS } from './embedding'
 
 let client: QdrantVectorClient | undefined
 
-// Local Qdrant (docker compose) needs no key. Qdrant Cloud sets QDRANT_URL and QDRANT_API_KEY (decision 0020).
 export function getQdrantClient() {
   client ??= new QdrantVectorClient({
     url: process.env.QDRANT_URL || 'http://localhost:6333',
@@ -17,7 +16,6 @@ export function getQdrantClient() {
 
 const PASSAGES_COLLECTION = 'passages'
 
-// Payload fields that Passage search filters on (decision 0020). The Anvia adapter doesn't create them.
 const PAYLOAD_INDEXES = [
   ['analystId', 'keyword'],
   ['documentId', 'keyword'],
@@ -25,7 +23,6 @@ const PAYLOAD_INDEXES = [
   ['confirmed', 'bool'],
 ] as const
 
-// The official Qdrant client behind the adapter, the only way to create payload indexes.
 type PayloadIndexClient = QdrantClientLike & {
   createPayloadIndex(
     collection: string,
@@ -35,14 +32,12 @@ type PayloadIndexClient = QdrantClientLike & {
 
 const passageStores = new Map<string, ReturnType<typeof createPassageStore>>()
 
-// Creates the collection and its payload indexes once per process. Both are idempotent in Qdrant.
 export function ensurePassageStore(collectionName = PASSAGES_COLLECTION) {
   let ready = passageStores.get(collectionName)
 
   if (!ready) {
     ready = createPassageStore(collectionName)
     passageStores.set(collectionName, ready)
-    // A failed setup is retried on the next call instead of being cached.
     ready.catch(() => passageStores.delete(collectionName))
   }
 

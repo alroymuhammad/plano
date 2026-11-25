@@ -72,14 +72,12 @@ export const verification = pgTable(
   (t) => [index('verification_identifier_idx').on(t.identifier)],
 )
 
-// Library (decision 0020). Postgres is the source of truth; Qdrant only holds vectors and a copy of Passage text.
 export const documentStatus = pgEnum('document_status', ['active', 'superseded', 'revoked'])
 
 export const document = pgTable(
   'document',
   {
     id: text().primaryKey(),
-    // No foreign key yet: Studio ingests for a dev Analyst who has no user row.
     analystId: text().notNull(),
     title: text().notNull(),
     type: text().notNull(),

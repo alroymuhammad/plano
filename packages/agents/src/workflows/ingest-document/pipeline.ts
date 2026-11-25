@@ -17,7 +17,6 @@ import { chunkPages } from './chunk'
 import { PASSAGE_INDEX_CONCURRENCY } from './constants'
 import { extractPages } from './extract'
 
-// A Passage's id is also its Anvia document id in Qdrant, so indexing it again overwrites its point (decision 0023).
 const passageId = (documentId: string, index: number) => `${documentId}:${index}`
 
 export function createIngestDocumentPipeline(options: IngestDocumentOptions) {
@@ -57,7 +56,6 @@ export function createIngestDocumentPipeline(options: IngestDocumentOptions) {
     })
 }
 
-// A document whose run failed before indexing: its Qdrant points go first, then its rows, then its file.
 async function discardUnindexed(
   options: IngestDocumentOptions,
   existing: { id: string; storageUri: string },
@@ -73,8 +71,6 @@ async function discardUnindexed(
   await rm(fileURLToPath(existing.storageUri), { force: true })
 }
 
-// A stored PDF with no row is an orphan, so a failed step before save removes it. Index runs after save, and
-// its failure keeps the file: the row exists, and the retry path discards both.
 async function removeStoredPdfOnError<T>(
   storageUri: string,
   step: () => T | Promise<T>,
@@ -191,7 +187,6 @@ function createNewDocumentPipeline(options: IngestDocumentOptions) {
             }),
             store: await ensurePassageStore(options.collectionName),
             model: options.embeddingModel ?? getEmbeddingModel(),
-            // Passages are already sized in chunk.ts, so Anvia must not split them again.
             chunking: { strategy: 'none' },
             concurrency: PASSAGE_INDEX_CONCURRENCY,
             abortSignal,

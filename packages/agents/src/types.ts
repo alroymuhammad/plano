@@ -82,7 +82,6 @@ export type DocumentsResult = z.infer<typeof DocumentsResultSchema>
 
 const DocumentStatusSchema = z.enum(['active', 'superseded', 'revoked'])
 
-// Metadata Card fields typed by hand in Studio, so an ingested document counts as confirmed.
 export const IngestDocumentInputSchema = z.object({
   path: z.string().trim().min(1).describe('Absolute path to the PDF on this machine'),
   title: z.string().trim().min(1),
@@ -99,17 +98,13 @@ export type IngestDocumentOptions = {
   library: LibraryStore
   analystId: string
   storageDir: string
-  // Holds the OCR language file (product 0011). The first OCR run downloads it here; later runs read it offline.
   ocrDataDir: string
-  // Defaults to OpenAI embeddings (decision 0026). Tests pass a fake model.
   embeddingModel?: EmbeddingModel
-  // Defaults to the `passages` collection. Tests use their own, so they never write to the dev collection.
   collectionName?: string
   observability?: PipelineObservabilityOptions
   signal?: AbortSignal
 }
 
-// Qdrant payload of one Passage (decision 0023). Number and year are left out when the card has none.
 export type PassageMetadata = {
   analystId: string
   documentId: string
@@ -124,11 +119,8 @@ export type PassageMetadata = {
   pageEnd: number
 }
 
-// Tests pass a fake embedding model and their own collection, as for ingestion.
 export type SearchLibraryOptions = {
-  // Defaults to OpenAI embeddings (decision 0026).
   embeddingModel?: EmbeddingModel
-  // Defaults to the `passages` collection.
   collectionName?: string
 }
 

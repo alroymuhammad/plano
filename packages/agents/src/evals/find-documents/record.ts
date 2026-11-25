@@ -117,7 +117,6 @@ try {
     console.log(`  ${recording.output?.status}, ${recording.queries.length} queries`)
   }
 } finally {
-  // close() flushes queued spans before it shuts the exporter down.
   await client
     .close()
     .catch((error) => console.warn('Lens close failed; traces may be lost:', error))

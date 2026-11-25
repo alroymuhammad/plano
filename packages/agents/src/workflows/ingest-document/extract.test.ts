@@ -12,9 +12,8 @@ import { createDb, createLibraryStore, type Db } from '@plano/db'
 import type { IngestDocumentResult } from '../../types'
 import { extractPages } from './extract'
 import { ingestDocument } from './index'
-import { fakeEmbeddingModel, OCR_DATA_DIR, qdrant } from '../../test-helpers'
+import { fakeEmbeddingModel, OCR_DATA_DIR, qdrantRest } from '../../test-helpers'
 
-// Gitignored, so a fresh checkout skips the RTRW test instead of failing it.
 const RTRW = fileURLToPath(new URL('../../../data/2025perda3578003.pdf', import.meta.url))
 const SCAN_WIDTH = 1240
 const SCAN_HEIGHT = 1754
@@ -23,7 +22,6 @@ const SCANNED_LINES = [
   'Wilayah Kota Surabaya terdiri atas kecamatan',
   'dan kelurahan sesuai dengan peta batas wilayah.',
 ]
-// Page 1's content stream: a text layer. Page 2 is a JPEG of a scanned page, with no text layer.
 const TEXT_PAGE_CONTENT = `BT /F1 14 Tf 72 760 Td (PERATURAN DAERAH KOTA SURABAYA) Tj 0 -28 Td (Pasal 1) Tj 0 -20 Td (Dalam Peraturan Daerah ini yang dimaksud dengan Kota adalah Kota Surabaya.) Tj ET`
 
 async function scannedPageJpeg(): Promise<Buffer> {
@@ -39,7 +37,6 @@ async function scannedPageJpeg(): Promise<Buffer> {
   return canvas.encode('jpeg', 92)
 }
 
-// Writes the PDF by hand, so the test needs no PDF library.
 async function buildScannedPdf(): Promise<Buffer> {
   const jpeg = await scannedPageJpeg()
   const stream = (dict: string, data: Buffer | string) => {
@@ -200,7 +197,7 @@ describe('ingestDocument with a scanned page', () => {
 
   after(async () => {
     await db.$client`delete from "document" where "analystId" = ${analystId}`
-    await qdrant('DELETE', `/collections/${collectionName}`)
+    await qdrantRest('DELETE', `/collections/${collectionName}`)
     await db.$client.end()
     await rm(sourceDir, { recursive: true, force: true })
     await rm(storageDir, { recursive: true, force: true })

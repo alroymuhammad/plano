@@ -10,7 +10,6 @@ import { getModel } from './utils/model'
 import { createFindDocumentsPipeline } from './workflows/find-documents/pipeline'
 import { createIngestDocumentPipeline } from './workflows/ingest-document/pipeline'
 
-// Throwaway wiring until the API and platform exist: one fixed dev Analyst, and the local data folder for PDFs.
 const DEV_ANALYST_ID = 'dev-analyst'
 
 const databaseUrl = process.env.DATABASE_URL
@@ -19,8 +18,7 @@ if (!databaseUrl) throw new Error('Set DATABASE_URL before starting Studio')
 
 const { observability, pipelineObservability } = createLens()
 const library = createLibraryStore(createDb(databaseUrl))
-// Chat with the dev Analyst's Library: the default tools plus searchLibrary, replaced when the platform exists.
-const chat = new Agent({
+const devChatAgent = new Agent({
   id: 'plano',
   model: getModel(),
   instructions: BASE_INSTRUCTION,
@@ -37,7 +35,7 @@ const studio = new Studio([
     ocrDataDir: fileURLToPath(new URL('../data/tessdata', import.meta.url)),
     observability: pipelineObservability,
   }),
-  chat,
+  devChatAgent,
 ])
 
 studio.start()

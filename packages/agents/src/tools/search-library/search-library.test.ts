@@ -7,10 +7,9 @@ import { after, before, describe, it } from 'node:test'
 import { createDb, createLibraryStore, type Db, type LibraryStore } from '@plano/db'
 import type { IngestDocumentInput, IngestDocumentResult } from '../../types'
 import { ingestDocument } from '../../workflows/ingest-document'
-import { fakeEmbeddingModel, OCR_DATA_DIR, qdrant } from '../../test-helpers'
+import { fakeEmbeddingModel, OCR_DATA_DIR, qdrantRest } from '../../test-helpers'
 import { createSearchLibraryTool } from './index'
 
-// A text-layer PDF with one page per entry, each a list of lines. Written by hand so the test needs no PDF library.
 function textPdf(pages: string[][]): Buffer {
   const objects = [
     '<< /Type /Catalog /Pages 2 0 R >>',
@@ -43,9 +42,7 @@ function textPdf(pages: string[][]): Buffer {
   return Buffer.from(pdf, 'latin1')
 }
 
-// BAB I and Pasal 1 to 8. Pasal 2 runs over the page break, so its Passage spans pages 1 and 2. `version` is the
-// last line, so each version is a different file (its own document) with the same Pasal 2 text.
-function ordinance(version: string) {
+function twoPageOrdinance(version: string) {
   return textPdf([
     [
       'BAB I',
@@ -84,7 +81,6 @@ const METADATA = {
 describe('searchLibrary', () => {
   const analystId = randomUUID()
   const otherAnalystId = randomUUID()
-  // A collection of its own, so these tests never write to the dev `passages` collection.
   const collectionName = `plano-test-search-${randomUUID()}`
   const embeddingModel = fakeEmbeddingModel()
   const tool = createSearchLibraryTool(analystId, { embeddingModel, collectionName })
@@ -98,7 +94,6 @@ describe('searchLibrary', () => {
   let unconfirmed: IngestDocumentResult
   let other: IngestDocumentResult
   let pasal2Id: string
-  // Identical text gets an identical fake vector, so a query equal to a Passage's indexed text matches it exactly.
   let query: string
 
   const ingest = (analyst: string, path: string, card: Partial<IngestDocumentInput> = {}) =>
@@ -139,7 +134,7 @@ describe('searchLibrary', () => {
     const write = async (name: string, version: string) => {
       const path = join(sourceDir, name)
 
-      await writeFile(path, ordinance(version))
+      await writeFile(path, twoPageOrdinance(version))
       return path
     }
 
@@ -149,10 +144,8 @@ describe('searchLibrary', () => {
       status: 'superseded',
     })
     unconfirmed = await ingest(analystId, await write('unconfirmed.pdf', 'D'))
-    // Nothing confirms a document after ingest yet, so unconfirm it the way a later flow would: in Postgres and in
-    // the payload of its points, which is all that search reads.
     await db.$client`update "document" set "confirmed" = false where "id" = ${unconfirmed.documentId}`
-    await qdrant('POST', `/collections/${collectionName}/points/payload?wait=true`, {
+    await qdrantRest('POST', `/collections/${collectionName}/points/payload?wait=true`, {
       payload: { confirmed: false },
       filter: { must: [{ key: 'documentId', match: { value: unconfirmed.documentId } }] },
     })
@@ -167,7 +160,7 @@ describe('searchLibrary', () => {
 
   after(async () => {
     await db.$client`delete from "document" where "analystId" = any(${[analystId, otherAnalystId]})`
-    await qdrant('DELETE', `/collections/${collectionName}`)
+    await qdrantRest('DELETE', `/collections/${collectionName}`)
     await db.$client.end()
     await rm(sourceDir, { recursive: true, force: true })
     await rm(storageDir, { recursive: true, force: true })

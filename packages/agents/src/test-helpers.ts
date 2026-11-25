@@ -4,10 +4,8 @@ import type { EmbeddingModel } from '@anvia/core/embeddings'
 
 const QDRANT_URL = process.env.QDRANT_URL || 'http://localhost:6333'
 
-// The OCR language cache, the folder Studio passes too. The first OCR run fills it (gitignored).
 export const OCR_DATA_DIR = fileURLToPath(new URL('../data/tessdata', import.meta.url))
 
-// Deterministic 1536-dimension vectors: identical text gets an identical vector, and no test calls OpenAI.
 export function fakeEmbeddingModel({ fail = false }: { fail?: boolean } = {}): EmbeddingModel {
   return {
     provider: 'fake',
@@ -29,8 +27,7 @@ export function fakeEmbeddingModel({ fail = false }: { fail?: boolean } = {}): E
   }
 }
 
-// Qdrant's REST API, the same data its dashboard shows, so tests check the points that were written.
-export async function qdrant(method: string, path: string, body?: object) {
+export async function qdrantRest(method: string, path: string, body?: object) {
   const headers: Record<string, string> = { 'content-type': 'application/json' }
 
   if (process.env.QDRANT_API_KEY) headers['api-key'] = process.env.QDRANT_API_KEY
