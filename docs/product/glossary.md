@@ -30,5 +30,6 @@ Canonical product terms. Use them in UI, code, and docs, and avoid the listed sy
 - **Metadata Card**: the agent-filled, Analyst-confirmed record of a document's type, number and year, Area, period, effective date, status, and amends/supersedes links, each field backed by a quote. _Avoid_: document info.
 - **Document Tier**: Tier 1 (RTRW, RDTR/Zonasi, RPJMD/RPJPD) is parsed, tuned, and evaluated; Tier 2 (sectoral, national, KLHS) is searchable only.
 - **Applicable Provision**: a provision from an active document whose Area and period cover the Case. _Avoid_: rule, relevant chunk.
+- **Passage**: a span of a Library document's text on known pages: what a search returns, what a citation quotes, and what is highlighted when the PDF opens. _Avoid_: chunk, snippet, hit.
 - **Zoning Classification**: an activity's status in a zone: I (permitted), T (limited), B (conditional), X (prohibited). Quoted, never a verdict. _Avoid_: permission, approval.
 - **Activity Mapping**: the link from a Case's activity and Area to a zone and activity row in a zoning regulation, shown so the Analyst can check it. _Avoid_: classification.

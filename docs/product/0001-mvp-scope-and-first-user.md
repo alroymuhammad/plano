@@ -1,6 +1,6 @@
 # 0001 — MVP scope and first user
 
-Status: accepted
+Status: accepted (OCR line superseded by 0011)
 Date: 2026-11-20
 
 ## Problem

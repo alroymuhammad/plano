@@ -1,6 +1,6 @@
 # 0004 — Per-user Library and Document Tiers
 
-Status: accepted
+Status: accepted (OCR line superseded by 0011)
 Date: 2026-11-20
 
 ## Problem
