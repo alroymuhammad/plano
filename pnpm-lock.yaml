@@ -122,8 +122,8 @@ importers:
         version: 4.6.7
     devDependencies:
       '@anvia/studio':
-        specifier: ^1.5.0
-        version: 1.5.0(@anvia/core@1.23.0(zod@4.6.7))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(immer@11.2.10)(zod@4.6.7)
+        specifier: ^1.5.2
+        version: 1.5.2(@anvia/core@1.23.0(zod@4.6.7))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(immer@11.2.10)(zod@4.6.7)
       '@plano/observability':
         specifier: workspace:*
         version: link:../observability
@@ -159,26 +159,26 @@ importers:
   packages/observability:
     dependencies:
       '@anvia/core':
-        specifier: ^1.21.0
-        version: 1.21.0(zod@4.6.7)
+        specifier: ^1.23.0
+        version: 1.23.0(zod@4.6.7)
       '@anvia/lens':
-        specifier: ^1.3.0
-        version: 1.3.0(@anvia/core@1.21.0(zod@4.6.7))
-      '@anvia/logger':
-        specifier: ^1.2.1
-        version: 1.2.1(@anvia/core@1.21.0(zod@4.6.7))
-      '@anvia/otel':
         specifier: ^1.3.2
-        version: 1.3.2(@anvia/core@1.21.0(zod@4.6.7))
+        version: 1.3.2(@anvia/core@1.23.0(zod@4.6.7))
+      '@anvia/logger':
+        specifier: ^1.3.0
+        version: 1.3.0(@anvia/core@1.23.0(zod@4.6.7))
+      '@anvia/otel':
+        specifier: ^1.4.2
+        version: 1.4.2(@anvia/core@1.23.0(zod@4.6.7))
 
   packages/ui:
     dependencies:
       '@anvia/react':
-        specifier: ^1.1.5
-        version: 1.1.5(@anvia/client@1.9.0(@anvia/core@1.23.0(zod@4.6.7)))(@anvia/core@1.23.0(zod@4.6.7))(@anvia/graph@1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7))(react@19.3.1)
+        specifier: ^1.3.0
+        version: 1.3.0(@anvia/client@1.9.1(@anvia/core@1.23.0(zod@4.6.7)))(@anvia/core@1.23.0(zod@4.6.7))(@anvia/graph@1.3.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7))(@floating-ui/dom@1.8.0)(@novnc/novnc@1.7.0)(@tiptap/extensions@3.35.0(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))(@tiptap/pm@3.35.0))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@anvia/react-ui':
-        specifier: ^1.3.2
-        version: 1.3.2(@anvia/client@1.9.0(@anvia/core@1.23.0(zod@4.6.7)))(@anvia/graph@1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7))(@anvia/react@1.1.5(@anvia/client@1.9.0(@anvia/core@1.23.0(zod@4.6.7)))(@anvia/core@1.23.0(zod@4.6.7))(@anvia/graph@1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7))(react@19.3.1))(@floating-ui/dom@1.8.0)(@novnc/novnc@1.7.0)(@tiptap/extensions@3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        specifier: ^1.3.3
+        version: 1.3.3(@anvia/client@1.9.1(@anvia/core@1.23.0(zod@4.6.7)))(@anvia/graph@1.3.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7))(@anvia/react@1.3.0(@anvia/client@1.9.1(@anvia/core@1.23.0(zod@4.6.7)))(@anvia/core@1.23.0(zod@4.6.7))(@anvia/graph@1.3.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7))(@floating-ui/dom@1.8.0)(@novnc/novnc@1.7.0)(@tiptap/extensions@3.35.0(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))(@tiptap/pm@3.35.0))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(@floating-ui/dom@1.8.0)(@novnc/novnc@1.7.0)(@tiptap/extensions@3.35.0(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))(@tiptap/pm@3.35.0))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@base-ui/react':
         specifier: ^1.9.0
         version: 1.9.0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -267,22 +267,13 @@ importers:
 
 packages:
 
-  '@anvia/client@1.9.0':
-    resolution: {integrity: sha512-qOAAH9ol2V7oGR9WwOEkNnbjfcap+X5PamUe2yZHtTGLgAAOpvCZaiMs72iwS5AGP9gT32MFxNpK9r+T9affvg==}
+  '@anvia/client@1.9.1':
+    resolution: {integrity: sha512-gFGJjvcEShNUAUlz3jw0TJyp9eJWz3TzLV/viDU4nHVZeI3DlMOIRFs1P5JIQt8ERtmBdwNFSx/3I6HuMZiu+g==}
     peerDependencies:
-      '@anvia/core': ^1.20.0
-      '@anvia/durable': '>=0.8.0 <1.0.0'
+      '@anvia/core': ^1.23.0
+      '@anvia/durable': '>=0.8.0 <2.0.0'
     peerDependenciesMeta:
       '@anvia/durable':
-        optional: true
-
-  '@anvia/core@1.21.0':
-    resolution: {integrity: sha512-QzrmQDpIC/kDzhyoKZzBlAtrhVxj2v83USnVr4IooXjgM/iBHDzJToK2k7zyAi2zzFFl8BKddoxjKLPyY/pfog==}
-    peerDependencies:
-      '@valibot/to-json-schema': ^1.8.0
-      zod: ^4.6.7
-    peerDependenciesMeta:
-      '@valibot/to-json-schema':
         optional: true
 
   '@anvia/core@1.23.0':
@@ -299,22 +290,22 @@ packages:
     peerDependencies:
       '@anvia/core': ^1.22.0
 
-  '@anvia/graph@1.2.0':
-    resolution: {integrity: sha512-kV/MOm5q2jW7RxI/pnL/f1xcV3gt4NJDSvkkdvnOAzjFxT8z35gwEk+bM0xfwJHpbQhw0fJ24Ww5GgqHrc3S/w==}
+  '@anvia/graph@1.3.0':
+    resolution: {integrity: sha512-ljiK75rYHvYRSocvN/i7tdRHnpojnDDeMstJjBoMKpt7Yu/lFSeU163aNjvhjADl8FZj417RGe9apSbBPL7iSg==}
     peerDependencies:
-      '@anvia/core': ^1.19.1
+      '@anvia/core': ^1.23.0
       zod: ^4.6.7
 
-  '@anvia/lens@1.3.0':
-    resolution: {integrity: sha512-zNL3Gj9m3tzzPkRfd2zwR4rvy1ro5/LdOhdTuJXnxm3L5jOBDhVnv1e3vnsKIIWFvpRhtuytGp0LskNCbOxLMw==}
+  '@anvia/lens@1.3.2':
+    resolution: {integrity: sha512-quwtBaU8XOVxQ5QUJ39BApBKBerJ4ba5X6CIYvS9D+oP+2VPh0dRV1zbqvrRc0nNbMm5h5I8zeWkkNF0fA/n9Q==}
     engines: {node: '>=24'}
     peerDependencies:
-      '@anvia/core': ^1.21.0
+      '@anvia/core': ^1.22.0
 
-  '@anvia/logger@1.2.1':
-    resolution: {integrity: sha512-gQprYXl8cj0pOmjuc9aFZtGlavSepAvGdaO/9Gr1LJfBX7to821py0gz2kSEmlGuubmNPWSOeHJxVQ+V6z/wtw==}
+  '@anvia/logger@1.3.0':
+    resolution: {integrity: sha512-Ms3KDWH+pskweMzvaZKvnrXpTSRhfIOEgUdzlPWzsmvJkb8cniWgXS3QF7cbUeVmJSdk8evHPey1MjsRKhJvIw==}
     peerDependencies:
-      '@anvia/core': ^1.14.1
+      '@anvia/core': ^1.20.0
 
   '@anvia/memory-drizzle@1.2.1':
     resolution: {integrity: sha512-RoeFue4A/KerjD4QwC/QcjgJT7wWHKfQcmffEoTrE2A7nnNDI0O6jlldgbnxhKofFmYC6jYRZaHhOb5zE+MdxQ==}
@@ -328,28 +319,23 @@ packages:
     peerDependencies:
       '@anvia/core': ^1.22.0
 
-  '@anvia/otel@1.3.2':
-    resolution: {integrity: sha512-OCe1JpznorsrHuub8Y4sEw+90kDilY3ihxhcQakR2zKkpwkpYFUjn9sE9sHJjbN6N4dsl7QHRsUZ84QPcLnkUg==}
+  '@anvia/otel@1.4.2':
+    resolution: {integrity: sha512-v9SQdW0uw3T3aiGUGFv6t8XeUA7r41E8Z8reAJAMeUx9SQdUezknk3IFmclbxddPzjrfR9QRPvWcBJuCf9hFCg==}
     peerDependencies:
-      '@anvia/core': ^1.18.0
-
-  '@anvia/otel@1.4.0':
-    resolution: {integrity: sha512-YsK4hPzS8J4GQ1aolSGUTjKbx3mAiAyKxCUB9W25VFGKv73PNkfs3uSXRXOq06oxYTUZccDUE2Yq8ib50xQ74w==}
-    peerDependencies:
-      '@anvia/core': ^1.21.0
+      '@anvia/core': ^1.22.0
 
   '@anvia/qdrant@1.3.0':
     resolution: {integrity: sha512-KHSvGmV2u+DC8DzSs17pSYdMH4rkz7XIzkmWBNqQxfP1/0Gv3DGiVM1gprvDkzz1ONv4F/Iy5VuUnbXiv3uXrA==}
     peerDependencies:
       '@anvia/core': ^1.23.0
 
-  '@anvia/react-ui@1.3.2':
-    resolution: {integrity: sha512-7DtfIr6JhjIhCdOmj5BPG9gRnJ+Vi17Ghn0gDHfkeXc/kEO4u4ZZMyxJ7LgKODf3xCW4/uoFUbckjv8EzgLA8Q==}
+  '@anvia/react-ui@1.3.3':
+    resolution: {integrity: sha512-FQkI6u165VuqpfMkh2j1rvoyV4c8UUBvuyvCQ/wPHJwPk35covcWT9ZUXrGVbajC7v3oe3c2s5ldPo2ppdNseQ==}
     deprecated: Merged into @anvia/react. Install @anvia/react and replace @anvia/react-ui imports with @anvia/react.
     peerDependencies:
-      '@anvia/client': ^1.8.1
+      '@anvia/client': ^1.9.0
       '@anvia/graph': ^1.2.0
-      '@anvia/react': ^1.1.5
+      '@anvia/react': ^1.2.0
       '@novnc/novnc': '>=1.5.0'
       '@xterm/addon-fit': '>=0.10.0'
       '@xterm/xterm': '>=5.5.0'
@@ -365,42 +351,41 @@ packages:
       '@xterm/xterm':
         optional: true
 
-  '@anvia/react@1.1.5':
-    resolution: {integrity: sha512-5POy5K75x35/8Lux8MoOLwiVh4y74zjCHON3EQz1cmFTaBgbYyL4Gv0mxPBK4Ox7cYKxj/HCh8yMlGaAK2ZLRg==}
+  '@anvia/react@1.3.0':
+    resolution: {integrity: sha512-v3Lld5Nz36GctQtHKyIpBlxvhklhRMKaYt5i0TGmHh1632k9XwvMN6jlYgRXe7Vg3xtQx1iSC9NLEmtluV19YA==}
     peerDependencies:
-      '@anvia/client': ^1.6.0
-      '@anvia/core': ^1.17.0
-      '@anvia/graph': ^1.1.5
+      '@anvia/client': ^1.9.1
+      '@anvia/core': ^1.23.0
+      '@anvia/graph': ^1.3.0
+      '@novnc/novnc': '>=1.5.0'
+      '@xterm/addon-fit': '>=0.10.0'
+      '@xterm/xterm': '>=5.5.0'
       react: '>=18'
+      react-dom: '>=18'
     peerDependenciesMeta:
       '@anvia/graph':
         optional: true
-
-  '@anvia/react@1.2.0':
-    resolution: {integrity: sha512-KIprzBZULE+nES3gi6E/oVZb6M5+hvowVtn7LnrbaEcz+zPUySlEBDUTL5P1ktEwLFQ/wqidrmtSQxGBsFcjXg==}
-    peerDependencies:
-      '@anvia/client': ^1.9.0
-      '@anvia/core': ^1.20.0
-      '@anvia/graph': ^1.2.0
-      react: '>=18'
-    peerDependenciesMeta:
-      '@anvia/graph':
+      '@novnc/novnc':
+        optional: true
+      '@xterm/addon-fit':
+        optional: true
+      '@xterm/xterm':
         optional: true
 
-  '@anvia/server@1.5.0':
-    resolution: {integrity: sha512-qgMhUQs3yqubJVXE9MloBLAPfOR6p97vy2w+fG+Zl4ou1257tjU1fzEag9WqN7jXCkE/c0d4E8mMc7ggeq7U+w==}
+  '@anvia/server@1.5.1':
+    resolution: {integrity: sha512-Z+8kDYSAugcfEmo4cyl9zlDPi2Mc6O0XuuE2+i7rJXxdsu9kTV+wVXMWsZXocesrRpE1ldz7IGhjSAVJ1Kaz+g==}
     peerDependencies:
-      '@anvia/client': ^1.9.0
-      '@anvia/durable': '>=0.8.0 <1.0.0'
+      '@anvia/client': ^1.9.1
+      '@anvia/durable': '>=0.8.0 <2.0.0'
     peerDependenciesMeta:
       '@anvia/durable':
         optional: true
 
-  '@anvia/studio@1.5.0':
-    resolution: {integrity: sha512-0qVkpTMUhcJ0qh96Br70xrJrVwKGgj+0ncUN8dC1TUg2BPR9pLX1nzzwSR4ojrB28UZySQFfV5s1Wmohlv76/A==}
+  '@anvia/studio@1.5.2':
+    resolution: {integrity: sha512-Vvtv6+x/qLNcJQj8FxEa9JrbmtVJImtkQ66fSzLHHPEbey1nYHd/74jf4hxVgmKUW5kv11rcAvMMerSwCIadQQ==}
     engines: {node: '>=20.12.0'}
     peerDependencies:
-      '@anvia/core': ^1.21.0
+      '@anvia/core': ^1.23.0
 
   '@babel/code-frame@7.29.7':
     resolution: {integrity: sha512-Aup7aUOfpbAUg2ROOJN6Iw5f9DMBlzu0mIkm/malLQFN/YQgO48wCj0Kxa3sEHJvPVFg7siR+qRInwXd2qhQKw==}
@@ -1072,6 +1057,12 @@ packages:
       '@modelcontextprotocol/sdk':
         optional: true
 
+  '@hono/node-server@2.1.11':
+    resolution: {integrity: sha512-KzKz9vl4vvr1vgLHamj+g5uonbrj5NwAdO3yzOS6cd2HjALVeOgTgeZOyAzNxejbkfOOPIcvuf/Tg8l1pEFLog==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      hono: ^4 || ^5.0.0-0
+
   '@hono/node-server@2.1.9':
     resolution: {integrity: sha512-Sk4NQd3GFY0WZWCzndwFMPwJhtD0y9qjsQ+pjID0/03nK9pxyBCUoUHCho8QYBLBVhi0ssL8UkNPHqbgSOFPIQ==}
     engines: {node: '>=20'}
@@ -1267,10 +1258,6 @@ packages:
 
   '@novnc/novnc@1.7.0':
     resolution: {integrity: sha512-ucEJOx4T2avIRCleodk7YobZj5O2Ga2AeLfQ69A/yjG9HHba2+PDgwSkN3FttrmG+70ZGx21sElNFouK13RzyA==}
-
-  '@opentelemetry/api-logs@0.223.0':
-    resolution: {integrity: sha512-Oepm6etVPFCn0VWB1t833iOTgz1eYBDUPxcrOR/XvwzD1+Ag9VzSPSrrKAFNJ/haatj+8CXbG47pZXvdNQKDJw==}
-    engines: {node: '>=8.0.0'}
 
   '@opentelemetry/api@1.10.0':
     resolution: {integrity: sha512-lMkyes8iHrG+mk6WH7X70MdCLI2RS0FwNBY1PyQ8UemaijE2m5mv5A0Niy3HtbYTFrgkUEQjFMXmSAk2hQDuPQ==}
@@ -2611,81 +2598,81 @@ packages:
       zod:
         optional: true
 
-  '@tiptap/core@3.34.0':
-    resolution: {integrity: sha512-PwpE5MAXt586AxIO5bW2RyJ3OUXdPfG5M1M5v/LIMCkDwIgRKegx8uERlABoI6575mWqaH/P6Xm+tequJ5UUnw==}
+  '@tiptap/core@3.35.0':
+    resolution: {integrity: sha512-jrtRrAfgL7bXd2ecy0T7G4b6ozwzW9h67B3iQsDmgu7PWytkqbrUPFrki6LjyysrxZEK4jqgRMNCvfe2Yx2fKg==}
     peerDependencies:
-      '@tiptap/pm': 3.34.0
+      '@tiptap/pm': 3.35.0
 
-  '@tiptap/extension-bubble-menu@3.34.0':
-    resolution: {integrity: sha512-Q6+/RxlaYLsF+hm9MFY//wwVFA4Apfjn2EAnbjaBlaiIs1LtB/s5t5fSjRwCBzadTf9ysMvGh7parpN1hT0tug==}
+  '@tiptap/extension-bubble-menu@3.35.0':
+    resolution: {integrity: sha512-sJJQrbnXKHf/nvD8jXrIWgRjjEusb0BcCsfbE2+9drOsHnP/0doNp6kFNxfqA8rJaktozNkmh/PpLJuUECvLzA==}
     peerDependencies:
-      '@tiptap/core': 3.34.0
-      '@tiptap/pm': 3.34.0
+      '@tiptap/core': 3.35.0
+      '@tiptap/pm': 3.35.0
 
-  '@tiptap/extension-document@3.34.0':
-    resolution: {integrity: sha512-Mvs7AUGJkUWI4HfsCNvWQF2f4YdVqR1UHKYnkFdxCifuGPwFBc8bT7rNMT6NBFjRZADbf4HrE/UIQqVQA5Gfyw==}
+  '@tiptap/extension-document@3.35.0':
+    resolution: {integrity: sha512-DOyA27ChJMpFjmIDpA33Vdf4UycfWops8FHbezBCBkNtZv/Og7+FLGnpcmo1X0QiBSOpH5p7wRmA/pRPz+daZw==}
     peerDependencies:
-      '@tiptap/core': 3.34.0
+      '@tiptap/core': 3.35.0
 
-  '@tiptap/extension-floating-menu@3.34.0':
-    resolution: {integrity: sha512-3D/cYVi4T5SzgMQR9A5cKSSDspVty92/o/+xnON5+buPSD/7+EVVa0XubCoRl/zNqo8jGapZX3JboslQO4Q7ng==}
+  '@tiptap/extension-floating-menu@3.35.0':
+    resolution: {integrity: sha512-R0UUXceRdqDrh7inAH5CGK7izsb0Ks5jO2JwglFOqpRb1cUN4jOiJ+O4+xDzy07zohFXlt8fAuBSjvf/dcwltw==}
     peerDependencies:
       '@floating-ui/dom': ^1.0.0
-      '@tiptap/core': 3.34.0
-      '@tiptap/pm': 3.34.0
+      '@tiptap/core': 3.35.0
+      '@tiptap/pm': 3.35.0
 
-  '@tiptap/extension-hard-break@3.34.0':
-    resolution: {integrity: sha512-um2QJimgSKRpaUBVvAfRWItmcJEJPnv4bVz78FyOrpxvQuVSgV18giF7t9pLCMJPBJ/H+jTSPQ87t+A4Xn4whA==}
+  '@tiptap/extension-hard-break@3.35.0':
+    resolution: {integrity: sha512-SY4+GqIy9z1+HlgjFDIZ8A1eQbf7vaX1FAZPbuLvmlMJIGto2XWyt3JplWEJ/ZgAt9VBt/+vSv9Sx0s1zdS6+w==}
     peerDependencies:
-      '@tiptap/core': 3.34.0
+      '@tiptap/core': 3.35.0
 
-  '@tiptap/extension-mention@3.34.0':
-    resolution: {integrity: sha512-+1MSISCPSmts9Xw3dqeeALOmjPiEDSbKxjvfetqzEJo8cUAoq6kvvg3r1bzxsQFbxKI+KVYefhsfD1DPSgwPPw==}
+  '@tiptap/extension-mention@3.35.0':
+    resolution: {integrity: sha512-SrNPVnY7cAcAvasvr80TspyATMKkUAm1pJllnXjZAcgcFHyaDhmZ0ThCnhq2iZx3R2d9XMn1nLPKmk/Xdn2lLg==}
     peerDependencies:
-      '@tiptap/core': 3.34.0
-      '@tiptap/pm': 3.34.0
-      '@tiptap/suggestion': 3.34.0
+      '@tiptap/core': 3.35.0
+      '@tiptap/pm': 3.35.0
+      '@tiptap/suggestion': 3.35.0
 
-  '@tiptap/extension-paragraph@3.34.0':
-    resolution: {integrity: sha512-hGoyXNl1xz7k+h5wNcSRY+UGe2uQE+YLf9iGuFPmzv2ub9XqRmuVc7MiTK6t+tDWdmPag4rH2c8waJ9GgmvzUQ==}
+  '@tiptap/extension-paragraph@3.35.0':
+    resolution: {integrity: sha512-3ep6HPJIipkPNSN49CylCeq59uQzfzrxZXEiad1Nk35CBHnICBSwawYz+h8L+FVh9Tn+XBQDZAU4NLEBRH0EIg==}
     peerDependencies:
-      '@tiptap/core': 3.34.0
+      '@tiptap/core': 3.35.0
 
-  '@tiptap/extension-placeholder@3.34.0':
-    resolution: {integrity: sha512-MdvR7G6Mz0Ie89hbM7zXgHCFMcLZYGbwJyOCVHObAtXUaXgBpWvRVcV45U+aNcZKhD0tWzpROf9WTPsfsc6//w==}
+  '@tiptap/extension-placeholder@3.35.0':
+    resolution: {integrity: sha512-chFdNgE8vb6gLWcjFaeZU2J0USRUhtKA0Fmk6sA5iS+sN3mwMPLkCg9tcGcFG41poiST8UTiFDjrRDcKrDLEvA==}
     peerDependencies:
-      '@tiptap/extensions': 3.34.0
+      '@tiptap/extensions': 3.35.0
 
-  '@tiptap/extension-text@3.34.0':
-    resolution: {integrity: sha512-90gNJ24bsTrJVxfnnbXXFhsmPGUsk9ZGjwbbJ4OvqIoYX4BjmwuPBHL4NePL7kKwPtTKhcIHsm3C3ofZlVH/rg==}
+  '@tiptap/extension-text@3.35.0':
+    resolution: {integrity: sha512-g1llNE9A1QA0xCRpWIzBiUtzAVYoElUAhZAcF1NNYxftPs+pW6Xz3f3QfdvFQljaCF5tClfX/C9pjtfT5YfWPQ==}
     peerDependencies:
-      '@tiptap/core': 3.34.0
+      '@tiptap/core': 3.35.0
 
-  '@tiptap/extensions@3.34.0':
-    resolution: {integrity: sha512-VA5kMiyactt71jqyNrdVB8kyGeD35AvjhcL1bKf12+XTTXTtOJkhS2/IQhNYK4ooCW0bpmNiuBnrdFWaeXyUOg==}
+  '@tiptap/extensions@3.35.0':
+    resolution: {integrity: sha512-sxXAIlEAQUpNGUXHZeVRmEfbUkQqyEaKpXwXP3wONe7ZdKQL5WO6l2dyd3+vbCY7H67NWyEG51NKF6lwmplreA==}
     peerDependencies:
-      '@tiptap/core': 3.34.0
-      '@tiptap/pm': 3.34.0
+      '@tiptap/core': 3.35.0
+      '@tiptap/pm': 3.35.0
 
-  '@tiptap/pm@3.34.0':
-    resolution: {integrity: sha512-/r64RekPVaLw/YUjGes8tH5voz5PYWLW6gahMf+nDZKs6nK4RtoZ4O6YFI+nV8XD1hygseQZPeJkT5OOkI4AdA==}
+  '@tiptap/pm@3.35.0':
+    resolution: {integrity: sha512-bijTl/bhwi+KYo0Xte872JwJl6rTsz557z5NTuuf8f5oqlocIESQLLFHLHsII2t3Urrf78OSnZaGe0qJ/kEU0Q==}
 
-  '@tiptap/react@3.34.0':
-    resolution: {integrity: sha512-DDqcnPZ0pVeU9E3hvQcK4rA5AWRe7PHDeFAGL6lW/aniYkJ1W2kKimjny3Lz43TxplvbH67f03Wey5l0GrKk8A==}
+  '@tiptap/react@3.35.0':
+    resolution: {integrity: sha512-9aCpTU1YjpZDYhCN3fioFgdKok8k2VNqwdQq8cirzJ5ZC354zu26rn7wtFWVoDz/NIu1sCL5RzS1EF2vM0l+jQ==}
     peerDependencies:
-      '@tiptap/core': 3.34.0
-      '@tiptap/pm': 3.34.0
+      '@tiptap/core': 3.35.0
+      '@tiptap/pm': 3.35.0
       '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
       '@types/react-dom': ^17.0.0 || ^18.0.0 || ^19.0.0
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  '@tiptap/suggestion@3.34.0':
-    resolution: {integrity: sha512-+gu9T9lc+6UeREkxIZan/HtMkmlT6LJmI7XqhaXl9nxCkVDy0KmaTs1Us03FafNbJ9yHLPq2ykth87CMWWsMcw==}
+  '@tiptap/suggestion@3.35.0':
+    resolution: {integrity: sha512-95GKUwsj7juT0/4xfv+o4uBHxWJAOxmFHGLNxhp/QQKzX1LPm+TweBcfgEK6PVoPP9FtLBJJywE7X4lcnptxbw==}
     peerDependencies:
       '@floating-ui/dom': ^1.0.0
-      '@tiptap/core': 3.34.0
-      '@tiptap/pm': 3.34.0
+      '@tiptap/core': 3.35.0
+      '@tiptap/pm': 3.35.0
 
   '@tybys/wasm-util@0.10.5':
     resolution: {integrity: sha512-dOGOPxlaNV+G046mZzN+9C0dAcQZeSKcXiVaM0TYy/LM4ttTmgSBDxYfovcYI8Em3+eAbiAYpvWLOv8+ZVRJKA==}
@@ -3508,6 +3495,10 @@ packages:
     resolution: {integrity: sha512-KmXvQAXwcAHV+muzbIwoJ23niEB5nMoDVr9WcRkU8mvjUECm/1+7v4Jgp7P7a+H6MLFrh+vXrGonGrGS+RQfkA==}
     engines: {node: '>=16.9.0'}
 
+  hono@4.13.21:
+    resolution: {integrity: sha512-h9UsguqfVk4kjUwLvQpHOmOaJpW10jz9lp8bvKUUa04wJG/fabKFBqXZ06D6LFaeKQZtUZRVeg0gfkTTEsX7Mw==}
+    engines: {node: '>=16.9.0'}
+
   html-url-attributes@3.0.1:
     resolution: {integrity: sha512-ol6UPyBWqsrO6EJySPz2O7ZSr856WDrEzM5zMqp+FJJLGMW35cLYmmZnl0vztAZxRUoNZJFTCohfjuIJ8I4QBQ==}
 
@@ -4282,6 +4273,9 @@ packages:
   tailwind-merge@3.7.0:
     resolution: {integrity: sha512-XPPUyAc+cvspz3lHTcR/QgPfW2A0lv/xQNIjX3HGhLR+Nq2lHaLq5MtTesHn8GUr3W3DguT2KT5x3NVgRtYwmA==}
 
+  tailwind-merge@3.7.1:
+    resolution: {integrity: sha512-v7y4BV4FUlO8exj/4M5UXKeoowDiuugVUg3tkMNIyOUCOHy5xp8+5aWQeXCtZ2491sUV1YPsVeM9EveZ6/xuZQ==}
+
   tailwindcss-animate@1.0.7:
     resolution: {integrity: sha512-bl6mpH3T7I3UFxuvDEXLxy/VuFxBk5bbzplh7tXI68mwMokNYd1t9qPBHlnyTwfa4JGC4zP516I1hYYtQ/vspA==}
     peerDependencies:
@@ -4567,14 +4561,9 @@ packages:
 
 snapshots:
 
-  '@anvia/client@1.9.0(@anvia/core@1.23.0(zod@4.6.7))':
+  '@anvia/client@1.9.1(@anvia/core@1.23.0(zod@4.6.7))':
     dependencies:
       '@anvia/core': 1.23.0(zod@4.6.7)
-
-  '@anvia/core@1.21.0(zod@4.6.7)':
-    dependencies:
-      yaml: 2.9.1
-      zod: 4.6.7
 
   '@anvia/core@1.23.0(zod@4.6.7)':
     dependencies:
@@ -4591,15 +4580,15 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@anvia/graph@1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7)':
+  '@anvia/graph@1.3.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7)':
     dependencies:
       '@anvia/core': 1.23.0(zod@4.6.7)
       zod: 4.6.7
 
-  '@anvia/lens@1.3.0(@anvia/core@1.21.0(zod@4.6.7))':
+  '@anvia/lens@1.3.2(@anvia/core@1.23.0(zod@4.6.7))':
     dependencies:
-      '@anvia/core': 1.21.0(zod@4.6.7)
-      '@anvia/otel': 1.4.0(@anvia/core@1.21.0(zod@4.6.7))
+      '@anvia/core': 1.23.0(zod@4.6.7)
+      '@anvia/otel': 1.4.2(@anvia/core@1.23.0(zod@4.6.7))
       '@opentelemetry/api': 1.10.0
       '@opentelemetry/exporter-logs-otlp-http': 0.301.2(@opentelemetry/api@1.10.0)
       '@opentelemetry/exporter-trace-otlp-http': 0.301.2(@opentelemetry/api@1.10.0)
@@ -4607,9 +4596,9 @@ snapshots:
       '@opentelemetry/sdk-logs': 3.1.1(@opentelemetry/api@1.10.0)
       '@opentelemetry/sdk-trace': 3.1.1(@opentelemetry/api@1.10.0)
 
-  '@anvia/logger@1.2.1(@anvia/core@1.21.0(zod@4.6.7))':
+  '@anvia/logger@1.3.0(@anvia/core@1.23.0(zod@4.6.7))':
     dependencies:
-      '@anvia/core': 1.21.0(zod@4.6.7)
+      '@anvia/core': 1.23.0(zod@4.6.7)
       pino: 10.4.0
 
   '@anvia/memory-drizzle@1.2.1(@anvia/core@1.23.0(zod@4.6.7))(drizzle-orm@0.45.4(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1))':
@@ -4630,15 +4619,9 @@ snapshots:
       - ws
       - zod
 
-  '@anvia/otel@1.3.2(@anvia/core@1.21.0(zod@4.6.7))':
+  '@anvia/otel@1.4.2(@anvia/core@1.23.0(zod@4.6.7))':
     dependencies:
-      '@anvia/core': 1.21.0(zod@4.6.7)
-      '@opentelemetry/api': 1.10.0
-      '@opentelemetry/api-logs': 0.223.0
-
-  '@anvia/otel@1.4.0(@anvia/core@1.21.0(zod@4.6.7))':
-    dependencies:
-      '@anvia/core': 1.21.0(zod@4.6.7)
+      '@anvia/core': 1.23.0(zod@4.6.7)
       '@opentelemetry/api': 1.10.0
 
   '@anvia/qdrant@1.3.0(@anvia/core@1.23.0(zod@4.6.7))(typescript@7.0.2)':
@@ -4648,28 +4631,28 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-  '@anvia/react-ui@1.3.2(@anvia/client@1.9.0(@anvia/core@1.23.0(zod@4.6.7)))(@anvia/graph@1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7))(@anvia/react@1.1.5(@anvia/client@1.9.0(@anvia/core@1.23.0(zod@4.6.7)))(@anvia/core@1.23.0(zod@4.6.7))(@anvia/graph@1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7))(react@19.3.1))(@floating-ui/dom@1.8.0)(@novnc/novnc@1.7.0)(@tiptap/extensions@3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
+  '@anvia/react-ui@1.3.3(@anvia/client@1.9.1(@anvia/core@1.23.0(zod@4.6.7)))(@anvia/graph@1.3.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7))(@anvia/react@1.3.0(@anvia/client@1.9.1(@anvia/core@1.23.0(zod@4.6.7)))(@anvia/core@1.23.0(zod@4.6.7))(@anvia/graph@1.3.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7))(@floating-ui/dom@1.8.0)(@novnc/novnc@1.7.0)(@tiptap/extensions@3.35.0(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))(@tiptap/pm@3.35.0))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(@floating-ui/dom@1.8.0)(@novnc/novnc@1.7.0)(@tiptap/extensions@3.35.0(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))(@tiptap/pm@3.35.0))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@anvia/client': 1.9.0(@anvia/core@1.23.0(zod@4.6.7))
-      '@anvia/react': 1.1.5(@anvia/client@1.9.0(@anvia/core@1.23.0(zod@4.6.7)))(@anvia/core@1.23.0(zod@4.6.7))(@anvia/graph@1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7))(react@19.3.1)
+      '@anvia/client': 1.9.1(@anvia/core@1.23.0(zod@4.6.7))
+      '@anvia/react': 1.3.0(@anvia/client@1.9.1(@anvia/core@1.23.0(zod@4.6.7)))(@anvia/core@1.23.0(zod@4.6.7))(@anvia/graph@1.3.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7))(@floating-ui/dom@1.8.0)(@novnc/novnc@1.7.0)(@tiptap/extensions@3.35.0(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))(@tiptap/pm@3.35.0))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@radix-ui/react-slot': 1.5.0(@types/react@19.3.0)(react@19.3.1)
-      '@tiptap/core': 3.34.0(@tiptap/pm@3.34.0)
-      '@tiptap/extension-document': 3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))
-      '@tiptap/extension-hard-break': 3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))
-      '@tiptap/extension-mention': 3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0)(@tiptap/suggestion@3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0))
-      '@tiptap/extension-paragraph': 3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))
-      '@tiptap/extension-placeholder': 3.34.0(@tiptap/extensions@3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0))
-      '@tiptap/extension-text': 3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))
-      '@tiptap/pm': 3.34.0
-      '@tiptap/react': 3.34.0(@floating-ui/dom@1.8.0)(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      '@tiptap/suggestion': 3.34.0(@floating-ui/dom@1.8.0)(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0)
+      '@tiptap/core': 3.35.0(@tiptap/pm@3.35.0)
+      '@tiptap/extension-document': 3.35.0(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))
+      '@tiptap/extension-hard-break': 3.35.0(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))
+      '@tiptap/extension-mention': 3.35.0(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))(@tiptap/pm@3.35.0)(@tiptap/suggestion@3.35.0(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))(@tiptap/pm@3.35.0))
+      '@tiptap/extension-paragraph': 3.35.0(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))
+      '@tiptap/extension-placeholder': 3.35.0(@tiptap/extensions@3.35.0(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))(@tiptap/pm@3.35.0))
+      '@tiptap/extension-text': 3.35.0(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))
+      '@tiptap/pm': 3.35.0
+      '@tiptap/react': 3.35.0(@floating-ui/dom@1.8.0)(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))(@tiptap/pm@3.35.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@tiptap/suggestion': 3.35.0(@floating-ui/dom@1.8.0)(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))(@tiptap/pm@3.35.0)
       marked: 18.2.1
       react: 19.3.1
       react-dom: 19.3.1(react@19.3.1)
       react-markdown: 10.1.0(@types/react@19.3.0)(react@19.3.1)
       remark-gfm: 4.0.1
     optionalDependencies:
-      '@anvia/graph': 1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7)
+      '@anvia/graph': 1.3.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7)
       '@novnc/novnc': 1.7.0
     transitivePeerDependencies:
       - '@floating-ui/dom'
@@ -4678,28 +4661,28 @@ snapshots:
       - '@types/react-dom'
       - supports-color
 
-  '@anvia/react-ui@1.3.2(@anvia/client@1.9.0(@anvia/core@1.23.0(zod@4.6.7)))(@anvia/graph@1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7))(@anvia/react@1.2.0(@anvia/client@1.9.0(@anvia/core@1.23.0(zod@4.6.7)))(@anvia/core@1.23.0(zod@4.6.7))(@anvia/graph@1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7))(react@19.3.1))(@novnc/novnc@1.7.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
+  '@anvia/react@1.3.0(@anvia/client@1.9.1(@anvia/core@1.23.0(zod@4.6.7)))(@anvia/core@1.23.0(zod@4.6.7))(@anvia/graph@1.3.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7))(@floating-ui/dom@1.8.0)(@novnc/novnc@1.7.0)(@tiptap/extensions@3.35.0(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))(@tiptap/pm@3.35.0))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@anvia/client': 1.9.0(@anvia/core@1.23.0(zod@4.6.7))
-      '@anvia/react': 1.2.0(@anvia/client@1.9.0(@anvia/core@1.23.0(zod@4.6.7)))(@anvia/core@1.23.0(zod@4.6.7))(@anvia/graph@1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7))(react@19.3.1)
+      '@anvia/client': 1.9.1(@anvia/core@1.23.0(zod@4.6.7))
+      '@anvia/core': 1.23.0(zod@4.6.7)
       '@radix-ui/react-slot': 1.5.0(@types/react@19.3.0)(react@19.3.1)
-      '@tiptap/core': 3.34.0(@tiptap/pm@3.34.0)
-      '@tiptap/extension-document': 3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))
-      '@tiptap/extension-hard-break': 3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))
-      '@tiptap/extension-mention': 3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0)(@tiptap/suggestion@3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0))
-      '@tiptap/extension-paragraph': 3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))
-      '@tiptap/extension-placeholder': 3.34.0(@tiptap/extensions@3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0))
-      '@tiptap/extension-text': 3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))
-      '@tiptap/pm': 3.34.0
-      '@tiptap/react': 3.34.0(@floating-ui/dom@1.8.0)(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      '@tiptap/suggestion': 3.34.0(@floating-ui/dom@1.8.0)(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0)
+      '@tiptap/core': 3.35.0(@tiptap/pm@3.35.0)
+      '@tiptap/extension-document': 3.35.0(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))
+      '@tiptap/extension-hard-break': 3.35.0(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))
+      '@tiptap/extension-mention': 3.35.0(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))(@tiptap/pm@3.35.0)(@tiptap/suggestion@3.35.0(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))(@tiptap/pm@3.35.0))
+      '@tiptap/extension-paragraph': 3.35.0(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))
+      '@tiptap/extension-placeholder': 3.35.0(@tiptap/extensions@3.35.0(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))(@tiptap/pm@3.35.0))
+      '@tiptap/extension-text': 3.35.0(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))
+      '@tiptap/pm': 3.35.0
+      '@tiptap/react': 3.35.0(@floating-ui/dom@1.8.0)(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))(@tiptap/pm@3.35.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@tiptap/suggestion': 3.35.0(@floating-ui/dom@1.8.0)(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))(@tiptap/pm@3.35.0)
       marked: 18.2.1
       react: 19.3.1
       react-dom: 19.3.1(react@19.3.1)
       react-markdown: 10.1.0(@types/react@19.3.0)(react@19.3.1)
       remark-gfm: 4.0.1
     optionalDependencies:
-      '@anvia/graph': 1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7)
+      '@anvia/graph': 1.3.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7)
       '@novnc/novnc': 1.7.0
     transitivePeerDependencies:
       - '@floating-ui/dom'
@@ -4708,37 +4691,20 @@ snapshots:
       - '@types/react-dom'
       - supports-color
 
-  '@anvia/react@1.1.5(@anvia/client@1.9.0(@anvia/core@1.23.0(zod@4.6.7)))(@anvia/core@1.23.0(zod@4.6.7))(@anvia/graph@1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7))(react@19.3.1)':
+  '@anvia/server@1.5.1(@anvia/client@1.9.1(@anvia/core@1.23.0(zod@4.6.7)))':
     dependencies:
-      '@anvia/client': 1.9.0(@anvia/core@1.23.0(zod@4.6.7))
-      '@anvia/core': 1.23.0(zod@4.6.7)
-      react: 19.3.1
-    optionalDependencies:
-      '@anvia/graph': 1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7)
+      '@anvia/client': 1.9.1(@anvia/core@1.23.0(zod@4.6.7))
 
-  '@anvia/react@1.2.0(@anvia/client@1.9.0(@anvia/core@1.23.0(zod@4.6.7)))(@anvia/core@1.23.0(zod@4.6.7))(@anvia/graph@1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7))(react@19.3.1)':
+  '@anvia/studio@1.5.2(@anvia/core@1.23.0(zod@4.6.7))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(immer@11.2.10)(zod@4.6.7)':
     dependencies:
-      '@anvia/client': 1.9.0(@anvia/core@1.23.0(zod@4.6.7))
+      '@anvia/client': 1.9.1(@anvia/core@1.23.0(zod@4.6.7))
       '@anvia/core': 1.23.0(zod@4.6.7)
-      react: 19.3.1
-    optionalDependencies:
-      '@anvia/graph': 1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7)
-
-  '@anvia/server@1.5.0(@anvia/client@1.9.0(@anvia/core@1.23.0(zod@4.6.7)))':
-    dependencies:
-      '@anvia/client': 1.9.0(@anvia/core@1.23.0(zod@4.6.7))
-
-  '@anvia/studio@1.5.0(@anvia/core@1.23.0(zod@4.6.7))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(immer@11.2.10)(zod@4.6.7)':
-    dependencies:
-      '@anvia/client': 1.9.0(@anvia/core@1.23.0(zod@4.6.7))
-      '@anvia/core': 1.23.0(zod@4.6.7)
-      '@anvia/graph': 1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7)
-      '@anvia/react': 1.2.0(@anvia/client@1.9.0(@anvia/core@1.23.0(zod@4.6.7)))(@anvia/core@1.23.0(zod@4.6.7))(@anvia/graph@1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7))(react@19.3.1)
-      '@anvia/react-ui': 1.3.2(@anvia/client@1.9.0(@anvia/core@1.23.0(zod@4.6.7)))(@anvia/graph@1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7))(@anvia/react@1.2.0(@anvia/client@1.9.0(@anvia/core@1.23.0(zod@4.6.7)))(@anvia/core@1.23.0(zod@4.6.7))(@anvia/graph@1.2.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7))(react@19.3.1))(@novnc/novnc@1.7.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      '@anvia/server': 1.5.0(@anvia/client@1.9.0(@anvia/core@1.23.0(zod@4.6.7)))
+      '@anvia/graph': 1.3.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7)
+      '@anvia/react': 1.3.0(@anvia/client@1.9.1(@anvia/core@1.23.0(zod@4.6.7)))(@anvia/core@1.23.0(zod@4.6.7))(@anvia/graph@1.3.0(@anvia/core@1.23.0(zod@4.6.7))(zod@4.6.7))(@floating-ui/dom@1.8.0)(@novnc/novnc@1.7.0)(@tiptap/extensions@3.35.0(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))(@tiptap/pm@3.35.0))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@anvia/server': 1.5.1(@anvia/client@1.9.1(@anvia/core@1.23.0(zod@4.6.7)))
       '@fontsource-variable/geist': 5.3.0
       '@fontsource-variable/geist-mono': 5.3.0
-      '@hono/node-server': 2.1.9(hono@4.13.19)
+      '@hono/node-server': 2.1.11(hono@4.13.21)
       '@novnc/novnc': 1.7.0
       '@phosphor-icons/react': 2.1.10(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@radix-ui/react-alert-dialog': 1.2.1(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -4751,10 +4717,10 @@ snapshots:
       '@xyflow/react': 12.12.1(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(immer@11.2.10)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       class-variance-authority: 0.7.1
       clsx: 2.1.1
-      hono: 4.13.19
+      hono: 4.13.21
       react: 19.3.1
       react-dom: 19.3.1(react@19.3.1)
-      tailwind-merge: 3.7.0
+      tailwind-merge: 3.7.1
       ws: 8.23.0
     transitivePeerDependencies:
       - '@anvia/durable'
@@ -5235,6 +5201,10 @@ snapshots:
       - supports-color
       - utf-8-validate
 
+  '@hono/node-server@2.1.11(hono@4.13.21)':
+    dependencies:
+      hono: 4.13.21
+
   '@hono/node-server@2.1.9(hono@4.13.19)':
     dependencies:
       hono: 4.13.19
@@ -5330,10 +5300,6 @@ snapshots:
   '@noble/hashes@2.4.0': {}
 
   '@novnc/novnc@1.7.0': {}
-
-  '@opentelemetry/api-logs@0.223.0':
-    dependencies:
-      '@opentelemetry/api': 1.10.0
 
   '@opentelemetry/api@1.10.0': {}
 
@@ -6534,56 +6500,56 @@ snapshots:
       - debug
       - supports-color
 
-  '@tiptap/core@3.34.0(@tiptap/pm@3.34.0)':
+  '@tiptap/core@3.35.0(@tiptap/pm@3.35.0)':
     dependencies:
-      '@tiptap/pm': 3.34.0
+      '@tiptap/pm': 3.35.0
 
-  '@tiptap/extension-bubble-menu@3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0)':
-    dependencies:
-      '@floating-ui/dom': 1.8.0
-      '@tiptap/core': 3.34.0(@tiptap/pm@3.34.0)
-      '@tiptap/pm': 3.34.0
-    optional: true
-
-  '@tiptap/extension-document@3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))':
-    dependencies:
-      '@tiptap/core': 3.34.0(@tiptap/pm@3.34.0)
-
-  '@tiptap/extension-floating-menu@3.34.0(@floating-ui/dom@1.8.0)(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0)':
+  '@tiptap/extension-bubble-menu@3.35.0(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))(@tiptap/pm@3.35.0)':
     dependencies:
       '@floating-ui/dom': 1.8.0
-      '@tiptap/core': 3.34.0(@tiptap/pm@3.34.0)
-      '@tiptap/pm': 3.34.0
+      '@tiptap/core': 3.35.0(@tiptap/pm@3.35.0)
+      '@tiptap/pm': 3.35.0
     optional: true
 
-  '@tiptap/extension-hard-break@3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))':
+  '@tiptap/extension-document@3.35.0(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))':
     dependencies:
-      '@tiptap/core': 3.34.0(@tiptap/pm@3.34.0)
+      '@tiptap/core': 3.35.0(@tiptap/pm@3.35.0)
 
-  '@tiptap/extension-mention@3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0)(@tiptap/suggestion@3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0))':
+  '@tiptap/extension-floating-menu@3.35.0(@floating-ui/dom@1.8.0)(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))(@tiptap/pm@3.35.0)':
     dependencies:
-      '@tiptap/core': 3.34.0(@tiptap/pm@3.34.0)
-      '@tiptap/pm': 3.34.0
-      '@tiptap/suggestion': 3.34.0(@floating-ui/dom@1.8.0)(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0)
+      '@floating-ui/dom': 1.8.0
+      '@tiptap/core': 3.35.0(@tiptap/pm@3.35.0)
+      '@tiptap/pm': 3.35.0
+    optional: true
 
-  '@tiptap/extension-paragraph@3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))':
+  '@tiptap/extension-hard-break@3.35.0(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))':
     dependencies:
-      '@tiptap/core': 3.34.0(@tiptap/pm@3.34.0)
+      '@tiptap/core': 3.35.0(@tiptap/pm@3.35.0)
 
-  '@tiptap/extension-placeholder@3.34.0(@tiptap/extensions@3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0))':
+  '@tiptap/extension-mention@3.35.0(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))(@tiptap/pm@3.35.0)(@tiptap/suggestion@3.35.0(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))(@tiptap/pm@3.35.0))':
     dependencies:
-      '@tiptap/extensions': 3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0)
+      '@tiptap/core': 3.35.0(@tiptap/pm@3.35.0)
+      '@tiptap/pm': 3.35.0
+      '@tiptap/suggestion': 3.35.0(@floating-ui/dom@1.8.0)(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))(@tiptap/pm@3.35.0)
 
-  '@tiptap/extension-text@3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))':
+  '@tiptap/extension-paragraph@3.35.0(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))':
     dependencies:
-      '@tiptap/core': 3.34.0(@tiptap/pm@3.34.0)
+      '@tiptap/core': 3.35.0(@tiptap/pm@3.35.0)
 
-  '@tiptap/extensions@3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0)':
+  '@tiptap/extension-placeholder@3.35.0(@tiptap/extensions@3.35.0(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))(@tiptap/pm@3.35.0))':
     dependencies:
-      '@tiptap/core': 3.34.0(@tiptap/pm@3.34.0)
-      '@tiptap/pm': 3.34.0
+      '@tiptap/extensions': 3.35.0(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))(@tiptap/pm@3.35.0)
 
-  '@tiptap/pm@3.34.0':
+  '@tiptap/extension-text@3.35.0(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))':
+    dependencies:
+      '@tiptap/core': 3.35.0(@tiptap/pm@3.35.0)
+
+  '@tiptap/extensions@3.35.0(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))(@tiptap/pm@3.35.0)':
+    dependencies:
+      '@tiptap/core': 3.35.0(@tiptap/pm@3.35.0)
+      '@tiptap/pm': 3.35.0
+
+  '@tiptap/pm@3.35.0':
     dependencies:
       prosemirror-changeset: 2.4.6
       prosemirror-commands: 1.7.2
@@ -6599,10 +6565,10 @@ snapshots:
       prosemirror-transform: 1.12.6
       prosemirror-view: 1.42.9
 
-  '@tiptap/react@3.34.0(@floating-ui/dom@1.8.0)(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
+  '@tiptap/react@3.35.0(@floating-ui/dom@1.8.0)(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))(@tiptap/pm@3.35.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@tiptap/core': 3.34.0(@tiptap/pm@3.34.0)
-      '@tiptap/pm': 3.34.0
+      '@tiptap/core': 3.35.0(@tiptap/pm@3.35.0)
+      '@tiptap/pm': 3.35.0
       '@types/react': 19.3.0
       '@types/react-dom': 19.3.0(@types/react@19.3.0)
       '@types/use-sync-external-store': 0.0.6
@@ -6611,16 +6577,16 @@ snapshots:
       react-dom: 19.3.1(react@19.3.1)
       use-sync-external-store: 1.7.0(react@19.3.1)
     optionalDependencies:
-      '@tiptap/extension-bubble-menu': 3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0)
-      '@tiptap/extension-floating-menu': 3.34.0(@floating-ui/dom@1.8.0)(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0)
+      '@tiptap/extension-bubble-menu': 3.35.0(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))(@tiptap/pm@3.35.0)
+      '@tiptap/extension-floating-menu': 3.35.0(@floating-ui/dom@1.8.0)(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))(@tiptap/pm@3.35.0)
     transitivePeerDependencies:
       - '@floating-ui/dom'
 
-  '@tiptap/suggestion@3.34.0(@floating-ui/dom@1.8.0)(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0)':
+  '@tiptap/suggestion@3.35.0(@floating-ui/dom@1.8.0)(@tiptap/core@3.35.0(@tiptap/pm@3.35.0))(@tiptap/pm@3.35.0)':
     dependencies:
       '@floating-ui/dom': 1.8.0
-      '@tiptap/core': 3.34.0(@tiptap/pm@3.34.0)
-      '@tiptap/pm': 3.34.0
+      '@tiptap/core': 3.35.0(@tiptap/pm@3.35.0)
+      '@tiptap/pm': 3.35.0
 
   '@tybys/wasm-util@0.10.5':
     dependencies:
@@ -7320,6 +7286,8 @@ snapshots:
       '@types/hast': 3.0.5
 
   hono@4.13.19: {}
+
+  hono@4.13.21: {}
 
   html-url-attributes@3.0.1: {}
 
@@ -8361,6 +8329,8 @@ snapshots:
       inline-style-parser: 0.2.9
 
   tailwind-merge@3.7.0: {}
+
+  tailwind-merge@3.7.1: {}
 
   tailwindcss-animate@1.0.7(tailwindcss@4.3.5):
     dependencies:
