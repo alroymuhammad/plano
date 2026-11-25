@@ -1,6 +1,6 @@
 # 0018 — Gateway models only: DeepSeek for agents, GPT-6 Luna for judging
 
-Status: accepted (embeddings superseded by 0021)
+Status: accepted (embeddings superseded by 0026)
 Date: 2026-11-24
 
 ## Context
