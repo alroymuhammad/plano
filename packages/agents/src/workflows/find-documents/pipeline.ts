@@ -1,8 +1,8 @@
 import { generateCompletion } from '@anvia/core'
 import { Pipeline } from '@anvia/core/pipeline'
-import { runAgent } from '../core'
-import { createWebSearchTool } from '../tools/web-search'
-import { searchWeb } from '../tools/web-search/service'
+import { runAgent } from '../../core'
+import { createWebSearchTool } from '../../tools/web-search'
+import { searchWeb } from '../../tools/web-search/service'
 import { z } from 'zod'
 import {
   type DocumentsResult,
@@ -12,8 +12,8 @@ import {
   type RulePlan,
   RulePlanSchema,
   ScopeSchema,
-} from '../types'
-import { getModel } from '../utils/model'
+} from '../../types'
+import { getModel } from '../../utils/model'
 import {
   ANSWER_INSTRUCTIONS,
   CLARIFY_INSTRUCTIONS,
