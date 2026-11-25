@@ -1,6 +1,6 @@
 # 0023 — Qdrant keeps a copy of Passage text; Passage ids are deterministic
 
-Status: accepted
+Status: accepted (amended by 0025)
 Date: 2026-11-25
 
 ## Context

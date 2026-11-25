@@ -1,6 +1,6 @@
 # 0020 — Qdrant for vectors, Postgres as source of truth, files behind a store
 
-Status: accepted (payload and Passage ids amended by 0023)
+Status: accepted (payload and Passage ids amended by 0023; file store and payload fields amended by 0025)
 Date: 2026-11-25
 
 ## Context
