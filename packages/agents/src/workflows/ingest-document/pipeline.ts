@@ -73,6 +73,20 @@ async function discardUnindexed(
   await rm(fileURLToPath(existing.storageUri), { force: true })
 }
 
+// A stored PDF with no row is an orphan, so a failed step before save removes it. Index runs after save, and
+// its failure keeps the file: the row exists, and the retry path discards both.
+async function removeStoredPdfOnError<T>(
+  storageUri: string,
+  step: () => T | Promise<T>,
+): Promise<T> {
+  try {
+    return await step()
+  } catch (error) {
+    await rm(fileURLToPath(storageUri), { force: true })
+    throw error
+  }
+}
+
 function createNewDocumentPipeline(options: IngestDocumentOptions) {
   return new Pipeline({
     id: 'ingest-document-new',
@@ -95,48 +109,54 @@ function createNewDocumentPipeline(options: IngestDocumentOptions) {
     })
     .step({
       id: 'extract',
-      run: async ({ input }) => ({
-        ...input,
-        pages: await extractPages(await readFile(fileURLToPath(input.storageUri))),
-      }),
+      run: ({ input }) =>
+        removeStoredPdfOnError(input.storageUri, async () => ({
+          ...input,
+          pages: await extractPages(await readFile(fileURLToPath(input.storageUri))),
+        })),
     })
     .step({
       id: 'chunk',
-      run: ({ input }) => ({ ...input, passages: chunkPages(input.title, input.pages) }),
+      run: ({ input }) =>
+        removeStoredPdfOnError(input.storageUri, () => ({
+          ...input,
+          passages: chunkPages(input.title, input.pages),
+        })),
     })
     .step({
       id: 'save',
-      run: async ({ input }) => {
-        await options.library.saveDocument({
-          document: {
-            id: input.documentId,
-            analystId: options.analystId,
-            title: input.title,
-            type: input.type,
-            number: input.number,
-            year: input.year,
-            area: input.area,
-            status: input.status,
-            confirmed: true,
-            fileHash: input.fileHash,
-            storageUri: input.storageUri,
-            pageCount: input.pages.length,
-          },
-          pages: input.pages.map((page) => ({
-            documentId: input.documentId,
-            page: page.page,
-            text: page.text,
-            ocr: page.ocr,
-          })),
-          passages: input.passages.map((passage) => ({
-            ...passage,
-            id: passageId(input.documentId, passage.index),
-            documentId: input.documentId,
-          })),
-        })
+      run: ({ input }) =>
+        removeStoredPdfOnError(input.storageUri, async () => {
+          await options.library.saveDocument({
+            document: {
+              id: input.documentId,
+              analystId: options.analystId,
+              title: input.title,
+              type: input.type,
+              number: input.number,
+              year: input.year,
+              area: input.area,
+              status: input.status,
+              confirmed: true,
+              fileHash: input.fileHash,
+              storageUri: input.storageUri,
+              pageCount: input.pages.length,
+            },
+            pages: input.pages.map((page) => ({
+              documentId: input.documentId,
+              page: page.page,
+              text: page.text,
+              ocr: page.ocr,
+            })),
+            passages: input.passages.map((passage) => ({
+              ...passage,
+              id: passageId(input.documentId, passage.index),
+              documentId: input.documentId,
+            })),
+          })
 
-        return input
-      },
+          return input
+        }),
     })
     .step({
       id: 'index',

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { createHash, randomUUID } from 'node:crypto'
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
-import { mkdtemp, rm } from 'node:fs/promises'
+import { mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -43,10 +43,12 @@ describe(
     const bareAnalystId = randomUUID()
     const retryAnalystId = randomUUID()
     const reindexAnalystId = randomUUID()
+    const unsavedAnalystId = randomUUID()
     // A collection of its own, so these tests never write to the dev `passages` collection.
     const collectionName = `plano-test-passages-${randomUUID()}`
     let db: Db
     let library: LibraryStore
+    let sourceDir: string
     let storageDir: string
     let first: IngestDocumentResult
 
@@ -98,15 +100,24 @@ describe(
 
       db = createDb(url)
       library = createLibraryStore(db)
+      sourceDir = await mkdtemp(join(tmpdir(), 'plano-ingest-src-'))
       storageDir = await mkdtemp(join(tmpdir(), 'plano-ingest-'))
       first = await ingest(analystId)
     })
 
     after(async () => {
-      const analysts = [analystId, otherAnalystId, bareAnalystId, retryAnalystId, reindexAnalystId]
+      const analysts = [
+        analystId,
+        otherAnalystId,
+        bareAnalystId,
+        retryAnalystId,
+        reindexAnalystId,
+        unsavedAnalystId,
+      ]
       await db.$client`delete from "document" where "analystId" = any(${analysts})`
       await qdrant('DELETE', `/collections/${collectionName}`)
       await db.$client.end()
+      await rm(sourceDir, { recursive: true, force: true })
       await rm(storageDir, { recursive: true, force: true })
     })
 
@@ -313,6 +324,8 @@ describe(
       const [failed] = await documentsOf(retryAnalystId)
       assert.equal(failed.indexedAt, null)
       assert.equal((await pointsWhere('analystId', retryAnalystId)).length, 0)
+      // The row exists, so its file stays until the retry discards the row and the file together.
+      assert.equal(existsSync(fileURLToPath(failed.storageUri)), true)
 
       const again = await ingest(retryAnalystId)
       assert.ok(!again.skipped)
@@ -325,6 +338,48 @@ describe(
       assert.ok(documents[0].indexedAt)
       assert.equal(existsSync(fileURLToPath(failed.storageUri)), false)
       assert.equal((await pointsWhere('analystId', retryAnalystId)).length, again.passageCount)
+    })
+
+    it('removes the stored PDF when a run fails before saving, so no file is left without a row', async () => {
+      const notPdf = join(sourceDir, 'not-a-pdf.pdf')
+      await writeFile(notPdf, 'This file is not a PDF.')
+      const filesBefore = readdirSync(storageDir)
+
+      await assert.rejects(
+        ingestDocument(
+          { path: notPdf, ...METADATA },
+          { library, analystId, storageDir, collectionName, embeddingModel },
+        ),
+        /Invalid PDF/,
+      )
+
+      assert.deepEqual(readdirSync(storageDir), filesBefore)
+    })
+
+    it('removes the stored PDF when saving the document fails', async () => {
+      const filesBefore = readdirSync(storageDir)
+      const failingLibrary = {
+        ...library,
+        saveDocument: async () => {
+          throw new Error('Save failed (test)')
+        },
+      }
+
+      await assert.rejects(
+        ingestDocument(
+          { path: FIXTURE, ...METADATA },
+          {
+            library: failingLibrary,
+            analystId: unsavedAnalystId,
+            storageDir,
+            collectionName,
+            embeddingModel,
+          },
+        ),
+        /Save failed/,
+      )
+
+      assert.deepEqual(readdirSync(storageDir), filesBefore)
     })
 
     it('leaves one point per Passage when the same document is indexed twice', async () => {
