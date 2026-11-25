@@ -1,17 +1,9 @@
 import { chunkText } from '@anvia/core/documents'
+import type { ExtractedPage, PassageDraft } from '../../types'
 import { PASSAGE_MAX_CHARS, PASSAGE_OVERLAP_CHARS, PASSAGE_SEPARATORS } from './constants'
-import type { ExtractedPage } from './extract'
 
 // A heading alone on its line. A Pasal cited mid-sentence has more text on its line, so it does not split.
 const HEADING = /^(?:LAMPIRAN\b.*|BAB\s+[IVXLCDM]+|Pasal\s+\d+[A-Z]?)\s*$/gm
-
-export type PassageDraft = {
-  index: number
-  heading: string
-  text: string
-  pageStart: number
-  pageEnd: number
-}
 
 // Cuts the text before each heading, then sizes every section with Anvia's chunker, so a Passage never
 // crosses a Pasal. Offsets in the joined text map each Passage back to its pages.

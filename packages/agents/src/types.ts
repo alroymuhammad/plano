@@ -130,6 +130,16 @@ export type SearchLibraryOptions = {
   collectionName?: string
 }
 
+export type ExtractedPage = { page: number; text: string; ocr: boolean }
+
+export type PassageDraft = {
+  index: number
+  heading: string
+  text: string
+  pageStart: number
+  pageEnd: number
+}
+
 export type IngestDocumentResult =
   | { documentId: string; skipped: true }
   | {

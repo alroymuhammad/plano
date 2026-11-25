@@ -4,9 +4,8 @@ import { join } from 'node:path'
 import { gunzipSync } from 'node:zlib'
 import { createWorker } from 'tesseract.js'
 import { extractText, getDocumentProxy, renderPageAsImage } from 'unpdf'
+import type { ExtractedPage } from '../../types'
 import { OCR_DATA_DIR, OCR_LANG, OCR_LANG_URL, OCR_MIN_PAGE_CHARS, OCR_SCALE } from './constants'
-
-export type ExtractedPage = { page: number; text: string; ocr: boolean }
 
 // Reads each page's text layer. A page with almost none is scanned: it is rendered and OCR'd (product 0011), and marked `ocr`.
 export async function extractPages(bytes: Uint8Array): Promise<ExtractedPage[]> {
