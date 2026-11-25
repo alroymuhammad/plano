@@ -10,7 +10,7 @@ Each package is `package.json` + `index.ts` (add files only as needed). Named `@
 - `index.ts` is the only public entry. Import from `@plano/<name>`, never from deep paths.
 - Shared types (exported, or used by more than one file) live in the package's `types.ts`, next to `index.ts`. `index.ts` re-exports the public ones.
 - Anvia deps live in the package that owns the concern:
-  - `agents` — `@anvia/core`, `@anvia/openai` (decision 0018), `@anvia/gemini` (embeddings, decision 0022), `@anvia/qdrant` (decision 0020), `@tavily/core` (decision 0009), `@anvia/studio` (dev only)
+  - `agents` — `@anvia/core`, `@anvia/openai` (chat through the gateway, decision 0018; embeddings directly on OpenAI, decision 0026), `@anvia/qdrant` (decision 0020), `@tavily/core` (decision 0009), `@anvia/studio` (dev only)
   - `ui` — `@anvia/react`, `@anvia/react-ui`
   - `observability` — `@anvia/otel`, `@anvia/logger`, `@anvia/lens` (decision 0013)
   - `db` — `@anvia/memory-drizzle` for agent memory (decision 0011); otherwise `drizzle-orm` + `postgres` (decision 0007)
