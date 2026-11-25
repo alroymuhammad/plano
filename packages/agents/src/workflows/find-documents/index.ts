@@ -1,4 +1,4 @@
-import type { DocumentsResult, FindDocumentsOptions } from '../types'
+import type { DocumentsResult, FindDocumentsOptions } from '../../types'
 import { createFindDocumentsPipeline } from './pipeline'
 
 export async function findDocuments(

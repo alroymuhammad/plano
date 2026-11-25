@@ -1,5 +1,5 @@
 import { EvalOutcome } from '@anvia/core/evals'
-import { MAX_RULES } from '../../find-documents/instructions'
+import { MAX_RULES } from '../../workflows/find-documents/instructions'
 import type { DocumentsResult } from '../../types'
 import { type ExpectedDocument, evalTypes } from './cases'
 
