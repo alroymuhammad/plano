@@ -9,7 +9,6 @@
     "build": "tsc --noEmit",
     "dev:studio": "tsx watch --env-file=../../.env src/studio.ts",
     "eval": "tsx --env-file=../../.env src/evals/find-documents/eval.ts",
-    "eval:record": "tsx --env-file=../../.env src/evals/find-documents/record.ts",
     "test": "tsx --env-file=../../.env --test 'src/**/*.test.ts'"
   },
   "dependencies": {

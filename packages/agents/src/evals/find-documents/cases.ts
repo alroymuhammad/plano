@@ -1,4 +1,4 @@
-import { createEvalTypes, type EvalCase } from '@anvia/core/evals'
+import { createEvalTypes, type EvalCase, type EvalTraceRef } from '@anvia/core/evals'
 import type { DocumentsResult, RulePlan } from '../../types'
 
 type Level = DocumentsResult['levels'][number]['level']
@@ -18,10 +18,7 @@ export type FindDocumentsExpected = {
 
 export type PdfProbe = { status: number; isPdf: boolean; bytes: number | null } | { error: string }
 
-export type Recording = {
-  caseId: string
-  prompt: string
-  recordedAt: string
+export type FindDocumentsRun = {
   durationMs: number
   error: string | null
   output: DocumentsResult | null
@@ -29,11 +26,10 @@ export type Recording = {
   queries: string[]
   found: string
   pdfs: Record<string, PdfProbe>
+  trace?: EvalTraceRef
 }
 
-export const recordingsDir = new URL('./recordings/', import.meta.url)
-
-export const evalTypes = createEvalTypes<string, Recording, FindDocumentsExpected>()
+export const evalTypes = createEvalTypes<string, FindDocumentsRun, FindDocumentsExpected>()
 
 const surabayaPermit: ExpectedDocument[] = [
   { type: 'UU', number: '28', year: '2002' },
@@ -47,7 +43,7 @@ const surabayaPermit: ExpectedDocument[] = [
 
 export const cases: EvalCase<string, FindDocumentsExpected>[] = [
   {
-    id: 'surabaya-pbg',
+    id: 'surabaya-pembangunan',
     input: 'dokumen terkait izin pembangunan di Surabaya',
     expected: { status: 'found', documents: surabayaPermit, skippedLevels: ['province'] },
   },
