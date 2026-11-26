@@ -7,7 +7,7 @@ export type Anchor = {
   year: string
 }
 
-export type RequestExpected = {
+export type FindDocumentsExpected = {
   status: DocumentsResult['status']
   anchors?: Anchor[]
 }
@@ -22,9 +22,9 @@ export type FindDocumentsRun = {
   trace?: EvalTraceRef
 }
 
-export const evalTypes = createEvalTypes<string, FindDocumentsRun, RequestExpected>()
+export const evalTypes = createEvalTypes<string, FindDocumentsRun, FindDocumentsExpected>()
 
-export const requests: EvalCase<string, RequestExpected>[] = [
+export const cases: EvalCase<string, FindDocumentsExpected>[] = [
   {
     id: 'surabaya-pembangunan',
     input: 'dokumen terkait izin pembangunan di Surabaya',

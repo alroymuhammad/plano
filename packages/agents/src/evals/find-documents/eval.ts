@@ -2,7 +2,7 @@ import { defineEvalSuite, runEvalCli } from '@anvia/core/evals'
 import type { PipelineObservabilityOptions } from '@anvia/core/pipeline'
 import { createLens } from '@plano/observability'
 import { createFindDocumentsPipeline } from '../../workflows/find-documents/pipeline'
-import { type FindDocumentsRun, type PdfProbe, requests } from './requests'
+import { cases, type FindDocumentsRun, type PdfProbe } from './cases'
 import { deterministicMetrics } from './deterministic'
 
 const CASE_TIMEOUT_MS = 300_000
@@ -10,7 +10,7 @@ const CASE_TIMEOUT_MS = 300_000
 const args = process.argv.slice(2)
 const withJudge = !args.includes('--no-judge')
 const selected = args.filter((arg) => arg !== '--no-judge')
-const unknown = selected.filter((id) => !requests.some((c) => c.id === id))
+const unknown = selected.filter((id) => !cases.some((c) => c.id === id))
 
 if (unknown.length > 0) {
   console.error(`unknown case id: ${unknown.join(', ')}\nusage: eval [caseId ...] [--no-judge]`)
@@ -95,7 +95,7 @@ async function runFindDocuments(prompt: string, signal?: AbortSignal): Promise<F
 
 const suite = defineEvalSuite({
   name: 'find-documents',
-  cases: requests,
+  cases,
   target: (input, _testCase, context) => runFindDocuments(input, context?.signal),
   metrics: [...deterministicMetrics, ...judgeMetrics],
 })

@@ -9,7 +9,7 @@ Date: 2026-11-26
 
 ## Decision
 
-- Cases live in `requests.ts`. An in-scope request lists 1–2 **anchors**, the documents it must return whatever else clarify picks. An out-of-scope request lists only its status.
+- Cases stay in `cases.ts`. An in-scope case lists 1–2 **anchors**, the documents it must return whatever else clarify picks. An out-of-scope case lists only its status.
 - Deterministic metrics: `status` (no error and the right status), `anchors`, `url-in-source`, `same-region`, `valid-files` (every document has a `pdfUrl` that is a real PDF). `level-coverage`, `no-duplicates` and `bounded` are removed.
 - Judges: `in-force` (no revoked or replaced rule; grow `REPLACED_RULES` as new cases come up), `redirect` (an out-of-scope message says why and points to Surabaya development permits), and `relevance-grounded` (each relevance line is specific to the request).
 - `MAX_RULES` goes from 10 to 6. Clarify lists rules most important first, so the anchors stay in.

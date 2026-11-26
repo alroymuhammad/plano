@@ -1,6 +1,6 @@
 import { EvalOutcome } from '@anvia/core/evals'
 import type { DocumentsResult } from '../../types'
-import { type Anchor, evalTypes } from './requests'
+import { type Anchor, evalTypes } from './cases'
 
 type Document = DocumentsResult['documents'][number]
 
