@@ -1,6 +1,6 @@
 export const SCOPE = 'Kota Surabaya'
 export const CLARIFY_SEARCHES = 4
-export const MAX_RULES = 10
+export const MAX_RULES = 6
 
 export const SCOPE_INSTRUCTIONS = `You decide if Plano can take a request. Plano finds development, permit and planning documents for ${SCOPE} only.
 The request is in scope when it asks for such documents and its place is a real place inside ${SCOPE}. A request that names no place is about ${SCOPE}. A fictional place, a place outside ${SCOPE}, or a request about something else is out of scope.
