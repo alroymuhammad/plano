@@ -3,7 +3,7 @@ import { gEval } from '@anvia/core/evals'
 import { Pipeline, type PipelineObservabilityOptions } from '@anvia/core/pipeline'
 import { z } from 'zod'
 import { getModel, JUDGE_MODEL } from '../../utils/model'
-import type { FindDocumentsExpected, FindDocumentsRun } from './cases'
+import type { FindDocumentsRun, RequestExpected } from './requests'
 
 function withoutTemperature(base: CompletionModel): CompletionModel {
   return Object.assign(Object.create(base), {
@@ -41,7 +41,7 @@ export function createJudgeMetrics(observability: PipelineObservabilityOptions) 
   const model = withoutTemperature(withPipelineTracing(getModel(JUDGE_MODEL), observability))
 
   const judge = (name: string, criteria: string) =>
-    gEval<string, FindDocumentsRun, FindDocumentsExpected, string, ['input', 'actualOutput']>({
+    gEval<string, FindDocumentsRun, RequestExpected, string, ['input', 'actualOutput']>({
       name,
       model,
       criteria,

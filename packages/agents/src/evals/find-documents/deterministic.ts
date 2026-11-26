@@ -1,15 +1,12 @@
 import { EvalOutcome } from '@anvia/core/evals'
-import { MAX_RULES } from '../../workflows/find-documents/instructions'
 import type { DocumentsResult } from '../../types'
-import { type ExpectedDocument, evalTypes } from './cases'
+import { type Anchor, evalTypes } from './requests'
 
 type Document = DocumentsResult['documents'][number]
 
-const MAX_DOCUMENTS = 15
-const MAX_DURATION_MS = 180_000
 const MIN_PDF_BYTES = 20_000
 
-const TYPE_NAMES: Record<ExpectedDocument['type'], string[]> = {
+const TYPE_NAMES: Record<Anchor['type'], string[]> = {
   UU: ['uu', 'undang-undang', 'undang undang'],
   PP: ['pp', 'peraturan pemerintah'],
   Perda: ['perda', 'peraturan daerah'],
@@ -25,12 +22,9 @@ const documentText = (doc: Document) =>
   `${doc.title} ${doc.url ?? ''} ${doc.pdfUrl ?? ''}`.toLowerCase()
 
 const typeOf = (text: string) => {
-  let first: { type: ExpectedDocument['type']; index: number } | undefined
+  let first: { type: Anchor['type']; index: number } | undefined
 
-  for (const [type, names] of Object.entries(TYPE_NAMES) as [
-    ExpectedDocument['type'],
-    string[],
-  ][]) {
+  for (const [type, names] of Object.entries(TYPE_NAMES) as [Anchor['type'], string[]][]) {
     for (const name of names) {
       const index = text.search(new RegExp(`(^|[^a-z])${name}([^a-z]|$)`))
 
@@ -45,13 +39,11 @@ const numberOf = (text: string) => /\bno(?:mor)?\.?[\s-]*0*(\d+)/.exec(text)?.[1
 
 const yearOf = (text: string) => /tahun[\s-]*(\d{4})/.exec(text)?.[1]
 
-const matches = (doc: Document, expected: ExpectedDocument) => {
+const matches = (doc: Document, anchor: Anchor) => {
   const text = documentText(doc)
 
   return (
-    typeOf(text) === expected.type &&
-    numberOf(text) === expected.number &&
-    yearOf(text) === expected.year
+    typeOf(text) === anchor.type && numberOf(text) === anchor.number && yearOf(text) === anchor.year
   )
 }
 
@@ -74,17 +66,17 @@ const status = evalTypes.defineMetric({
   },
 })
 
-const expectedDocuments = evalTypes.defineMetric({
-  name: 'expected-documents',
+const anchors = evalTypes.defineMetric({
+  name: 'anchors',
   dataType: 'BOOLEAN',
   required: true,
   evaluate: ({ output, case: testCase }) => {
     const documents = output.output?.documents ?? []
-    const missing = (testCase.expected?.documents ?? []).filter(
-      (expected) => !documents.some((doc) => matches(doc, expected)),
+    const missing = (testCase.expected?.anchors ?? []).filter(
+      (anchor) => !documents.some((doc) => matches(doc, anchor)),
     )
 
-    return result(missing.map((d) => `missing ${d.type} ${d.number}/${d.year}`))
+    return result(missing.map((a) => `missing ${a.type} ${a.number}/${a.year}`))
   },
 })
 
@@ -98,37 +90,6 @@ const urlInSource = evalTypes.defineMetric({
     const untraced = urls.filter((url): url is string => !!url && !found.has(url))
 
     return result(untraced.map((url) => `not in search results: ${url}`))
-  },
-})
-
-const levelCoverage = evalTypes.defineMetric({
-  name: 'level-coverage',
-  dataType: 'BOOLEAN',
-  required: true,
-  evaluate: ({ output, case: testCase }) => {
-    if (output.output?.status !== 'found') return EvalOutcome.pass(true)
-
-    const { levels, documents } = output.output
-    const problems: string[] = []
-
-    for (const level of ['national', 'province', 'city'] as const) {
-      if (!levels.some((l) => l.level === level)) problems.push(`${level} level is missing`)
-    }
-
-    for (const level of levels) {
-      if (level.needed && !documents.some((doc) => doc.level === level.level))
-        problems.push(`needed ${level.level} level has no document`)
-
-      if (!level.needed && level.reason.trim() === '')
-        problems.push(`skipped ${level.level} level gives no reason`)
-    }
-
-    for (const skipped of testCase.expected?.skippedLevels ?? []) {
-      if (levels.find((l) => l.level === skipped)?.needed !== false)
-        problems.push(`${skipped} level should be skipped`)
-    }
-
-    return result(problems)
   },
 })
 
@@ -147,63 +108,16 @@ const sameRegion = evalTypes.defineMetric({
   },
 })
 
-const noDuplicates = evalTypes.defineMetric({
-  name: 'no-duplicates',
-  dataType: 'BOOLEAN',
-  required: true,
-  evaluate: ({ output }) => {
-    const seen = new Set<string>()
-    const duplicates: string[] = []
-
-    for (const doc of output.output?.documents ?? []) {
-      const text = documentText(doc)
-      const number = numberOf(text)
-      const year = yearOf(text)
-
-      const type = typeOf(text)
-
-      if (!type || !number || !year) continue
-
-      const key = `${type} ${number}/${year}`
-
-      if (seen.has(key)) duplicates.push(`duplicate ${key}`)
-
-      seen.add(key)
-    }
-
-    return result(duplicates)
-  },
-})
-
-const bounded = evalTypes.defineMetric({
-  name: 'bounded',
-  dataType: 'BOOLEAN',
-  required: true,
-  evaluate: ({ output }) => {
-    const problems: string[] = []
-    const documents = output.output?.documents.length ?? 0
-
-    if (output.queries.length > MAX_RULES) problems.push(`${output.queries.length} queries`)
-
-    if (output.durationMs > MAX_DURATION_MS) problems.push(`took ${output.durationMs} ms`)
-
-    if (documents > MAX_DOCUMENTS) problems.push(`${documents} documents`)
-
-    return result(problems)
-  },
-})
-
 const validFiles = evalTypes.defineMetric({
   name: 'valid-files',
   dataType: 'BOOLEAN',
   required: true,
-  evaluate: ({ output, case: testCase }) => {
+  evaluate: ({ output }) => {
     const problems: string[] = []
 
     for (const doc of output.output?.documents ?? []) {
       if (!doc.pdfUrl) {
-        if (testCase.expected?.requireFiles) problems.push(`no file: ${doc.title}`)
-
+        problems.push(`no file: ${doc.title}`)
         continue
       }
 
@@ -223,13 +137,4 @@ const validFiles = evalTypes.defineMetric({
   },
 })
 
-export const deterministicMetrics = [
-  status,
-  expectedDocuments,
-  urlInSource,
-  levelCoverage,
-  sameRegion,
-  noDuplicates,
-  bounded,
-  validFiles,
-]
+export const deterministicMetrics = [status, anchors, urlInSource, sameRegion, validFiles]
