@@ -1,6 +1,6 @@
 # 0028 — Find Documents evals run live and report to Lens
 
-Status: accepted (amends 0019)
+Status: accepted (amends 0019; cases and metrics amended by 0029)
 Date: 2026-11-26
 
 ## Context

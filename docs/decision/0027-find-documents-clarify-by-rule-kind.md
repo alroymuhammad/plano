@@ -1,6 +1,6 @@
 # 0027 — Find Documents clarify by rule kind, in force, at most 5 rules
 
-Status: accepted
+Status: accepted (MAX_RULES amended by 0029)
 Date: 2026-11-26
 
 ## Context
