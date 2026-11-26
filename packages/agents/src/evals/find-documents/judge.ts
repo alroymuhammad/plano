@@ -5,6 +5,8 @@ import { z } from 'zod'
 import { getModel, JUDGE_MODEL } from '../../utils/model'
 import type { FindDocumentsRun, RequestExpected } from './requests'
 
+const REPLACED_RULES = ['Perda Kota Surabaya 12/2014 (RTRW) is replaced by Perda 3/2025']
+
 function withoutTemperature(base: CompletionModel): CompletionModel {
   return Object.assign(Object.create(base), {
     completion: ((request, options) =>
@@ -52,16 +54,16 @@ export function createJudgeMetrics(observability: PipelineObservabilityOptions) 
 
   return [
     judge(
-      'query-fit',
-      'The request is an Indonesian analyst asking for development, permit or planning documents in Kota Surabaya. Judge whether the documents match the breadth of the request: a broad request gets the main documents for it without every loosely related rule, and a narrow request still gets the document it names. An out-of-scope answer fits when the request is not about Surabaya planning documents.',
+      'in-force',
+      `Judge whether every listed document is the version in force today in Indonesia, not one that a newer rule revoked or replaced. An amendment passes only when its base rule is still in force. Known replacements:\n${REPLACED_RULES.map((r) => `- ${r}`).join('\n')}\nAn answer with no documents passes.`,
     ),
     judge(
-      'level-reasoning',
-      'Judge whether each level (national, province, city) is correctly marked needed or not needed for this request in Kota Surabaya, and whether each reason is legally sound under Indonesian law, for example which government issues a building permit (PBG) under PP 16/2021. An out-of-scope answer has no levels and passes.',
+      'redirect',
+      'Only for an out-of-scope answer: judge whether its message, in the language of the request, says why the request is outside Plano and that Plano covers development and permit documents for Kota Surabaya. An answer with status found passes.',
     ),
     judge(
-      'usefulness',
-      'Judge whether an analyst who knows Indonesian planning law would find this answer useful as a starting list of documents to read: the right rules, official sources, working links, and nothing misleading. The tool collects documents; it never decides permits. An out-of-scope answer is useful when its message clearly says why and what Plano covers.',
+      'relevance-grounded',
+      "Judge whether each document's relevance line says concretely how that rule applies to this request, such as which permit step, zoning check or building limit it sets, rather than a generic line like 'regulates buildings'. An answer with no documents passes.",
     ),
   ]
 }
