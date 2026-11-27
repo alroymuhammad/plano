@@ -7,6 +7,7 @@
     "dev:studio": "pnpm --filter @plano/agents dev:studio",
     "db:generate": "pnpm --filter @plano/db generate",
     "db:migrate": "pnpm --filter @plano/db migrate",
+    "db:studio": "pnpm --filter @plano/db studio",
     "eval:find-docs": "pnpm --filter @plano/agents eval",
     "lens:up": "docker compose -f lens/docker-compose.yml up -d",
     "lens:down": "docker compose -f lens/docker-compose.yml down",

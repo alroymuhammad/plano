@@ -7,7 +7,8 @@
   "types": "src/index.ts",
   "scripts": {
     "generate": "NODE_OPTIONS=--conditions=import drizzle-kit generate",
-    "migrate": "drizzle-kit migrate"
+    "migrate": "drizzle-kit migrate",
+    "studio": "NODE_OPTIONS=--conditions=import drizzle-kit studio"
   },
   "dependencies": {
     "@anvia/core": "^1.23.0",
