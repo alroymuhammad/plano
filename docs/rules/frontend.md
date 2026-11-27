@@ -23,5 +23,7 @@ apps/platform/src/
 - Style with Tailwind classes. No CSS files beyond `index.css`.
 - Call the API through `/api/*` (Vite proxies to the API in dev).
 - Auth goes through `authClient` from `src/modules/auth/client.ts` (decision 0006).
+- Route protection uses TanStack Router pathless layouts: put protected pages under `src/routes/_authenticated/` and guest-only auth pages under `src/routes/_auth/` (decision 0031).
+- Shared UI primitives come from `@plano/ui/components/*` instead of raw HTML form controls.
 - Server state lives in hooks inside the module; keep components dumb.
 - Cross-module reuse of generic UI goes to `packages/ui`, not module-to-module imports.
