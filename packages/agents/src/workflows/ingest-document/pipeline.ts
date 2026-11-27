@@ -2,20 +2,27 @@ import { createHash, randomUUID } from 'node:crypto'
 import { copyFile, mkdir, readFile, rm } from 'node:fs/promises'
 import { join } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
+import { embedDocuments } from '@anvia/core/embeddings'
 import { Pipeline } from '@anvia/core/pipeline'
-import { ingestVectorDocuments } from '@anvia/core/vector-store'
 import { z } from 'zod'
 import {
   IngestDocumentInputSchema,
   type IngestDocumentOptions,
   type IngestDocumentResult,
   type PassageMetadata,
+  type PassageTopic,
 } from '../../types'
 import { getEmbeddingModel } from '../../utils/embedding'
 import { ensurePassageStore } from '../../utils/qdrant'
 import { chunkPages } from './chunk'
 import { PASSAGE_INDEX_CONCURRENCY } from './constants'
+import { enrichPassages, formatPassageEmbeddingText } from './enrich'
 import { extractPages } from './extract'
+
+type PassageQdrantMetadata = PassageMetadata & {
+  topics: PassageTopic[]
+  tags: string[]
+}
 
 const passageId = (documentId: string, index: number) => `${documentId}:${index}`
 
@@ -123,6 +130,23 @@ function createNewDocumentPipeline(options: IngestDocumentOptions) {
         })),
     })
     .step({
+      id: 'enrich',
+      run: ({ input, abortSignal }) =>
+        removeStoredPdfOnError(input.storageUri, async () => ({
+          ...input,
+          passages: await enrichPassages(
+            input.passages,
+            {
+              title: input.title,
+              type: input.type,
+              area: input.area,
+              abortSignal,
+            },
+            options.enricher,
+          ),
+        })),
+    })
+    .step({
       id: 'save',
       run: ({ input }) =>
         removeStoredPdfOnError(input.storageUri, async () => {
@@ -148,9 +172,13 @@ function createNewDocumentPipeline(options: IngestDocumentOptions) {
               ocr: page.ocr,
             })),
             passages: input.passages.map((passage) => ({
-              ...passage,
               id: passageId(input.documentId, passage.index),
               documentId: input.documentId,
+              index: passage.index,
+              heading: passage.heading,
+              text: passage.text,
+              pageStart: passage.pageStart,
+              pageEnd: passage.pageEnd,
             })),
           })
 
@@ -161,36 +189,44 @@ function createNewDocumentPipeline(options: IngestDocumentOptions) {
       id: 'index',
       run: async ({ input, abortSignal }): Promise<IngestDocumentResult> => {
         if (input.passages.length > 0) {
-          await ingestVectorDocuments({
-            documents: input.passages.map((passage) => {
-              const metadata: PassageMetadata = {
-                analystId: options.analystId,
-                documentId: input.documentId,
-                confirmed: true,
-                status: input.status,
-                title: input.title,
-                type: input.type,
-                heading: passage.heading,
-                pageStart: passage.pageStart,
-                pageEnd: passage.pageEnd,
-              }
+          const passageDocuments = input.passages.map((passage) => {
+            const metadata: PassageQdrantMetadata = {
+              analystId: options.analystId,
+              documentId: input.documentId,
+              confirmed: true,
+              status: input.status,
+              title: input.title,
+              type: input.type,
+              heading: passage.heading,
+              pageStart: passage.pageStart,
+              pageEnd: passage.pageEnd,
+              topics: passage.topics,
+              tags: passage.tags,
+            }
 
-              if (input.number !== null) metadata.number = input.number
+            if (input.number !== null) metadata.number = input.number
 
-              if (input.year !== null) metadata.year = input.year
+            if (input.year !== null) metadata.year = input.year
 
-              return {
-                id: passageId(input.documentId, passage.index),
-                text: `${passage.heading}\n${passage.text}`,
-                metadata,
-              }
-            }),
-            store: await ensurePassageStore(options.collectionName),
+            return {
+              id: passageId(input.documentId, passage.index),
+              text: formatPassageEmbeddingText(passage),
+              metadata: metadata as unknown as PassageMetadata,
+            }
+          })
+
+          const { documents } = await embedDocuments({
+            documents: passageDocuments,
+            id: (doc) => doc.id,
+            content: (doc) => [doc.text],
+            metadata: (doc) => doc.metadata,
             model: options.embeddingModel ?? getEmbeddingModel(),
-            chunking: { strategy: 'none' },
             concurrency: PASSAGE_INDEX_CONCURRENCY,
             abortSignal,
           })
+
+          const store = await ensurePassageStore(options.collectionName)
+          await store.upsert({ documents })
         }
 
         await options.library.markIndexed(input.documentId)

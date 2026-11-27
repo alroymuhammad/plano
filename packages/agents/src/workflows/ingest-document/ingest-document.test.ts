@@ -10,7 +10,7 @@ import type { EmbeddingModel } from '@anvia/core/embeddings'
 import { createDb, createLibraryStore, type Db, type LibraryStore } from '@plano/db'
 import type { IngestDocumentResult } from '../../types'
 import { ingestDocument } from './index'
-import { fakeEmbeddingModel, OCR_DATA_DIR, qdrantRest } from '../../test-helpers'
+import { fakeEmbeddingModel, fakeEnricher, OCR_DATA_DIR, qdrantRest } from '../../test-helpers'
 
 const FIXTURE = fileURLToPath(new URL('../../../data/2025perda3578003.pdf', import.meta.url))
 const PAGE_COUNT = 305
@@ -29,6 +29,7 @@ type IngestOverrides = { model?: EmbeddingModel; number?: string | null; year?: 
 
 const embeddingModel = fakeEmbeddingModel()
 const failingEmbeddingModel = fakeEmbeddingModel({ fail: true })
+const noopEnricher = fakeEnricher()
 
 describe(
   'ingestDocument',
@@ -61,6 +62,7 @@ describe(
           ocrDataDir: OCR_DATA_DIR,
           collectionName,
           embeddingModel: model,
+          enricher: noopEnricher,
         },
       )
 
@@ -352,6 +354,7 @@ describe(
             ocrDataDir: OCR_DATA_DIR,
             collectionName,
             embeddingModel,
+            enricher: noopEnricher,
           },
         ),
         /Invalid PDF/,
@@ -379,6 +382,7 @@ describe(
             ocrDataDir: OCR_DATA_DIR,
             collectionName,
             embeddingModel,
+            enricher: noopEnricher,
           },
         ),
         /Save failed/,

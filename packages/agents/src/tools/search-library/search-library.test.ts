@@ -7,7 +7,13 @@ import { after, before, describe, it } from 'node:test'
 import { createDb, createLibraryStore, type Db, type LibraryStore } from '@plano/db'
 import type { IngestDocumentInput, IngestDocumentResult } from '../../types'
 import { ingestDocument } from '../../workflows/ingest-document'
-import { fakeEmbeddingModel, OCR_DATA_DIR, qdrantRest, textPdf } from '../../test-helpers'
+import {
+  fakeEmbeddingModel,
+  fakeEnricher,
+  OCR_DATA_DIR,
+  qdrantRest,
+  textPdf,
+} from '../../test-helpers'
 import { createSearchLibraryTool } from './index'
 
 function twoPageOrdinance(version: string) {
@@ -51,6 +57,7 @@ describe('searchLibrary', () => {
   const otherAnalystId = randomUUID()
   const collectionName = `plano-test-search-${randomUUID()}`
   const embeddingModel = fakeEmbeddingModel()
+  const enricher = fakeEnricher()
   const tool = createSearchLibraryTool(analystId, { embeddingModel, collectionName })
   let db: Db
   let library: LibraryStore
@@ -74,6 +81,7 @@ describe('searchLibrary', () => {
         ocrDataDir: OCR_DATA_DIR,
         collectionName,
         embeddingModel,
+        enricher,
       },
     )
 

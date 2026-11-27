@@ -12,7 +12,7 @@ import { createDb, createLibraryStore, type Db } from '@plano/db'
 import type { IngestDocumentResult } from '../../types'
 import { extractPages } from './extract'
 import { ingestDocument } from './index'
-import { fakeEmbeddingModel, OCR_DATA_DIR, qdrantRest } from '../../test-helpers'
+import { fakeEmbeddingModel, fakeEnricher, OCR_DATA_DIR, qdrantRest } from '../../test-helpers'
 
 const RTRW = fileURLToPath(new URL('../../../data/2025perda3578003.pdf', import.meta.url))
 const SCAN_WIDTH = 1240
@@ -191,6 +191,7 @@ describe('ingestDocument with a scanned page', () => {
         ocrDataDir: OCR_DATA_DIR,
         collectionName,
         embeddingModel: fakeEmbeddingModel(),
+        enricher: fakeEnricher(),
       },
     )
   })

@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto'
 import { fileURLToPath } from 'node:url'
 import type { EmbeddingModel } from '@anvia/core/embeddings'
+import type { PassageEnricher, PassageTopic } from './types'
 
 const QDRANT_URL = process.env.QDRANT_URL || 'http://localhost:6333'
 
@@ -25,6 +26,16 @@ export function fakeEmbeddingModel({ fail = false }: { fail?: boolean } = {}): E
       })
     },
   }
+}
+
+export function fakeEnricher({
+  topics = [],
+  tags = [],
+}: {
+  topics?: PassageTopic[]
+  tags?: string[]
+} = {}): PassageEnricher {
+  return async (passages) => passages.map((passage) => ({ index: passage.index, topics, tags }))
 }
 
 export async function qdrantRest(method: string, path: string, body?: object) {
