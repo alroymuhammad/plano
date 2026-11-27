@@ -5,7 +5,7 @@ export const Route = createFileRoute('/_auth')({
     const session = await context.auth.getSession()
 
     if (session) {
-      throw redirect({ to: '/' })
+      throw redirect({ to: '/editor' })
     }
   },
   component: () => <Outlet />,

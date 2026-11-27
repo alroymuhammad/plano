@@ -125,7 +125,7 @@ export function AuthLayout({ mode, title, description, badge, children }: AuthLa
         />
 
         <div className="relative z-10">
-          <Link to="/" className="inline-flex items-center gap-2.5 text-[#1B3B5C]">
+          <Link to="/editor" className="inline-flex items-center gap-2.5 text-[#1B3B5C]">
             <PlanoMark className="h-7 w-7" />
             <span className="text-lg font-semibold tracking-tight text-[#0F1E2E]">Plano</span>
           </Link>
@@ -195,7 +195,7 @@ export function AuthLayout({ mode, title, description, badge, children }: AuthLa
 
       <main className="flex h-full flex-col justify-between overflow-y-auto px-6 py-6 sm:px-12 lg:px-16">
         <div className="flex items-center justify-between lg:justify-end">
-          <Link to="/" className="inline-flex items-center gap-2 text-[#1B3B5C] lg:hidden">
+          <Link to="/editor" className="inline-flex items-center gap-2 text-[#1B3B5C] lg:hidden">
             <PlanoMark className="h-6 w-6" />
             <span className="text-base font-semibold text-[#0F1E2E]">Plano</span>
           </Link>

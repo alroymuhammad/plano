@@ -59,7 +59,7 @@ function SignIn() {
       return
     }
 
-    navigate({ to: '/' })
+    navigate({ to: '/editor' })
   }
 
   return (
