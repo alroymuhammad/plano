@@ -79,7 +79,10 @@ const isPassageTopic = (topic: string): topic is PassageTopic => VALID_TOPICS.ha
 const uniqueCapped = <T>(items: T[], max: number) => [...new Set(items)].slice(0, max)
 
 const normalizeTopics = (topics: string[]) =>
-  uniqueCapped(topics.filter(isPassageTopic), PASSAGE_ENRICH_MAX_TOPICS)
+  uniqueCapped(
+    topics.map((topic) => topic.trim().toLowerCase().replace(/\s+/g, '_')).filter(isPassageTopic),
+    PASSAGE_ENRICH_MAX_TOPICS,
+  )
 
 const normalizeTags = (tags: string[]) =>
   uniqueCapped(tags.map((tag) => tag.trim().toLowerCase()).filter(Boolean), PASSAGE_ENRICH_MAX_TAGS)

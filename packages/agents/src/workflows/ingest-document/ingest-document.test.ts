@@ -532,7 +532,7 @@ describe(
               index: passage.index,
               topics: [
                 'bukan_topik',
-                'substansi_teknis',
+                ' Substansi Teknis ',
                 'substansi_teknis',
                 'prosedur',
                 'kewenangan',
