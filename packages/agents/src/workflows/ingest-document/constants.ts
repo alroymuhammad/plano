@@ -2,6 +2,22 @@ export const PASSAGE_MAX_CHARS = 3000
 export const PASSAGE_OVERLAP_CHARS = 450
 export const PASSAGE_SEPARATORS = ['\n\n', '\n', '. ', ' ']
 export const PASSAGE_INDEX_CONCURRENCY = 2
+export const PASSAGE_ENRICH_BATCH_SIZE = 8
+export const PASSAGE_ENRICH_CONCURRENCY = 3
+export const PASSAGE_ENRICH_MAX_RETRIES = 1
+export const PASSAGE_ENRICH_MAX_TOPICS = 3
+export const PASSAGE_ENRICH_MAX_TAGS = 6
+
+export const PASSAGE_TOPICS = [
+  'ketentuan_umum',
+  'kewenangan',
+  'substansi_teknis',
+  'prosedur',
+  'hak_kewajiban',
+  'pengawasan_sanksi',
+  'peralihan_penutup',
+  'lampiran',
+] as const
 
 export const OCR_MIN_PAGE_CHARS = 50
 export const OCR_RENDER_SCALE = 2

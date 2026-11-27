@@ -4,6 +4,7 @@ import type { AgentObservabilityOptions } from '@anvia/core/observability'
 import type { PipelineObservabilityOptions } from '@anvia/core/pipeline'
 import type { LibraryStore } from '@plano/db'
 import { z } from 'zod'
+import type { PASSAGE_TOPICS } from './workflows/ingest-document/constants'
 
 export type RunAgentOptions = {
   prompt: AgentPrompt
@@ -100,6 +101,7 @@ export type IngestDocumentOptions = {
   storageDir: string
   ocrDataDir: string
   embeddingModel?: EmbeddingModel
+  enricher?: PassageEnricher
   collectionName?: string
   observability?: PipelineObservabilityOptions
   signal?: AbortSignal
@@ -133,6 +135,29 @@ export type PassageDraft = {
   pageStart: number
   pageEnd: number
 }
+
+export type PassageTopic = (typeof PASSAGE_TOPICS)[number]
+
+export type PassageEnrichment = {
+  topics: PassageTopic[]
+  tags: string[]
+}
+
+export type PassageEnrichmentItem = PassageEnrichment & { index: number }
+
+export type EnrichedPassage = PassageDraft & PassageEnrichment
+
+export type PassageEnrichContext = {
+  title: string
+  type: string
+  area: string
+  abortSignal?: AbortSignal
+}
+
+export type PassageEnricher = (
+  passages: PassageDraft[],
+  context: PassageEnrichContext,
+) => Promise<PassageEnrichmentItem[]>
 
 export type IngestDocumentResult =
   | { documentId: string; skipped: true }

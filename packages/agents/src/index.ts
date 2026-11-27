@@ -7,5 +7,10 @@ export type {
   IngestDocumentInput,
   IngestDocumentOptions,
   IngestDocumentResult,
+  PassageDraft,
+  PassageEnrichContext,
+  PassageEnricher,
+  PassageEnrichmentItem,
+  PassageTopic,
   RunAgentOptions,
 } from './types'
