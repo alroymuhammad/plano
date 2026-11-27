@@ -143,7 +143,7 @@ export type PassageEnrichment = {
   tags: string[]
 }
 
-export type PassageEnrichmentItem = PassageEnrichment & { index: number }
+export type PassageEnrichmentItem = { index: number; topics: string[]; tags: string[] }
 
 export type EnrichedPassage = PassageDraft & PassageEnrichment
 
