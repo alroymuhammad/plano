@@ -210,7 +210,7 @@ function createNewDocumentPipeline(options: IngestDocumentOptions) {
 
             return {
               id: passageId(input.documentId, passage.index),
-              text: formatPassageEmbeddingText(passage),
+              text: `${passage.heading}\n${passage.text}`,
               metadata: metadata as unknown as PassageMetadata,
             }
           })
@@ -218,7 +218,7 @@ function createNewDocumentPipeline(options: IngestDocumentOptions) {
           const { documents } = await embedDocuments({
             documents: passageDocuments,
             id: (doc) => doc.id,
-            content: (doc) => [doc.text],
+            content: (_doc, index) => [formatPassageEmbeddingText(input.passages[index])],
             metadata: (doc) => doc.metadata,
             model: options.embeddingModel ?? getEmbeddingModel(),
             concurrency: PASSAGE_INDEX_CONCURRENCY,

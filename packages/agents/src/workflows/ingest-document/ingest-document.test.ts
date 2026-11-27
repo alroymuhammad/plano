@@ -341,8 +341,10 @@ describe(
           topics: ['substansi_teknis'],
           tags: ['kdb', 'klb'],
         })
-        const embeddedText = `${passage.heading}\n${passage.text}\nTopik: substansi_teknis\nTag: kdb, klb`
-        assert.equal(JSON.parse(String(point.payload.__anvia_document)).text, embeddedText)
+        assert.equal(
+          JSON.parse(String(point.payload.__anvia_document)).text,
+          `${passage.heading}\n${passage.text}`,
+        )
       }
     })
 
@@ -557,7 +559,7 @@ describe(
       ])
       assert.equal(
         JSON.parse(String(point.payload.__anvia_document)).text,
-        `${passage.heading}\n${passage.text}\nTopik: substansi_teknis, prosedur, kewenangan\nTag: kdb, pbg, izin bangunan, klb, gsb, sempadan`,
+        `${passage.heading}\n${passage.text}`,
       )
     })
 
@@ -633,7 +635,7 @@ describe(
         assert.deepEqual(point.payload.tags, [`idx-${passage.index}`])
         assert.equal(
           JSON.parse(String(point.payload.__anvia_document)).text,
-          `${passage.heading}\n${passage.text}\nTopik: substansi_teknis\nTag: idx-${passage.index}`,
+          `${passage.heading}\n${passage.text}`,
         )
       }
     })
