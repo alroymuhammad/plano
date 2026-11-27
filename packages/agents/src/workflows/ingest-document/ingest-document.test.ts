@@ -40,6 +40,13 @@ type IngestOverrides = {
 
 const embeddingModel = fakeEmbeddingModel()
 const failingEmbeddingModel = fakeEmbeddingModel({ fail: true })
+const recordingEmbeddingModel = (embedded: string[]): EmbeddingModel => ({
+  ...embeddingModel,
+  embedTexts: (texts, options) => {
+    embedded.push(...texts)
+    return embeddingModel.embedTexts(texts, options)
+  },
+})
 const defaultEnricher = fakeEnricher({
   topics: ['substansi_teknis'],
   tags: ['kdb', 'klb'],
@@ -453,8 +460,9 @@ describe(
       assert.equal((await pointsWhere('analystId', reindexAnalystId)).length, twice.passageCount)
     })
 
-    it('omits Topik and Tag lines from embedded text when topics and tags are empty', async () => {
+    it('embeds only heading and text when topics and tags are empty', async () => {
       const pdfPath = join(sourceDir, 'empty-enrichment.pdf')
+      const embedded: string[] = []
       await writeFile(pdfPath, textPdf([['Pasal 1', 'Ketentuan umum zonasi perkotaan.']]))
 
       const savedKey = process.env.GATEWAY_API_KEY
@@ -471,13 +479,17 @@ describe(
             storageDir,
             ocrDataDir: OCR_DATA_DIR,
             collectionName,
-            embeddingModel,
+            embeddingModel: recordingEmbeddingModel(embedded),
             enricher: fakeEnricher({ topics: [], tags: [] }),
           },
         )
         assert.ok(!res.skipped)
 
         const passages = await passagesOf(res.documentId)
+        assert.deepEqual(
+          embedded,
+          passages.map((passage) => `${passage.heading}\n${passage.text}`),
+        )
         const points = await pointsWhere('documentId', res.documentId)
         assert.equal(points.length, passages.length)
 
@@ -498,8 +510,9 @@ describe(
       }
     })
 
-    it('normalizes tags and topics before indexing in Qdrant while keeping Postgres verbatim', async () => {
+    it('normalizes tags and topics, then embeds and indexes them while keeping Postgres verbatim', async () => {
       const pdfPath = join(sourceDir, 'normalize-enrichment.pdf')
+      const embedded: string[] = []
       await writeFile(
         pdfPath,
         textPdf([['Pasal 2', 'Koefisien dasar bangunan ditetapkan paling tinggi 60 persen.']]),
@@ -513,11 +526,12 @@ describe(
           storageDir,
           ocrDataDir: OCR_DATA_DIR,
           collectionName,
-          embeddingModel,
+          embeddingModel: recordingEmbeddingModel(embedded),
           enricher: async (passages) =>
             passages.map((passage) => ({
               index: passage.index,
               topics: [
+                'bukan_topik',
                 'substansi_teknis',
                 'substansi_teknis',
                 'prosedur',
@@ -556,6 +570,9 @@ describe(
         'klb',
         'gsb',
         'sempadan',
+      ])
+      assert.deepEqual(embedded, [
+        `${passage.heading}\n${passage.text}\nTopik: substansi_teknis, prosedur, kewenangan\nTag: kdb, pbg, izin bangunan, klb, gsb, sempadan`,
       ])
       assert.equal(
         JSON.parse(String(point.payload.__anvia_document)).text,
