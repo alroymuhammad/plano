@@ -8,9 +8,15 @@ import { fileURLToPath } from 'node:url'
 import { after, before, describe, it } from 'node:test'
 import type { EmbeddingModel } from '@anvia/core/embeddings'
 import { createDb, createLibraryStore, type Db, type LibraryStore } from '@plano/db'
-import type { IngestDocumentResult } from '../../types'
+import type { IngestDocumentResult, PassageEnricher } from '../../types'
 import { ingestDocument } from './index'
-import { fakeEmbeddingModel, fakeEnricher, OCR_DATA_DIR, qdrantRest } from '../../test-helpers'
+import {
+  fakeEmbeddingModel,
+  fakeEnricher,
+  OCR_DATA_DIR,
+  qdrantRest,
+  textPdf,
+} from '../../test-helpers'
 
 const FIXTURE = fileURLToPath(new URL('../../../data/2025perda3578003.pdf', import.meta.url))
 const PAGE_COUNT = 305
@@ -25,11 +31,19 @@ const METADATA = {
   area: 'Kota Surabaya',
 }
 type Points = { id: string; payload: Record<string, unknown> }[]
-type IngestOverrides = { model?: EmbeddingModel; number?: string | null; year?: number | null }
+type IngestOverrides = {
+  model?: EmbeddingModel
+  enricher?: PassageEnricher
+  number?: string | null
+  year?: number | null
+}
 
 const embeddingModel = fakeEmbeddingModel()
 const failingEmbeddingModel = fakeEmbeddingModel({ fail: true })
-const noopEnricher = fakeEnricher()
+const defaultEnricher = fakeEnricher({
+  topics: ['substansi_teknis'],
+  tags: ['kdb', 'klb'],
+})
 
 describe(
   'ingestDocument',
@@ -45,6 +59,12 @@ describe(
     const retryAnalystId = randomUUID()
     const reindexAnalystId = randomUUID()
     const unsavedAnalystId = randomUUID()
+    const enrichCasesAnalystId = randomUUID()
+    const enrichFailAnalystId = randomUUID()
+    const enrichConcurrencyAnalystId = randomUUID()
+    const enrichRetryAnalystId = randomUUID()
+    const enrichPermanentAnalystId = randomUUID()
+    const enrichRerunAnalystId = randomUUID()
     const collectionName = `plano-test-passages-${randomUUID()}`
     let db: Db
     let library: LibraryStore
@@ -52,7 +72,10 @@ describe(
     let storageDir: string
     let first: IngestDocumentResult
 
-    const ingest = (analyst: string, { model = embeddingModel, ...card }: IngestOverrides = {}) =>
+    const ingest = (
+      analyst: string,
+      { model = embeddingModel, enricher = defaultEnricher, ...card }: IngestOverrides = {},
+    ) =>
       ingestDocument(
         { path: FIXTURE, ...METADATA, ...card },
         {
@@ -62,7 +85,7 @@ describe(
           ocrDataDir: OCR_DATA_DIR,
           collectionName,
           embeddingModel: model,
-          enricher: noopEnricher,
+          enricher,
         },
       )
 
@@ -120,6 +143,12 @@ describe(
         retryAnalystId,
         reindexAnalystId,
         unsavedAnalystId,
+        enrichCasesAnalystId,
+        enrichFailAnalystId,
+        enrichConcurrencyAnalystId,
+        enrichRetryAnalystId,
+        enrichPermanentAnalystId,
+        enrichRerunAnalystId,
       ]
       await db.$client`delete from "document" where "analystId" = any(${analysts})`
       await qdrantRest('DELETE', `/collections/${collectionName}`)
@@ -253,12 +282,18 @@ describe(
       )
     })
 
-    it('returns skipped and writes nothing when the same file is ingested again', async () => {
+    it('returns skipped and writes nothing without calling enricher when the same file is ingested again', async () => {
       const countsBefore = await libraryCounts()
+      let enricherCalls = 0
+      const spyEnricher: PassageEnricher = async (passages, context) => {
+        enricherCalls += 1
+        return defaultEnricher(passages, context)
+      }
 
-      const again = await ingest(analystId)
+      const again = await ingest(analystId, { enricher: spyEnricher })
 
       assert.deepEqual(again, { documentId: first.documentId, skipped: true })
+      assert.equal(enricherCalls, 0)
       assert.deepEqual(await libraryCounts(), countsBefore)
     })
 
@@ -269,15 +304,22 @@ describe(
       assert.equal((await documentsOf(otherAnalystId)).length, 1)
     })
 
-    it('marks the document indexed and writes one Qdrant point per Passage with its payload', async () => {
+    it('marks the document indexed and writes one Qdrant point per Passage with its payload and keyword indexes', async () => {
       const [row] = await documentsOf(analystId)
       assert.ok(row.indexedAt)
+
+      const collection = await qdrantRest('GET', `/collections/${collectionName}`)
+      assert.equal(collection.payload_schema?.topics?.data_type, 'keyword')
+      assert.equal(collection.payload_schema?.tags?.data_type, 'keyword')
 
       const passages = await passagesOf(first.documentId)
       const points = await pointsWhere('documentId', first.documentId)
       assert.equal(points.length, passages.length)
 
       for (const passage of passages) {
+        assert.equal(passage.text.includes('\nTopik:'), false)
+        assert.equal(passage.text.includes('\nTag:'), false)
+
         const point = points.find((item) => item.payload.__anvia_document_id === passage.id)
         assert.ok(point, `no point for Passage ${passage.id}`)
 
@@ -296,8 +338,10 @@ describe(
           heading: passage.heading,
           pageStart: passage.pageStart,
           pageEnd: passage.pageEnd,
+          topics: ['substansi_teknis'],
+          tags: ['kdb', 'klb'],
         })
-        const embeddedText = `${passage.heading}\n${passage.text}`
+        const embeddedText = `${passage.heading}\n${passage.text}\nTopik: substansi_teknis\nTag: kdb, klb`
         assert.equal(JSON.parse(String(point.payload.__anvia_document)).text, embeddedText)
       }
     })
@@ -354,7 +398,7 @@ describe(
             ocrDataDir: OCR_DATA_DIR,
             collectionName,
             embeddingModel,
-            enricher: noopEnricher,
+            enricher: defaultEnricher,
           },
         ),
         /Invalid PDF/,
@@ -382,7 +426,7 @@ describe(
             ocrDataDir: OCR_DATA_DIR,
             collectionName,
             embeddingModel,
-            enricher: noopEnricher,
+            enricher: defaultEnricher,
           },
         ),
         /Save failed/,
@@ -405,6 +449,432 @@ describe(
       )
       assert.equal((await pointsWhere('documentId', once.documentId)).length, 0)
       assert.equal((await pointsWhere('analystId', reindexAnalystId)).length, twice.passageCount)
+    })
+
+    it('omits Topik and Tag lines from embedded text when topics and tags are empty', async () => {
+      const pdfPath = join(sourceDir, 'empty-enrichment.pdf')
+      await writeFile(pdfPath, textPdf([['Pasal 1', 'Ketentuan umum zonasi perkotaan.']]))
+
+      const savedKey = process.env.GATEWAY_API_KEY
+      const savedBaseUrl = process.env.GATEWAY_BASE_URL
+      delete process.env.GATEWAY_API_KEY
+      delete process.env.GATEWAY_BASE_URL
+
+      try {
+        const res = await ingestDocument(
+          { path: pdfPath, ...METADATA, title: 'Perda Uji Kosong' },
+          {
+            library,
+            analystId: enrichCasesAnalystId,
+            storageDir,
+            ocrDataDir: OCR_DATA_DIR,
+            collectionName,
+            embeddingModel,
+            enricher: fakeEnricher({ topics: [], tags: [] }),
+          },
+        )
+        assert.ok(!res.skipped)
+
+        const passages = await passagesOf(res.documentId)
+        const points = await pointsWhere('documentId', res.documentId)
+        assert.equal(points.length, passages.length)
+
+        for (const passage of passages) {
+          const point = points.find((item) => item.payload.__anvia_document_id === passage.id)
+          assert.ok(point)
+          assert.deepEqual(point.payload.topics, [])
+          assert.deepEqual(point.payload.tags, [])
+          assert.equal(
+            JSON.parse(String(point.payload.__anvia_document)).text,
+            `${passage.heading}\n${passage.text}`,
+          )
+        }
+      } finally {
+        if (savedKey !== undefined) process.env.GATEWAY_API_KEY = savedKey
+
+        if (savedBaseUrl !== undefined) process.env.GATEWAY_BASE_URL = savedBaseUrl
+      }
+    })
+
+    it('normalizes tags and topics before indexing in Qdrant while keeping Postgres verbatim', async () => {
+      const pdfPath = join(sourceDir, 'normalize-enrichment.pdf')
+      await writeFile(
+        pdfPath,
+        textPdf([['Pasal 2', 'Koefisien dasar bangunan ditetapkan paling tinggi 60 persen.']]),
+      )
+
+      const res = await ingestDocument(
+        { path: pdfPath, ...METADATA, title: 'Perda Uji Normalisasi' },
+        {
+          library,
+          analystId: enrichCasesAnalystId,
+          storageDir,
+          ocrDataDir: OCR_DATA_DIR,
+          collectionName,
+          embeddingModel,
+          enricher: async (passages) =>
+            passages.map((passage) => ({
+              index: passage.index,
+              topics: [
+                'substansi_teknis',
+                'substansi_teknis',
+                'prosedur',
+                'kewenangan',
+                'lampiran',
+              ],
+              tags: [
+                '  KDB ',
+                'kdb',
+                '',
+                '   ',
+                'PBG',
+                'Izin Bangunan',
+                'KLB',
+                'GSB',
+                'Sempadan',
+                'extra',
+              ],
+            })),
+        },
+      )
+      assert.ok(!res.skipped)
+
+      const [passage] = await passagesOf(res.documentId)
+      assert.equal(
+        passage.text,
+        'Pasal 2\nKoefisien dasar bangunan ditetapkan paling tinggi 60 persen.',
+      )
+
+      const [point] = await pointsWhere('documentId', res.documentId)
+      assert.deepEqual(point.payload.topics, ['substansi_teknis', 'prosedur', 'kewenangan'])
+      assert.deepEqual(point.payload.tags, [
+        'kdb',
+        'pbg',
+        'izin bangunan',
+        'klb',
+        'gsb',
+        'sempadan',
+      ])
+      assert.equal(
+        JSON.parse(String(point.payload.__anvia_document)).text,
+        `${passage.heading}\n${passage.text}\nTopik: substansi_teknis, prosedur, kewenangan\nTag: kdb, pbg, izin bangunan, klb, gsb, sempadan`,
+      )
+    })
+
+    it('removes stored PDF and writes no Postgres or Qdrant rows when enrichment fails', async () => {
+      const pdfPath = join(sourceDir, 'failing-enrichment.pdf')
+      await writeFile(pdfPath, textPdf([['Pasal 3', 'Aturan sempadan sungai.']]))
+      const filesBefore = readdirSync(storageDir)
+
+      await assert.rejects(
+        ingestDocument(
+          { path: pdfPath, ...METADATA, title: 'Perda Uji Gagal Enrich' },
+          {
+            library,
+            analystId: enrichFailAnalystId,
+            storageDir,
+            ocrDataDir: OCR_DATA_DIR,
+            collectionName,
+            embeddingModel,
+            enricher: async () => {
+              throw new Error('Enrichment failed (test)')
+            },
+          },
+        ),
+        /Enrichment failed/,
+      )
+
+      assert.deepEqual(readdirSync(storageDir), filesBefore)
+      assert.equal((await documentsOf(enrichFailAnalystId)).length, 0)
+      assert.equal((await pointsWhere('analystId', enrichFailAnalystId)).length, 0)
+    })
+
+    it('enriches passages in batches of 8 with bounded concurrency of 3 and maps results by index', async () => {
+      const batchSizes: number[] = []
+      let inFlight = 0
+      let maxInFlight = 0
+
+      const res = await ingest(enrichConcurrencyAnalystId, {
+        enricher: async (passages) => {
+          batchSizes.push(passages.length)
+          inFlight += 1
+
+          if (inFlight > maxInFlight) maxInFlight = inFlight
+
+          try {
+            const delayMs = passages[0]?.index === 0 ? 60 : 20
+            await new Promise((resolve) => setTimeout(resolve, delayMs))
+
+            return [...passages].reverse().map((passage) => ({
+              index: passage.index,
+              topics: ['substansi_teknis'],
+              tags: [`idx-${passage.index}`],
+            }))
+          } finally {
+            inFlight -= 1
+          }
+        },
+      })
+
+      assert.ok(!res.skipped)
+      assert.ok(res.passageCount > 24)
+      assert.ok(batchSizes.length > 3)
+      assert.ok(batchSizes.slice(0, -1).every((size) => size === 8))
+      assert.ok(batchSizes[batchSizes.length - 1] >= 1 && batchSizes[batchSizes.length - 1] <= 8)
+      assert.equal(maxInFlight, 3)
+
+      const passages = await passagesOf(res.documentId)
+      const points = await pointsWhere('documentId', res.documentId)
+      assert.equal(points.length, passages.length)
+
+      for (const passage of passages) {
+        const point = points.find((item) => item.payload.__anvia_document_id === passage.id)
+        assert.ok(point, `no point for Passage ${passage.id}`)
+        assert.deepEqual(point.payload.tags, [`idx-${passage.index}`])
+        assert.equal(
+          JSON.parse(String(point.payload.__anvia_document)).text,
+          `${passage.heading}\n${passage.text}\nTopik: substansi_teknis\nTag: idx-${passage.index}`,
+        )
+      }
+    })
+
+    it('retries a batch once when enrichment throws on the first attempt and completes ingestion', async () => {
+      const lines = Array.from({ length: 10 }, (_, i) => [
+        `Pasal ${i + 1}`,
+        `Ketentuan teknis zonasi nomor ${i + 1}.`,
+      ]).flat()
+      const pdfPath = join(sourceDir, 'transient-error-enrichment.pdf')
+      await writeFile(pdfPath, textPdf([lines]))
+
+      const callsPerBatch = new Map<number, number>()
+      const res = await ingestDocument(
+        { path: pdfPath, ...METADATA, title: 'Perda Uji Retry Error' },
+        {
+          library,
+          analystId: enrichRetryAnalystId,
+          storageDir,
+          ocrDataDir: OCR_DATA_DIR,
+          collectionName,
+          embeddingModel,
+          enricher: async (passages) => {
+            const firstIndex = passages[0].index
+            const attempt = (callsPerBatch.get(firstIndex) ?? 0) + 1
+            callsPerBatch.set(firstIndex, attempt)
+
+            if (firstIndex === 8 && attempt === 1) {
+              throw new Error('Transient enrichment error (test)')
+            }
+
+            return passages.map((passage) => ({
+              index: passage.index,
+              topics: ['substansi_teknis'],
+              tags: [`retry-${passage.index}`],
+            }))
+          },
+        },
+      )
+
+      assert.ok(!res.skipped)
+      assert.equal(res.passageCount, 10)
+      assert.equal(callsPerBatch.get(0), 1)
+      assert.equal(callsPerBatch.get(8), 2)
+
+      const points = await pointsWhere('documentId', res.documentId)
+      assert.equal(points.length, 10)
+    })
+
+    it('retries a batch once when the first response omits a submitted passage index', async () => {
+      const lines = Array.from({ length: 10 }, (_, i) => [
+        `Pasal ${i + 1}`,
+        `Ketentuan prosedur perizinan nomor ${i + 1}.`,
+      ]).flat()
+      const pdfPath = join(sourceDir, 'incomplete-batch-enrichment.pdf')
+      await writeFile(pdfPath, textPdf([lines]))
+
+      const callsPerBatch = new Map<number, number>()
+      const res = await ingestDocument(
+        { path: pdfPath, ...METADATA, title: 'Perda Uji Retry Incomplete' },
+        {
+          library,
+          analystId: enrichRetryAnalystId,
+          storageDir,
+          ocrDataDir: OCR_DATA_DIR,
+          collectionName,
+          embeddingModel,
+          enricher: async (passages) => {
+            const firstIndex = passages[0].index
+            const attempt = (callsPerBatch.get(firstIndex) ?? 0) + 1
+            callsPerBatch.set(firstIndex, attempt)
+
+            const items = passages.map((passage) => ({
+              index: passage.index,
+              topics: ['prosedur'] as const,
+              tags: [`inc-${passage.index}`],
+            }))
+
+            if (firstIndex === 0 && attempt === 1) {
+              return items.slice(0, -1).map((item) => ({ ...item, topics: [...item.topics] }))
+            }
+
+            return items.map((item) => ({ ...item, topics: [...item.topics] }))
+          },
+        },
+      )
+
+      assert.ok(!res.skipped)
+      assert.equal(res.passageCount, 10)
+      assert.equal(callsPerBatch.get(0), 2)
+      assert.equal(callsPerBatch.get(8), 1)
+
+      const passages = await passagesOf(res.documentId)
+      const points = await pointsWhere('documentId', res.documentId)
+      assert.equal(points.length, 10)
+
+      for (const passage of passages) {
+        const point = points.find((item) => item.payload.__anvia_document_id === passage.id)
+        assert.ok(point)
+        assert.deepEqual(point.payload.topics, ['prosedur'])
+        assert.deepEqual(point.payload.tags, [`inc-${passage.index}`])
+      }
+    })
+
+    it('rejects after 1 retry on a persistently incomplete batch with zero Postgres, Qdrant, or disk leftovers', async () => {
+      const lines = Array.from({ length: 10 }, (_, i) => [
+        `Pasal ${i + 1}`,
+        `Ketentuan pengawasan sanksi nomor ${i + 1}.`,
+      ]).flat()
+      const pdfPath = join(sourceDir, 'permanent-incomplete-enrichment.pdf')
+      await writeFile(pdfPath, textPdf([lines]))
+
+      const filesBefore = readdirSync(storageDir)
+      const [{ n: pageCountBefore }] =
+        await db.$client`select count(*)::int as n from "document_page"`
+      const [{ n: passageCountBefore }] = await db.$client`select count(*)::int as n from "passage"`
+      const callsPerBatch = new Map<number, number>()
+
+      await assert.rejects(
+        ingestDocument(
+          { path: pdfPath, ...METADATA, title: 'Perda Uji Gagal Permanen Incomplete' },
+          {
+            library,
+            analystId: enrichPermanentAnalystId,
+            storageDir,
+            ocrDataDir: OCR_DATA_DIR,
+            collectionName,
+            embeddingModel,
+            enricher: async (passages) => {
+              const firstIndex = passages[0].index
+              callsPerBatch.set(firstIndex, (callsPerBatch.get(firstIndex) ?? 0) + 1)
+
+              if (firstIndex === 8) {
+                return passages.slice(0, -1).map((passage) => ({
+                  index: passage.index,
+                  topics: ['pengawasan_sanksi'],
+                  tags: ['sanksi'],
+                }))
+              }
+
+              return passages.map((passage) => ({
+                index: passage.index,
+                topics: ['pengawasan_sanksi'],
+                tags: ['sanksi'],
+              }))
+            },
+          },
+        ),
+        /Missing enrichment for passage index 9/,
+      )
+
+      assert.equal(callsPerBatch.get(8), 2)
+      assert.deepEqual(readdirSync(storageDir), filesBefore)
+      assert.equal((await documentsOf(enrichPermanentAnalystId)).length, 0)
+      assert.equal((await pointsWhere('analystId', enrichPermanentAnalystId)).length, 0)
+
+      const [{ n: pageCountAfter }] =
+        await db.$client`select count(*)::int as n from "document_page"`
+      const [{ n: passageCountAfter }] = await db.$client`select count(*)::int as n from "passage"`
+      assert.equal(pageCountAfter, pageCountBefore)
+      assert.equal(passageCountAfter, passageCountBefore)
+    })
+
+    it('ingests cleanly once when re-run after a permanent enrichment failure', async () => {
+      const lines = Array.from({ length: 10 }, (_, i) => [
+        `Pasal ${i + 1}`,
+        `Ketentuan peralihan nomor ${i + 1}.`,
+      ]).flat()
+      const pdfPath = join(sourceDir, 'permanent-fail-then-rerun.pdf')
+      await writeFile(pdfPath, textPdf([lines]))
+
+      const filesBefore = readdirSync(storageDir)
+      const [{ n: pageCountBefore }] =
+        await db.$client`select count(*)::int as n from "document_page"`
+      const [{ n: passageCountBefore }] = await db.$client`select count(*)::int as n from "passage"`
+      let failedBatchCalls = 0
+
+      await assert.rejects(
+        ingestDocument(
+          { path: pdfPath, ...METADATA, title: 'Perda Uji Gagal Lalu Ulang' },
+          {
+            library,
+            analystId: enrichRerunAnalystId,
+            storageDir,
+            ocrDataDir: OCR_DATA_DIR,
+            collectionName,
+            embeddingModel,
+            enricher: async (passages) => {
+              if (passages[0].index === 8) {
+                failedBatchCalls += 1
+                throw new Error('Permanent enrichment error (test)')
+              }
+
+              return passages.map((passage) => ({
+                index: passage.index,
+                topics: ['peralihan_penutup'],
+                tags: ['peralihan'],
+              }))
+            },
+          },
+        ),
+        /Permanent enrichment error/,
+      )
+
+      assert.equal(failedBatchCalls, 2)
+      assert.deepEqual(readdirSync(storageDir), filesBefore)
+      assert.equal((await documentsOf(enrichRerunAnalystId)).length, 0)
+      assert.equal((await pointsWhere('analystId', enrichRerunAnalystId)).length, 0)
+
+      const [{ n: pageCountAfterFail }] =
+        await db.$client`select count(*)::int as n from "document_page"`
+      const [{ n: passageCountAfterFail }] =
+        await db.$client`select count(*)::int as n from "passage"`
+      assert.equal(pageCountAfterFail, pageCountBefore)
+      assert.equal(passageCountAfterFail, passageCountBefore)
+
+      const rerun = await ingestDocument(
+        { path: pdfPath, ...METADATA, title: 'Perda Uji Gagal Lalu Ulang' },
+        {
+          library,
+          analystId: enrichRerunAnalystId,
+          storageDir,
+          ocrDataDir: OCR_DATA_DIR,
+          collectionName,
+          embeddingModel,
+          enricher: defaultEnricher,
+        },
+      )
+
+      assert.ok(!rerun.skipped)
+      assert.equal(rerun.passageCount, 10)
+
+      const documents = await documentsOf(enrichRerunAnalystId)
+      assert.deepEqual(
+        documents.map((doc) => doc.id),
+        [rerun.documentId],
+      )
+      assert.ok(documents[0].indexedAt)
+      assert.equal((await pagesOf(rerun.documentId)).length, 1)
+      assert.equal((await passagesOf(rerun.documentId)).length, 10)
+      assert.equal((await pointsWhere('analystId', enrichRerunAnalystId)).length, 10)
     })
   },
 )
