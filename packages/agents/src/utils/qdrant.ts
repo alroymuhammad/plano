@@ -21,6 +21,8 @@ const PAYLOAD_INDEXES = [
   ['documentId', 'keyword'],
   ['status', 'keyword'],
   ['confirmed', 'bool'],
+  ['topics', 'keyword'],
+  ['tags', 'keyword'],
 ] as const
 
 type PayloadIndexClient = QdrantClientLike & {
